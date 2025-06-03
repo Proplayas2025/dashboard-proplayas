@@ -17,7 +17,7 @@ export interface Projects {
     link?: string | null; // nullable, must be a URL
     file_file?: string | null; // nullable, file path or name
     file_url?: string | null; // nullable, must be a URL
-    cover_image_file?: string | null; // nullable, image file path or name
+    cover_image?: string | null; // nullable, image file path or name
     cover_image_url?: string | null; // nullable, must be a URL
     participants?: string[] | null; // nullable, array of strings, each max 255
 }
@@ -68,8 +68,8 @@ export interface Publications {
     link?: string | null;
     doi?: string | null;
     issn?: string | null;
-    cover_image_url?: string | null;
     cover_image?: string | null;
+    cover_image_url?: string | null;
     file_url?: string | null;
     file_file?: string | null;
 }
@@ -94,7 +94,7 @@ export interface News {
     content: string; // required
     category: string; // required, max 255
     tags?: string[] | null; // nullable, array of strings, each max 100
-    cover_image_file?: string | null; // nullable, image file path or name
+    cover_image?: string | null; // nullable, image file path or name
     cover_image_url?: string | null; // nullable, must be a URL
     link?: string | null; // nullable, must be a URL
 }

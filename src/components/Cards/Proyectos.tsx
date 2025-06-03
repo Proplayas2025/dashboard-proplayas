@@ -1,47 +1,46 @@
 "use client";
 import React, { useState } from "react";
-import { Events } from "@/interfaces/Content";
-import { IconPencil, IconTrash, IconFileText, IconUpload, IconPhoto, IconChevronUp, IconChevronDown } from "@tabler/icons-react";
+import { Projects } from "@/interfaces/Content";
+import { IconPencil, IconTrash, IconFileText, IconUpload, IconPhoto, IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
-const PROFILE_COVER_URL =
-  process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
-const FILES_URL =
-  process.env.NEXT_PUBLIC_FILES_URL?.replace(/\/$/, "") || "";
+const COVER_URL = process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
+const FILES_URL = process.env.NEXT_PUBLIC_FILES_URL?.replace(/\/$/, "") || "";
 
-interface EventCardProps {
-  event: Events;
-  onEdit?: (event: Events) => void;
-  onDelete?: (event: Events) => void;
-  onChangeImage?: (event: Events) => void;
-  onChangeFile?: (event: Events) => void;
+interface ProyectoCardProps {
+  proyecto: Projects;
+  onEdit?: (proyecto: Projects) => void;
+  onDelete?: (proyecto: Projects) => void;
+  onChangeImage?: (proyecto: Projects) => void;
+  onChangeFile?: (proyecto: Projects) => void;
 }
 
-export const EventCard: React.FC<EventCardProps> = ({
-  event,
+export const ProyectoCard: React.FC<ProyectoCardProps> = ({
+  proyecto,
   onEdit,
   onDelete,
   onChangeImage,
   onChangeFile,
 }) => {
   const [showParticipants, setShowParticipants] = useState(false);
+
   const imageUrl =
-    event.cover_image_url ||
-    (event.cover_image && PROFILE_COVER_URL
-      ? `${PROFILE_COVER_URL}/${event.cover_image}`
+    proyecto.cover_image_url ||
+    (proyecto.cover_image && COVER_URL
+      ? `${COVER_URL}/${proyecto.cover_image}`
       : undefined);
 
   const fileUrl =
-    event.file_url && !event.file_url.startsWith("http")
-      ? `${FILES_URL}/${event.file_url}`
-      : event.file_url || undefined;
+    proyecto.file_url && !proyecto.file_url.startsWith("http")
+      ? `${FILES_URL}/${proyecto.file_url}`
+      : proyecto.file_url || undefined;
 
   const participants: string[] =
-    typeof event.participants === "string" && (event.participants as string).trim().startsWith("[")
-      ? JSON.parse(event.participants as string)
-      : Array.isArray(event.participants)
-        ? event.participants
+    typeof proyecto.participants === "string"
+      ? JSON.parse(proyecto.participants)
+      : Array.isArray(proyecto.participants)
+        ? proyecto.participants
         : [];
 
   return (
@@ -50,7 +49,7 @@ export const EventCard: React.FC<EventCardProps> = ({
         {imageUrl ? (
           <Image
             src={imageUrl}
-            alt={event.title}
+            alt={proyecto.title}
             fill
             className="object-cover rounded-md"
             sizes="128px"
@@ -64,36 +63,49 @@ export const EventCard: React.FC<EventCardProps> = ({
       </div>
       <div className="flex-1 flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">{event.title}</h2>
-          <span className="text-xs px-2 py-1 rounded bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300">
-            {event.type}
+          <h2 className="text-xl font-semibold">{proyecto.title}</h2>
+          <span className="text-xs px-2 py-1 rounded bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 capitalize">
+            Proyecto
           </span>
         </div>
-        <p className="text-gray-600 dark:text-gray-300 line-clamp-2">{event.description}</p>
+        <p className="text-gray-600 dark:text-gray-300">{proyecto.description}</p>
         <div className="flex flex-wrap gap-2 text-sm text-gray-500 dark:text-gray-400">
           <span>
             <strong>Fecha:</strong>{" "}
-            {new Date(event.date).toLocaleDateString("en-GB", { timeZone: "UTC" })}{" "}
-            <strong>Hora (UTC):</strong>{" "}
-            {new Date(event.date).toLocaleTimeString("en-GB", {
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: false,
-              timeZone: "UTC",
-            })}{" "}
-            UTC
+            {proyecto.date
+              ? new Date(proyecto.date).toLocaleDateString("en-GB", { timeZone: "UTC" })
+              : "Sin fecha"}
           </span>
-          {event.format && (
+          {proyecto.location && (
             <span>
-              <strong>Formato:</strong> {event.format}
-            </span>
-          )}
-          {event.location && (
-            <span>
-              <strong>Lugar:</strong> {event.location}
+              <strong>Ubicación:</strong> {proyecto.location}
             </span>
           )}
         </div>
+        {proyecto.link && (
+          <a
+            href={proyecto.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 dark:text-blue-400 underline text-sm"
+          >
+            Más información
+          </a>
+        )}
+        {fileUrl && (
+          <div className="flex items-center gap-2 mt-2">
+            <a
+              href={fileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-blue-600 dark:text-blue-400 underline text-sm"
+              title="Ver archivo adjunto"
+            >
+              <IconFileText size={18} />
+              Archivo adjunto
+            </a>
+          </div>
+        )}
         {/* Participantes colapsable */}
         {participants.length > 0 && (
           <div className="mt-2">
@@ -116,36 +128,11 @@ export const EventCard: React.FC<EventCardProps> = ({
             )}
           </div>
         )}
-        {/* Enlace al archivo */}
-        {fileUrl && (
-          <div className="flex items-center gap-2 mt-2">
-            <a
-              href={fileUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 text-blue-600 dark:text-blue-400 underline text-sm"
-              title="Ver archivo adjunto"
-            >
-              <IconFileText size={18} />
-              Archivo adjunto
-            </a>
-          </div>
-        )}
-        {event.link && (
-          <a
-            href={event.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 dark:text-blue-400 underline text-sm"
-          >
-            Más información
-          </a>
-        )}
         <div className="flex gap-2 mt-2 flex-wrap">
           <Button
             variant="outline"
             size="icon"
-            onClick={() => onEdit?.(event)}
+            onClick={() => onEdit?.(proyecto)}
             title="Editar"
           >
             <IconPencil size={18} />
@@ -153,7 +140,7 @@ export const EventCard: React.FC<EventCardProps> = ({
           <Button
             variant="destructive"
             size="icon"
-            onClick={() => onDelete?.(event)}
+            onClick={() => onDelete?.(proyecto)}
             title="Eliminar"
           >
             <IconTrash size={18} />
@@ -162,7 +149,7 @@ export const EventCard: React.FC<EventCardProps> = ({
           <Button
             variant="secondary"
             size="icon"
-            onClick={() => onChangeImage?.(event)}
+            onClick={() => onChangeImage?.(proyecto)}
             title="Cambiar imagen de portada"
           >
             <IconPhoto size={18} />
@@ -171,7 +158,7 @@ export const EventCard: React.FC<EventCardProps> = ({
           <Button
             variant="secondary"
             size="icon"
-            onClick={() => onChangeFile?.(event)}
+            onClick={() => onChangeFile?.(proyecto)}
             title="Cambiar archivo adjunto"
           >
             <IconUpload size={18} />

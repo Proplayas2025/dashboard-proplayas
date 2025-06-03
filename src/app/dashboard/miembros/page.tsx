@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
+
 import { DataTable } from "@/components/members-table";
 import { SiteHeader } from "@/components/site-header";
 import { NodosService } from "@/lib/NodoService";
@@ -8,16 +9,16 @@ import { NodeMembers } from "@/interfaces/Nodes";
 import { getCookie } from "@/lib/cookies";
 
 export default function Page() {
-  const nodo = new NodosService();
+  const nodo = useMemo(() => new NodosService(), []);
   const [members, setMembers] = useState<NodeMembers[]>([]);
 
-  const fetchMembers = async () => {
+  const fetchMembers = useCallback(async () => {
     const nodeId = getCookie("node_id");
     if (nodeId) {
       const res = await nodo.getNodoMembers(nodeId);
       setMembers(res?.data || []);
     }
-  };
+  }, [nodo]);
 
   const handleToggleStatus = async (id: number) => {
     await nodo.toggleMemberStatus(id);
@@ -31,7 +32,7 @@ export default function Page() {
 
   useEffect(() => {
     fetchMembers();
-  }, []);
+  }, [fetchMembers]);
 
   return (
     <>
