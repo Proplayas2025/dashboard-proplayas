@@ -1,26 +1,25 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { ContentController } from "@/lib/ContentController";
 import { Publications } from "@/interfaces/Content";
-// Importa tus componentes de UI:
 import { PublicationCard } from "@/components/Cards/Publications";
 import { EditPublicationModal } from "@/components/Forms/publicaciones/EditPublication";
 import { CreatePublicationModal } from "@/components/Forms/publicaciones/CreatePublication";
 import { EditCoverImageModal, EditAttachmentFileModal } from "@/components/Forms/publicaciones/EditFiles";
-
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react"; // O usa cualquier icono/spinner que prefieras
+import { Loader2 } from "lucide-react";
+
 
 export default function Page() {
-  const content = new ContentController();
+  // Usar useMemo para la instancia de ContentController
+  const content = useMemo(() => new ContentController(), []);
   const [publications, setPublications] = useState<Publications[]>([]);
   const [editPublication, setEditPublication] = useState<Publications | null>(null);
   const [showEdit, setShowEdit] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Nuevo: estados para los modales de imagen y archivo
   const [showImageModal, setShowImageModal] = useState<Publications | null>(null);
   const [showFileModal, setShowFileModal] = useState<Publications | null>(null);
 
@@ -97,16 +96,18 @@ export default function Page() {
     setShowFileModal(null);
   };
 
-  const fetchPublications = async () => {
+  // Envolver fetchPublications en useCallback y agregar content como dependencia
+  const fetchPublications = useCallback(async () => {
     setLoading(true);
     const res = await content.getContentAuthor("publications");
     setPublications(res?.data || []);
     setLoading(false);
-  };
+  }, [content]);
 
+  // Agregar fetchPublications al array de dependencias
   useEffect(() => {
     fetchPublications();
-  }, []);
+  }, [fetchPublications]);
 
   return (
     <>
@@ -127,7 +128,6 @@ export default function Page() {
               publication={publication}
               onEdit={handleEdit}
               onDelete={handleDelete}
-              // Nuevo: handlers para los botones de cambiar imagen y archivo
               onChangeImage={() => setShowImageModal(publication)}
               onChangeFile={() => setShowFileModal(publication)}
             />

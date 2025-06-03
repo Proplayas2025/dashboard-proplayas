@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { ContentController } from "@/lib/ContentController";
 import { Books } from "@/interfaces/Content";
@@ -8,14 +8,19 @@ import { EditBookModal } from "@/components/Forms/libros/EditBook";
 import { CreateBookModal } from "@/components/Forms/libros/CreateBook";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { EditCoverImageModal, EditAttachmentFileModal } from "@/components/Forms/publicaciones/EditFiles";
 
 export default function Page() {
-  const content = new ContentController();
+  const content = useMemo(() => new ContentController(), []);
   const [books, setBooks] = useState<Books[]>([]);
   const [editBook, setEditBook] = useState<Books | null>(null);
   const [showEdit, setShowEdit] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  // Estados para los modales de imagen y archivo
+  const [showImageModal, setShowImageModal] = useState<Books | null>(null);
+  const [showFileModal, setShowFileModal] = useState<Books | null>(null);
 
   const handleEdit = (book: Books) => {
     setEditBook(book);
@@ -23,7 +28,8 @@ export default function Page() {
   };
 
   const handleDelete = async (book: Books) => {
-    if (!window.confirm("¿Estás seguro de que deseas eliminar este libro?")) return;
+    if (!window.confirm("¿Estás seguro de que deseas eliminar este libro?"))
+      return;
     try {
       await content.deleteContent("book", book.id);
       setBooks((prev) => prev.filter((b) => b.id !== book.id));
@@ -33,7 +39,6 @@ export default function Page() {
   };
 
   const handleSave = async (updated: Books) => {
-    // Solo los campos editables
     const payload = {
       title: updated.title,
       book_author: updated.book_author,
@@ -69,16 +74,38 @@ export default function Page() {
     setShowCreate(false);
   };
 
-  const fetchBooks = async () => {
+  // Handler para subir imagen de portada
+  const handleUploadImage = async (book: Books, file: File) => {
+    try {
+      await content.uploadImage("book", book.id, file);
+      await fetchBooks();
+    } catch (err) {
+      console.error("Error al subir la imagen de portada", err);
+    }
+    setShowImageModal(null);
+  };
+
+  // Handler para subir archivo adjunto
+  const handleUploadFile = async (book: Books, file: File) => {
+    try {
+      await content.uploadFile("book", book.id, file);
+      await fetchBooks();
+    } catch (err) {
+      console.error("Error al subir el archivo adjunto", err);
+    }
+    setShowFileModal(null);
+  };
+
+  const fetchBooks = useCallback(async () => {
     setLoading(true);
     const res = await content.getContentAuthor("books");
     setBooks(res?.data || []);
     setLoading(false);
-  };
+  }, [content]);
 
   useEffect(() => {
     fetchBooks();
-  }, []);
+  }, [fetchBooks]);
 
   return (
     <>
@@ -90,7 +117,9 @@ export default function Page() {
         {loading ? (
           <div className="col-span-full flex flex-col items-center justify-center py-12">
             <Loader2 className="animate-spin h-8 w-8 text-gray-400 mb-2" />
-            <span className="text-gray-500 dark:text-gray-400">Cargando libros...</span>
+            <span className="text-gray-500 dark:text-gray-400">
+              Cargando libros...
+            </span>
           </div>
         ) : books.length > 0 ? (
           books.map((book) => (
@@ -117,6 +146,18 @@ export default function Page() {
         isOpen={showCreate}
         onClose={() => setShowCreate(false)}
         onSave={handleCreate}
+      />
+      <EditCoverImageModal
+        isOpen={!!showImageModal}
+        item={showImageModal}
+        onClose={() => setShowImageModal(null)}
+        onSave={handleUploadImage}
+      />
+      <EditAttachmentFileModal
+        isOpen={!!showFileModal}
+        item={showFileModal}
+        onClose={() => setShowFileModal(null)}
+        onSave={handleUploadFile}
       />
     </>
   );

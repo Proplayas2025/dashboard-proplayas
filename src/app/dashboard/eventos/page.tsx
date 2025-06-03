@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { ContentController } from "@/lib/ContentController";
 import { Events } from "@/interfaces/Content";
@@ -11,7 +11,7 @@ import { Loader2 } from "lucide-react";
 import { EditCoverImageModal, EditAttachmentFileModal } from "@/components/Forms/publicaciones/EditFiles";
 
 export default function Page() {
-  const content = new ContentController();
+  const content = useMemo(() => new ContentController(), []);
   const [events, setEvents] = useState<Events[]>([]);
   const [editEvent, setEditEvent] = useState<Events | null>(null);
   const [showEdit, setShowEdit] = useState(false);
@@ -76,7 +76,7 @@ export default function Page() {
   const handleUploadImage = async (event: Events, file: File) => {
     try {
       await content.uploadImage("event", event.id, file);
-      await fetchEvents("events");
+      await fetchEvents();
     } catch (err) {
       console.error("Error al subir la imagen de portada", err);
     }
@@ -87,23 +87,23 @@ export default function Page() {
   const handleUploadFile = async (event: Events, file: File) => {
     try {
       await content.uploadFile("event", event.id, file);
-      await fetchEvents("events");
+      await fetchEvents();
     } catch (err) {
       console.error("Error al subir el archivo adjunto", err);
     }
     setShowFileModal(null);
   };
 
-  const fetchEvents = async (contentType = "events") => {
+  const fetchEvents = useCallback(async () => {
     setLoading(true);
-    const res = await content.getContentAuthor(contentType);
+    const res = await content.getContentAuthor("events");
     setEvents(res?.data || []);
     setLoading(false);
-  };
+  }, [content]);
 
   useEffect(() => {
-    fetchEvents("events");
-  }, []);
+    fetchEvents();
+  }, [fetchEvents]);
 
   return (
     <>

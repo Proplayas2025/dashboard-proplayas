@@ -1,25 +1,34 @@
 "use client";
 import React from "react";
 import { Books } from "@/interfaces/Content";
-import { IconPencil, IconTrash, IconFileText, IconExternalLink } from "@tabler/icons-react";
+import {
+  IconPencil,
+  IconTrash,
+  IconFileText,
+  IconExternalLink,
+  IconPhoto,
+  IconUpload,
+} from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
-const COVER_URL =
-  process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
-const FILES_URL =
-  process.env.NEXT_PUBLIC_FILES_URL?.replace(/\/$/, "") || "";
+const COVER_URL = process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
+const FILES_URL = process.env.NEXT_PUBLIC_FILES_URL?.replace(/\/$/, "") || "";
 
 interface BookCardProps {
   book: Books;
   onEdit?: (book: Books) => void;
   onDelete?: (book: Books) => void;
+  onChangeImage?: (book: Books) => void;
+  onChangeFile?: (book: Books) => void;
 }
 
 export const BookCard: React.FC<BookCardProps> = ({
   book,
   onEdit,
   onDelete,
+  onChangeImage,
+  onChangeFile,
 }) => {
   // Usa cover_image_url si viene completa, si no, arma la ruta con COVER_URL y cover_image
   const imageUrl =
@@ -62,7 +71,8 @@ export const BookCard: React.FC<BookCardProps> = ({
         </div>
         {book.publication_date && (
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            <strong>Publicado:</strong> {new Date(book.publication_date).toLocaleDateString("en-GB")}
+            <strong>Publicado:</strong>{" "}
+            {new Date(book.publication_date).toLocaleDateString("en-GB")}
           </div>
         )}
         {book.isbn && (
@@ -70,7 +80,9 @@ export const BookCard: React.FC<BookCardProps> = ({
             <strong>ISBN:</strong> {book.isbn}
           </div>
         )}
-        <p className="text-gray-600 dark:text-gray-300 line-clamp-3">{book.description}</p>
+        <p className="text-gray-600 dark:text-gray-300 line-clamp-3">
+          {book.description}
+        </p>
         {/* Enlace al archivo */}
         {fileUrl && (
           <div className="flex items-center gap-2 mt-2">
@@ -115,6 +127,24 @@ export const BookCard: React.FC<BookCardProps> = ({
             title="Eliminar"
           >
             <IconTrash size={18} />
+          </Button>
+          {/* Botón para cambiar imagen de portada */}
+          <Button
+            variant="secondary"
+            size="icon"
+            onClick={() => onChangeImage?.(book)}
+            title="Cambiar imagen de portada"
+          >
+            <IconPhoto size={18} />
+          </Button>
+          {/* Botón para cambiar archivo adjunto */}
+          <Button
+            variant="secondary"
+            size="icon"
+            onClick={() => onChangeFile?.(book)}
+            title="Cambiar archivo adjunto"
+          >
+            <IconUpload size={18} />
           </Button>
         </div>
       </div>
