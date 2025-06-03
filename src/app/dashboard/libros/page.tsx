@@ -1,0 +1,123 @@
+"use client";
+import { useEffect, useState } from "react";
+import { SiteHeader } from "@/components/site-header";
+import { ContentController } from "@/lib/ContentController";
+import { Books } from "@/interfaces/Content";
+import { BookCard } from "@/components/Cards/Books";
+import { EditBookModal } from "@/components/Forms/libros/EditBook";
+import { CreateBookModal } from "@/components/Forms/libros/CreateBook";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+
+export default function Page() {
+  const content = new ContentController();
+  const [books, setBooks] = useState<Books[]>([]);
+  const [editBook, setEditBook] = useState<Books | null>(null);
+  const [showEdit, setShowEdit] = useState(false);
+  const [showCreate, setShowCreate] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const handleEdit = (book: Books) => {
+    setEditBook(book);
+    setShowEdit(true);
+  };
+
+  const handleDelete = async (book: Books) => {
+    if (!window.confirm("¿Estás seguro de que deseas eliminar este libro?")) return;
+    try {
+      await content.deleteContent("book", book.id);
+      setBooks((prev) => prev.filter((b) => b.id !== book.id));
+    } catch (err) {
+      console.error("Error al eliminar el libro", err);
+    }
+  };
+
+  const handleSave = async (updated: Books) => {
+    // Solo los campos editables
+    const payload = {
+      title: updated.title,
+      book_author: updated.book_author,
+      publication_date: updated.publication_date,
+      isbn: updated.isbn,
+      description: updated.description,
+      link: updated.link,
+      cover_image_url: updated.cover_image_url,
+      file_url: updated.file_url,
+    };
+    try {
+      const res = await content.updateContent("book", updated.id, payload);
+      if (res?.data) {
+        setBooks((prev) =>
+          prev.map((b) => (b.id === updated.id ? res.data : b))
+        );
+      }
+    } catch (err) {
+      console.error("Error al actualizar el libro", err);
+    }
+    setShowEdit(false);
+  };
+
+  const handleCreate = async (formData: FormData) => {
+    try {
+      const res = await content.createContent("book", formData);
+      if (res?.data) {
+        setBooks((prev) => [res.data, ...prev]);
+      }
+    } catch (err) {
+      console.error("Error al crear el libro", err);
+    }
+    setShowCreate(false);
+  };
+
+  const fetchBooks = async () => {
+    setLoading(true);
+    const res = await content.getContentAuthor("books");
+    setBooks(res?.data || []);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchBooks();
+  }, []);
+
+  return (
+    <>
+      <SiteHeader />
+      <div className="flex justify-end px-4 mt-4">
+        <Button onClick={() => setShowCreate(true)}>+ Crear libro</Button>
+      </div>
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-4">
+        {loading ? (
+          <div className="col-span-full flex flex-col items-center justify-center py-12">
+            <Loader2 className="animate-spin h-8 w-8 text-gray-400 mb-2" />
+            <span className="text-gray-500 dark:text-gray-400">Cargando libros...</span>
+          </div>
+        ) : books.length > 0 ? (
+          books.map((book) => (
+            <BookCard
+              key={book.id}
+              book={book}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          ))
+        ) : (
+          <div className="col-span-full text-center text-gray-500 dark:text-gray-400">
+            No hay libros registrados.
+          </div>
+        )}
+      </div>
+      <EditBookModal
+        isOpen={showEdit}
+        onClose={() => setShowEdit(false)}
+        book={editBook}
+        onSave={handleSave}
+      />
+      <CreateBookModal
+        isOpen={showCreate}
+        onClose={() => setShowCreate(false)}
+        onSave={handleCreate}
+      />
+    </>
+  );
+}
