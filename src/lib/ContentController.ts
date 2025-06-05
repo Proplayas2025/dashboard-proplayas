@@ -18,7 +18,7 @@ export class ContentController {
     return response.data;
   }
 
-  async updateContent(content: string, id: number, payload: any) {
+  async updateContent(content: string, id: number, payload: unknown) {
     const response = await api.put(`/${content}/${id}`, payload);
     return response.data;
   }

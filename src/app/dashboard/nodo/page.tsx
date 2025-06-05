@@ -6,7 +6,7 @@ import { Node } from "@/interfaces/Nodes";
 import { getCookie } from "@/lib/cookies";
 import Image from "next/image";
 
-import { EditNodeFormModal, EditNodeImageModal } from "@/components/Forms/NodeForm";
+import { EditNodeFormModal, EditNodeImageModal } from "@/components/Forms/nodo/NodeForm";
 import { IconPencil } from "@tabler/icons-react";
 import { Loader2 } from "lucide-react";
 

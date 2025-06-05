@@ -16,7 +16,6 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import {
   IconCircleCheckFilled,
   IconLoader,
-  IconPlus,
   IconTrash,
   IconPower,
 } from "@tabler/icons-react";
@@ -53,7 +52,6 @@ export function NodesTable({
   data,
   onToggleStatus,
   onDelete,
-  onAdd,
   page = 1,
   pageSize = 10,
   total = 0,
@@ -63,17 +61,11 @@ export function NodesTable({
   const totalPages = Math.ceil(total / pageSize);
 
   return (
-    <Tabs defaultValue="outline" className="w-full flex-col justify-start gap-6">
+    <Tabs defaultValue="outline" className="w-full flex-col justify-start gap-2">
       <div className="flex items-center justify-between px-4 lg:px-6">
         <Label htmlFor="view-selector" className="sr-only">
           View
         </Label>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={onAdd}>
-            <IconPlus />
-            <span className="hidden lg:inline">Añadir nodo</span>
-          </Button>
-        </div>
       </div>
       <TabsContent
         value="outline"

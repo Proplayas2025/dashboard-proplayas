@@ -4,22 +4,16 @@ import * as React from "react";
 import {
   IconCamera,
   IconChartBar,
-  IconDashboard,
   IconDatabase,
-  IconFileAi,
-  IconFileDescription,
   IconFileWord,
   IconFolder,
-  IconHelp,
   IconListDetails,
-  IconReport,
-  IconSearch,
-  IconSettings,
   IconUsers,
   IconUser,
-  IconSquare,
-  IconPencil,
+  IconBook2,
+  Icon,
 } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
 
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
@@ -33,47 +27,54 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-const data = {
-  user: {
-    name: "Nombre del Usuario",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  content: [
-    {
-      title: "Eventos",
-      url: "/dashboard/eventos",
-      icon: IconDatabase,
-    },
-    {
-      title: "Publicaciones",
-      url: "/dashboard/publicaciones",
-      icon: IconFileWord,
-    },
-    {
-      title: "Libros",
-      url: "/dashboard/libros",
-      icon: IconFileAi,
-    },
-    {
-      title: "Proyectos",
-      url: "/dashboard/proyectos",
-      icon: IconChartBar,
-    },
-    {
-      title: "WebSeries",
-      url: "/dashboard/series",
-      icon: IconReport,
-    },
-  ],
-};
 
 export function AppSidebar({
   role,
   ...props
 }: React.ComponentProps<typeof Sidebar> & { role: string | null }) {
+  const [email, setEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    setEmail(localStorage.getItem("email"));
+  }, []);
+
+  const data = {
+    user: {
+      name: "Proplayas User",
+      email: email ?? "",
+      avatar: '',
+    },
+    content: [
+      {
+        title: "Eventos",
+        url: "/dashboard/eventos",
+        icon: IconDatabase,
+      },
+      {
+        title: "Publicaciones",
+        url: "/dashboard/publicaciones",
+        icon: IconFileWord,
+      },
+      {
+        title: "Libros",
+        url: "/dashboard/libros",
+        icon: IconBook2,
+      },
+      {
+        title: "Proyectos",
+        url: "/dashboard/proyectos",
+        icon: IconChartBar,
+      },
+      {
+        title: "WebSeries",
+        url: "/dashboard/series",
+        icon: IconCamera,
+      },
+    ],
+  };
+
   // Construir los ítems de navegación principales según el rol
-  let navMainFiltered: Array<{ title: string; url: string; icon: any }> = [];
+  let navMainFiltered: Array<{ title: string; url: string; icon: Icon }> = [];
   if (role === "node_leader") {
     navMainFiltered = [
       {

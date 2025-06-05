@@ -13,11 +13,11 @@ export default function Page() {
     setLoading(true);
     setError(null);
     const auth = new Authentication();
-    const res = await auth.loginTwo(values);
+    const res = await auth.login(values);
     setLoading(false);
 
     if (res.status === 200 && res.data?.token) {
-      router.push("/dashboard");
+      router.push("/dashboard/perfil");
     } else {
       setError(res.message || "Error al iniciar sesión");
     }

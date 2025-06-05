@@ -9,10 +9,10 @@ import { CreatePublicationModal } from "@/components/Forms/publicaciones/CreateP
 import { EditCoverImageModal, EditAttachmentFileModal } from "@/components/Forms/publicaciones/EditFiles";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 
 export default function Page() {
-  // Usar useMemo para la instancia de ContentController
   const content = useMemo(() => new ContentController(), []);
   const [publications, setPublications] = useState<Publications[]>([]);
   const [editPublication, setEditPublication] = useState<Publications | null>(null);
@@ -33,8 +33,10 @@ export default function Page() {
     try {
       await content.deleteContent("publication", publication.id);
       setPublications((prev) => prev.filter((pub) => pub.id !== publication.id));
+      toast.success("La publicación se ha eliminado con éxito");
     } catch (err) {
       console.error("Error al eliminar la publicación", err);
+      toast.error("Ocurrió un error al eliminar la publicación");
     }
   };
 
@@ -55,9 +57,11 @@ export default function Page() {
         setPublications((prev) =>
           prev.map((pub) => (pub.id === updated.id ? res.data : pub))
         );
+        toast.success("La publicación se ha actualizado con éxito");
       }
     } catch (err) {
       console.error("Error al actualizar la publicación", err);
+      toast.error("Ocurrió un error al actualizar la publicación");
     }
     setShowEdit(false);
   };
@@ -67,44 +71,49 @@ export default function Page() {
       const res = await content.createContent("publication", formData);
       if (res?.data) {
         setPublications((prev) => [res.data, ...prev]);
+        toast.success("La publicación se ha creado con éxito");
       }
-    } catch (err) {
-      console.error("Error al crear la publicación", err);
+    } catch{
+      toast.error("Ocurrió un error al crear la publicación");
     }
     setShowCreate(false);
   };
 
-  // Nuevo: handler para subir imagen de portada
+  // Handler para subir imagen de portada
   const handleUploadImage = async (publication: Publications, file: File) => {
     try {
       await content.uploadImage("publication", publication.id, file);
       await fetchPublications();
-    } catch (err) {
-      console.error("Error al subir la imagen de portada", err);
+      toast.success("La imagen de portada se ha actualizado con éxito");
+    } catch {
+      toast.error("Ocurrió un error al subir la imagen de portada");
     }
     setShowImageModal(null);
   };
 
-  // Nuevo: handler para subir archivo adjunto
+  // Handler para subir archivo adjunto
   const handleUploadFile = async (publication: Publications, file: File) => {
     try {
       await content.uploadFile("publication", publication.id, file);
       await fetchPublications();
-    } catch (err) {
-      console.error("Error al subir el archivo adjunto", err);
+      toast.success("El archivo adjunto se ha actualizado con éxito");
+    } catch {
+      toast.error("Ocurrió un error al subir el archivo adjunto");
     }
     setShowFileModal(null);
   };
 
-  // Envolver fetchPublications en useCallback y agregar content como dependencia
   const fetchPublications = useCallback(async () => {
     setLoading(true);
-    const res = await content.getContentAuthor("publications");
-    setPublications(res?.data || []);
+    try {
+      const res = await content.getContentAuthor("publications");
+      setPublications(res?.data || []);
+    } catch {
+      toast.error("Ocurrió un error al cargar las publicaciones");
+    }
     setLoading(false);
   }, [content]);
 
-  // Agregar fetchPublications al array de dependencias
   useEffect(() => {
     fetchPublications();
   }, [fetchPublications]);
@@ -115,7 +124,7 @@ export default function Page() {
       <div className="flex justify-end px-4 mt-4">
         <Button onClick={() => setShowCreate(true)}>+ Crear publicación</Button>
       </div>
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-4">
+      <div className="grid gap-4 p-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(420px, 1fr))", }}>
         {loading ? (
           <div className="col-span-full flex flex-col items-center justify-center py-12">
             <Loader2 className="animate-spin h-8 w-8 text-gray-400 mb-2" />

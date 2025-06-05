@@ -9,6 +9,7 @@ import { CreateProyectoModal } from "@/components/Forms/proyectos/CreateProyecto
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { EditCoverImageModal, EditAttachmentFileModal } from "@/components/Forms/publicaciones/EditFiles";
+import { toast } from "sonner";
 
 export default function Page() {
   const content = useMemo(() => new ContentController(), []);
@@ -32,8 +33,10 @@ export default function Page() {
     try {
       await content.deleteContent("project", project.id);
       setProjects((prev) => prev.filter((p) => p.id !== project.id));
+      toast.success("El proyecto se ha eliminado con éxito");
     } catch (err) {
       console.error("Error al eliminar el proyecto", err);
+      toast.error("Ocurrió un error al eliminar el proyecto");
     }
   };
 
@@ -54,9 +57,11 @@ export default function Page() {
         setProjects((prev) =>
           prev.map((p) => (p.id === updated.id ? res.data : p))
         );
+        toast.success("El proyecto se ha actualizado con éxito");
       }
     } catch (err) {
       console.error("Error al actualizar el proyecto", err);
+      toast.error("Ocurrió un error al actualizar el proyecto");
     }
     setShowEdit(false);
   };
@@ -66,9 +71,11 @@ export default function Page() {
       const res = await content.createContent("project", formData);
       if (res?.data) {
         setProjects((prev) => [res.data, ...prev]);
+        toast.success("El proyecto se ha creado con éxito");
       }
     } catch (err) {
       console.error("Error al crear el proyecto", err);
+      toast.error("Ocurrió un error al crear el proyecto");
     }
     setShowCreate(false);
   };
@@ -78,8 +85,10 @@ export default function Page() {
     try {
       await content.uploadImage("project", project.id, file);
       await fetchProjects();
+      toast.success("La imagen de portada se ha actualizado con éxito");
     } catch (err) {
       console.error("Error al subir la imagen de portada", err);
+      toast.error("Ocurrió un error al subir la imagen de portada");
     }
     setShowImageModal(null);
   };
@@ -89,16 +98,22 @@ export default function Page() {
     try {
       await content.uploadFile("project", project.id, file);
       await fetchProjects();
+      toast.success("El archivo adjunto se ha actualizado con éxito");
     } catch (err) {
       console.error("Error al subir el archivo adjunto", err);
+      toast.error("Ocurrió un error al subir el archivo adjunto");
     }
     setShowFileModal(null);
   };
 
   const fetchProjects = useCallback(async () => {
     setLoading(true);
-    const res = await content.getContentAuthor("projects");
-    setProjects(res?.data || []);
+    try {
+      const res = await content.getContentAuthor("projects");
+      setProjects(res?.data || []);
+    } catch {
+      toast.error("Ocurrió un error al cargar los proyectos");
+    }
     setLoading(false);
   }, [content]);
 
@@ -112,7 +127,7 @@ export default function Page() {
       <div className="flex justify-end px-4 mt-4">
         <Button onClick={() => setShowCreate(true)}>+ Crear proyecto</Button>
       </div>
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-4">
+      <div className="grid gap-4 p-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(420px, 1fr))", }}>
         {loading ? (
           <div className="col-span-full flex flex-col items-center justify-center py-12">
             <Loader2 className="animate-spin h-8 w-8 text-gray-400 mb-2" />

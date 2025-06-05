@@ -56,7 +56,12 @@ export function EditNodeFormModal({
   defaultValues,
   onSave,
 }: EditNodeFormModalProps) {
-  const [formData, setFormData] = useState<Node>(defaultValues);
+  const [formData, setFormData] = useState<Node>({
+    ...defaultValues,
+    social_media: Array.isArray(defaultValues.social_media)
+      ? defaultValues.social_media
+      : [],
+  });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

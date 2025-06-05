@@ -37,7 +37,7 @@ export const ProyectoCard: React.FC<ProyectoCardProps> = ({
       : proyecto.file_url || undefined;
 
   const participants: string[] =
-    typeof proyecto.participants === "string"
+    typeof proyecto.participants === "string" && (proyecto.participants as string).trim().startsWith("[")
       ? JSON.parse(proyecto.participants)
       : Array.isArray(proyecto.participants)
         ? proyecto.participants
