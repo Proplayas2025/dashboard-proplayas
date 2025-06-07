@@ -11,6 +11,8 @@ export interface User {
     expertise_area: string;
     research_work: string;
     profile_picture: File; // foto del usuario
+    country: string;
+    city: string;
     social_media: SocialLink[];
     status: string;
 }

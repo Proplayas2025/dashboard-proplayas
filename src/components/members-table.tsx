@@ -5,7 +5,6 @@ import { z } from "zod";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-//import { Checkbox } from "@/components/ui/checkbox";
 import {
   Drawer,
   DrawerClose,
@@ -31,11 +30,8 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import {
   IconCircleCheckFilled,
   IconLoader,
-//  IconChevronDown,
-  IconPlus,
   IconTrash,
   IconPower,
-  //IconPowerOff,
 } from "@tabler/icons-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -71,12 +67,6 @@ export function DataTable({
         <Label htmlFor="view-selector" className="sr-only">
           View
         </Label>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
-            <IconPlus />
-            <span className="hidden lg:inline">Añadir miembro</span>
-          </Button>
-        </div>
       </div>
       <TabsContent
         value="outline"

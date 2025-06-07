@@ -1,3 +1,4 @@
+"use client";
 import { getCookie } from "./cookies";
 
 // Variables de entorno para Next.js

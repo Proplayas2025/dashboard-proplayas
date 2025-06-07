@@ -5,6 +5,8 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from 'next/navigation'
 import { jwtDecode } from "jwt-decode";
 import RegisterNodeLeaderForm from "@/components/Forms/register/RegisterNodeLeaderForm";
+import RegisterNodeMemberForm from "@/components/Forms/register/RegisterNodeMemberForm";
+
 import { toast } from "sonner";
 import InvitationService from "@/lib/InvitationService";
 
@@ -28,7 +30,7 @@ export default function RegisterPage() {
       try {
         const decodedToken = jwtDecode<DecodedToken>(token);
         setDecoded(decodedToken);
-      } catch (err) {
+      } catch {
         toast.error("Token inválido o expirado");
       }
     }
@@ -37,7 +39,7 @@ export default function RegisterPage() {
   const handleSubmit = async (formData: FormData) => {
     setLoading(true);
     try {
-      // Extrae y codifica la contraseña (y confirm_password si lo agregas)
+      // Codifica las contraseñas en base64 antes de enviar
       const password = formData.get("password");
       if (typeof password === "string") {
         formData.set("password", btoa(password));
@@ -46,22 +48,29 @@ export default function RegisterPage() {
       if (typeof confirmPassword === "string") {
         formData.set("confirm_password", btoa(confirmPassword));
       }
-
-      console.log("Datos del formulario:", Object.fromEntries(formData.entries()));
-      
       const response = await invitationService.registerNewUser(formData);
-      const {status, message, data } = response.data;
-      if(status !== 201) {
-        toast.error(`Error al registrar: ${message}`)
-        return;
-      } else if (status === 201 && data) {
+      const { status, message, data } = response;
+
+      if (status === 201 && data) {
         toast.success("Registro exitoso. ¡Bienvenido!");
         router.push('/login');
+        return;
       }
-    } catch (error: any) {
-      toast('Event has been created', {
-        description: error,
-      })
+
+      if (status === 400) {
+        toast.error("El token ya fue utilizado o ha expirado. Solicita una nueva invitación.");
+        return;
+      }
+
+      if (status === 500) {
+        toast.error("Error del servidor. Intenta más tarde.");
+        return;
+      }
+
+      // Otros errores
+      toast.error(message || "Error al registrar. Intenta de nuevo.");
+    } catch  {
+      toast.error("Error inesperado al registrar. Intenta de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -93,6 +102,22 @@ export default function RegisterPage() {
             email: decoded.email,
             name: decoded.name,
             node_type: decoded.node_type,
+            token: token,
+          }}
+        />
+      </div>
+    );
+  }
+
+  if (decoded.role_type === "member") {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-muted/50 py-8">
+        <RegisterNodeMemberForm
+          loading={loading}
+          onSubmit={handleSubmit}
+          initialValues={{
+            email: decoded.email,
+            name: decoded.name,
             token: token,
           }}
         />

@@ -18,7 +18,7 @@ import { Eye, EyeOff } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Ingresa un correo válido." }),
-  password: z.string().min(4, { message: "La contraseña debe tener al menos 4 caracteres." }),
+  password: z.string().min(8, { message: "La contraseña debe tener al menos 8 caracteres." }),
 });
 
 export type LoginFormValues = z.infer<typeof formSchema>;

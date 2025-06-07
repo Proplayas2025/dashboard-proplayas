@@ -18,6 +18,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Authentication } from "@/lib/Auth/Authentication";
+import { toast } from "sonner";
 
 export function NavUser({
   user,
@@ -33,7 +34,13 @@ export function NavUser({
   const auth = new Authentication();
 
   const handleLogout = async () => {
-    await auth.logout();
+    const { status, message, data} = await auth.logout();
+    if (status !== 200) {
+      toast.error(`Error al cerrar sesión: ${message}`);
+      router.push("/login"); // Cambia la ruta si tu login está en otra URL
+      return;
+    }
+    toast.success("Sesión cerrada correctamente");
     router.push("/login"); // Cambia la ruta si tu login está en otra URL
   };
 

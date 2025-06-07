@@ -6,7 +6,7 @@ export default class InvitationService {
     // Miembros
     async createInvitationToNodeMember(data: InviteNodeMember): Promise<ApiResponse<InviteNodeMember>> {
         try {
-            const response = await axiosInstance.post("/member/invite", data);
+            const response = await axiosInstance.post("/member/invite", { ...data, role_type: "member" });
             return response.data;
         } catch (error) {
             console.error("Error al enviar la invitación:", error);
@@ -28,7 +28,7 @@ export default class InvitationService {
     async registerNewUser(data: any): Promise<ApiResponse<any>> {
         try {
             const response = await axiosInstance.post("/invitations/accept", data);
-            return response.data.status;
+            return response.data; //{status, message, data : {user:{}, node:}}
         } catch (error) {
             console.error("Error al registrar el usuario:", error);
             throw error;

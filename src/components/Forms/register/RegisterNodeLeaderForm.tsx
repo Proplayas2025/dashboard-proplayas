@@ -81,13 +81,37 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  // Manejo de campos simples
+  const [passwordInfo, setPasswordInfo] = useState({
+    length: false,
+    upper: false,
+    lower: false,
+    number: false,
+    special: false,
+  });
+
+  const [passwordsMatch, setPasswordsMatch] = useState(true);
+
+  // Actualiza la verificación de la contraseña y si coinciden
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setForm((prev) => {
+      const updated = { ...prev, [name]: value };
+
+      if (name === "password" || name === "confirm_password") {
+        // Validación de formato de contraseña
+        const pwd = name === "password" ? value : updated.password;
+        setPasswordInfo({
+          length: pwd.length >= 8,
+          upper: /[A-Z]/.test(pwd),
+          lower: /[a-z]/.test(pwd),
+          number: /\d/.test(pwd),
+          special: /[^A-Za-z0-9]/.test(pwd),
+        });
+        // Validación de coincidencia
+        setPasswordsMatch(updated.password === updated.confirm_password);
+      }
+      return updated;
+    });
   };
 
   // Manejo de archivos
@@ -109,7 +133,7 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
         if (Array.isArray(value)) {
           value.forEach((v) => data.append(`${key}[]`, v));
         } else {
-          data.append(key, value as any);
+          data.append(key, value as string);
         }
       }
     });
@@ -142,6 +166,7 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
               required
               minLength={8}
               className="pr-10"
+              autoComplete="new-password"
             />
             <button
               type="button"
@@ -151,6 +176,16 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
             >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
+          </div>
+          <div className="text-xs text-gray-600 mt-1">
+            La contraseña debe tener al menos:
+            <ul className="list-disc ml-5">
+              <li className={passwordInfo.length ? "text-green-600" : ""}>8 caracteres</li>
+              <li className={passwordInfo.upper ? "text-green-600" : ""}>Una letra mayúscula</li>
+              <li className={passwordInfo.lower ? "text-green-600" : ""}>Una letra minúscula</li>
+              <li className={passwordInfo.number ? "text-green-600" : ""}>Un número</li>
+              <li className={passwordInfo.special ? "text-green-600" : ""}>Un carácter especial</li>
+            </ul>
           </div>
 
           <Label htmlFor="confirm_password">Confirmar Contraseña*</Label>
@@ -164,6 +199,7 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
               required
               minLength={8}
               className="pr-10"
+              autoComplete="new-password"
             />
             <button
               type="button"
@@ -174,6 +210,11 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
               {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
+          {!passwordsMatch && (
+            <div className="text-xs text-red-600 mt-1">
+              Las contraseñas no coinciden.
+            </div>
+          )}
 
           <Label htmlFor="username">Usuario</Label>
           <Input id="username" name="username" value={form.username} onChange={handleChange} autoComplete="username"/>
@@ -263,9 +304,7 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
                   { platform: allowedPlatforms[0], url: "" },
                 ];
                 setForm({ ...form, social_media: updated });
-              }}
-            >
-              + Agregar
+              }}>+ Agregar
             </Button>
           </div>
 

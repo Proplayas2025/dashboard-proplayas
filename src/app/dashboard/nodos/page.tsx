@@ -8,7 +8,7 @@ import { Nodes } from "@/interfaces/Nodes";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { IconPlus } from "@tabler/icons-react";
-import InviteNodeForm from "@/components/Forms/register/InviteNodeForm";
+import InviteNodeForm from "@/components/Forms/invitations/InviteNodeLeaderForm";
 import InvitationService from "@/lib/InvitationService";
 import { toast } from "sonner"; // Si usas alguna librería de notificaciones
 
@@ -53,7 +53,7 @@ export default function Page() {
       await invitationService.createInvitationToNodeLeader(data);
       toast.success("Invitación enviada correctamente");
       fetchNodes();
-    } catch (error) {
+    } catch {
       toast.error("Error al enviar la invitación");
     }
     setInviteLoading(false);

@@ -51,6 +51,26 @@ export interface RegisterNodeLeaderRequest {
   memorandum?: string;
 }
 
+export interface InviteNodeMember {
+    name: string;
+    email: string;
+}
+
+export interface RegisterNodeMemberRequest {
+    token: string;
+    name: string;
+    username: string;
+    email: string;
+    password: string;
+    confirm_password: string;
+    expertise_area: string;
+    research_work: string;
+    social_media?: SocialMediaItem[];
+    about_user: string;
+    country_user: string;
+    city_user: string;
+}
+
 export interface InviteAdmin {
     name: string;
     email: string;
@@ -64,21 +84,3 @@ export interface RegisterAdmin {
     confirm_password: string;
 }
 
-export interface InviteNodeMember {
-    name: string;
-    email: string;
-}
-
-export interface RegisterNodeMember {
-    token: string;
-    name: string;
-    username: string;
-    email: string;
-    password: string;
-    confirm_password: string;
-    expertise_area: string;
-    research_work: string;
-    about_user: string;
-    country_user: string;
-    city_user: string;
-}

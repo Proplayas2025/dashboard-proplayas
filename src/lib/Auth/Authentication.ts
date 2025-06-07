@@ -52,7 +52,7 @@ export class Authentication {
     system.authToken = null;
     system.role = null;
   }
-  
+
   async login(credentials: LoginRequest): Promise<ApiResponse<LoginResponse>> {
     const response = await axiosInstance.post('/login', { email: credentials.email, password: btoa(credentials.password) });
     if (response.data.status === 200 && response.data.data) {
@@ -75,18 +75,34 @@ export class Authentication {
     };
   }
 
+  //{"status":200,"message":"Logged out successfully","data":[]}
   async logout(): Promise<ApiResponse<null>> {
     try {
-      await axiosInstance.post('/logout');
-    } catch {
-      // Ignora errores de logout en el backend
+      const response = await axiosInstance.post('/logout');
+      const { status, message } = response.data;
+      this.clearSession();
+      return {
+        status: status || 500,
+        message: message || (status === 200 ? "Sesión cerrada correctamente" : "Error al cerrar sesión"),
+        data: null
+      };
+    } catch (error: any) {
+      console.error("Error al cerrar sesión");
+      this.clearSession();
+      if (error?.response?.data) {
+        const { status, message } = error.response.data;
+        return {
+          status: status || 500,
+          message: message || "Error al cerrar sesión",
+          data: null
+        };
+      }
+      return {
+        status: 500,
+        message: "Error al cerrar sesión",
+        data: null
+      };
     }
-    this.clearSession();
-    return {
-      status: 200,
-      message: "Sesión cerrada correctamente",
-      data: null
-    };
   }
 
   async recoverPassword(email: string): Promise<ApiResponse<null>> {

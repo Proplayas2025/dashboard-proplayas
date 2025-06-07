@@ -1,3 +1,4 @@
+"use client";
 import axios from "axios";
 import { V_Global_API, system } from "./system";
 import { getCookie } from "./cookies";
