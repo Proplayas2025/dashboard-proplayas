@@ -6,7 +6,7 @@ import { Publications } from "@/interfaces/Content";
 import { PublicationCard } from "@/components/Cards/Publications";
 import { EditPublicationModal } from "@/components/Forms/publicaciones/EditPublication";
 import { CreatePublicationModal } from "@/components/Forms/publicaciones/CreatePublication";
-import { EditCoverImageModal, EditAttachmentFileModal } from "@/components/Forms/publicaciones/EditFiles";
+import { EditCoverImageModal, EditAttachmentFileModal } from "@/components/Forms/Acomposables/EditFiles";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";

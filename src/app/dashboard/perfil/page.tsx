@@ -7,9 +7,8 @@ import Image from "next/image";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { IconPencil, IconWorld, IconPin } from "@tabler/icons-react";
-
 // Puedes crear estos componentes modales como en el nodo, o usar los mismos si son genéricos
-// import { EditProfileFormModal, EditProfileImageModal } from "@/components/Forms/profile/ProfileForm";
+import { EditProfileFormModal, EditProfileImageModal } from "@/components/Forms/perfil/EditProfile";
 
 export default function Page() {
   const profileService = useMemo(() => new ProfileService(), []);
@@ -24,7 +23,7 @@ export default function Page() {
     try {
       const res = await profileService.fetchProfile();
       setUser(res?.data || undefined);
-    } catch (err) {
+    } catch {
       toast.error("Error al cargar el perfil");
     }
     setLoading(false);
@@ -45,7 +44,7 @@ export default function Page() {
   // Actualizar imagen de perfil
   const handleUploadImage = async (file: File) => {
     const formData = new FormData();
-    formData.append("profile_picture", file);
+    formData.append("image", file);
     try {
       const res = await profileService.uploadProfilePicture(formData);
       setUser(res.data);
@@ -68,7 +67,9 @@ export default function Page() {
           {loading ? (
             <div className="flex flex-col items-center justify-center py-12">
               <Loader2 className="animate-spin h-8 w-8 text-gray-400 mb-2" />
-              <span className="text-gray-500 dark:text-gray-400">Cargando perfil...</span>
+              <span className="text-gray-500 dark:text-gray-400">
+                Cargando perfil...
+              </span>
             </div>
           ) : user ? (
             <div className="bg-white dark:bg-zinc-700 shadow-md rounded-lg p-6 grid grid-cols-1 md:grid-cols-[300px_minmax(600px,_1fr)] gap-6 relative">
@@ -80,8 +81,10 @@ export default function Page() {
                       height={192}
                       src={
                         typeof user.profile_picture === "string"
-                          ? `${process.env.NEXT_PUBLIC_PROFILE_COVER_URL || ""}${user.profile_picture}`
-                          : URL.createObjectURL(user.profile_picture as any)
+                          ? `${
+                              process.env.NEXT_PUBLIC_PROFILE_COVER_URL || ""
+                            }${user.profile_picture}`
+                          : URL.createObjectURL(user.profile_picture as never)
                       }
                       alt="Foto de perfil"
                       className="w-full h-full rounded-full border-2 border-gray-300 object-cover"
@@ -144,13 +147,17 @@ export default function Page() {
                     <h2 className="text-lg font-semibold text-gray-500 dark:text-white">
                       Área de experiencia
                     </h2>
-                    <p className="text-gray-600 dark:text-white">{user.expertise_area}</p>
+                    <p className="text-gray-600 dark:text-white">
+                      {user.expertise_area}
+                    </p>
                   </div>
                   <div className="mt-4">
                     <h2 className="text-lg font-semibold text-gray-500 dark:text-white">
                       Trabajo de investigación
                     </h2>
-                    <p className="text-gray-600 dark:text-white">{user.research_work}</p>
+                    <p className="text-gray-600 dark:text-white">
+                      {user.research_work}
+                    </p>
                   </div>
                 </div>
 
@@ -184,19 +191,23 @@ export default function Page() {
         </div>
       </div>
       {/* Modales de edición */}
-      {/* 
-      <EditProfileFormModal
-        isOpen={showEditInfo}
-        onClose={() => setShowEditInfo(false)}
-        defaultValues={user}
-        onSave={handleSaveInfo}
-      />
-      <EditProfileImageModal
-        isOpen={showEditImage}
-        onClose={() => setShowEditImage(false)}
-        onUpload={handleUploadImage}
-      />
-      */}
+
+      {user && (
+        <EditProfileFormModal
+          isOpen={showEditInfo}
+          onClose={() => setShowEditInfo(false)}
+          defaultValues={user}
+          onSave={handleSaveInfo}
+        />
+      )}
+      {user && (
+        <EditProfileImageModal
+          isOpen={showEditImage}
+          onClose={() => setShowEditImage(false)}
+
+          onUpload={handleUploadImage}
+        />
+      )}
     </>
   );
 }

@@ -8,7 +8,7 @@ import { EditEventModal } from "@/components/Forms/eventos/EditEvent";
 import { CreateEventModal } from "@/components/Forms/eventos/CreateEvent";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import { EditCoverImageModal, EditAttachmentFileModal } from "@/components/Forms/publicaciones/EditFiles";
+import { EditCoverImageModal, EditAttachmentFileModal } from "@/components/Forms/Acomposables/EditFiles";
 import { toast } from "sonner";
 
 export default function Page() {
