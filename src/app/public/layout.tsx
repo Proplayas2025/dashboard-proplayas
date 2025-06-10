@@ -8,7 +8,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       <header>
         <AppHeader />
       </header>
-      <main className="flex-1 p-4">{children}</main>
+      <main className="flex-1">{children}</main>
     </div>
   );
 }

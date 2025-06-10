@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
+import { ModeToggle } from "@/components/theme-toggler";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -76,6 +77,9 @@ export function AppHeader() {
             </Button>
           )}
         </nav>
+        <div>
+          <ModeToggle/>
+        </div>
         {/* Dropdown menú en mobile */}
         <div className="md:hidden">
           <DropdownMenu>
