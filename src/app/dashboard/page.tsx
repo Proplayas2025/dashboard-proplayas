@@ -1,13 +1,19 @@
-"use client";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+'use client'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { getCookie } from '@/lib/cookies'
 
-export default function Page() {
-  const router = useRouter();
+export default function Home() {
+  const router = useRouter()
 
   useEffect(() => {
-    router.replace("/dashboard/eventos");
-  }, [router]);
+    const role = getCookie('role')
+    if (role === 'admin' || role === 'node_leader' || role === 'member') {
+      router.replace('/dashboard')
+    } else {
+      router.replace('/login') // o alguna pantalla pública o de error
+    }
+  }, [router])
 
-  return null;
+  return null
 }
