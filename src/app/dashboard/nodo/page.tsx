@@ -61,12 +61,12 @@ export default function Page() {
                       <span className="text-gray-400">Sin foto</span>
                     </div>
                   )}
-                  <button
+                    <button
                     onClick={() => setShowEditImage(true)}
-                    className="absolute top-2 right-2 bg-white p-1 rounded-full shadow hover:bg-gray-100"
-                  >
-                    <IconPencil size={18} />
-                  </button>
+                    className="absolute top-2 right-2 bg-white dark:bg-zinc-800 p-1 rounded-full shadow hover:bg-gray-100 dark:hover:bg-zinc-700"
+                    >
+                    <IconPencil size={18} className="text-gray-700 dark:text-zinc-200" />
+                    </button>
                 </div>
                 <div className="my-3 text-center md:text-left">
                   <h1 className="text-2xl font-semibold text-gray-500 dark:text-white">
@@ -87,7 +87,7 @@ export default function Page() {
                 <div className="absolute top-4 right-4">
                   <button
                     onClick={() => setShowEditInfo(true)}
-                    className="bg-white p-1 rounded-full shadow hover:bg-gray-100"
+                    className="bg-white dark:bg-zinc-800 dark:hover:bg-zinc-700 hover:bg-gray-100 p-1 rounded-full shadow"
                   >
                     <IconPencil size={18} />
                   </button>

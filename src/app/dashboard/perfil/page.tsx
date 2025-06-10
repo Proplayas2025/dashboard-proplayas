@@ -96,7 +96,7 @@ export default function Page() {
                   )}
                   <button
                     onClick={() => setShowEditImage(true)}
-                    className="absolute top-2 right-2 bg-white p-1 rounded-full shadow hover:bg-gray-100"
+                    className="bg-white dark:bg-zinc-800 dark:hover:bg-zinc-700 hover:bg-gray-100 absolute top-2 right-2 p-1 rounded-full shadow"
                   >
                     <IconPencil size={18} />
                   </button>
@@ -131,7 +131,7 @@ export default function Page() {
                 <div className="absolute top-4 right-4">
                   <button
                     onClick={() => setShowEditInfo(true)}
-                    className="bg-white p-1 rounded-full shadow hover:bg-gray-100"
+                    className="bg-white dark:bg-zinc-800 dark:hover:bg-zinc-700 hover:bg-gray-100 p-1 rounded-full shadow"
                   >
                     <IconPencil size={18} />
                   </button>
