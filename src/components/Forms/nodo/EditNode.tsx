@@ -18,6 +18,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { NodosService } from "@/lib/NodoService";
 import { Node } from "@/interfaces/Nodes";
+import Image from "next/image";
 
 interface EditNodeFormModalProps {
   isOpen: boolean;
@@ -237,10 +238,13 @@ export function EditNodeImageModal({
         <div className="space-y-4">
           <Input type="file" accept="image/*" onChange={handleFileChange} />
           {preview && (
-            <img
+            <Image
               src={preview}
               alt="Preview"
-              className="w-32 h-32 rounded-full object-cover mx-auto"
+              width={128}
+              height={128}
+              className="w-32 h-32 object-cover rounded-md mt-2"
+              unoptimized
             />
           )}
           <Button onClick={handleSubmit} disabled={!file}>

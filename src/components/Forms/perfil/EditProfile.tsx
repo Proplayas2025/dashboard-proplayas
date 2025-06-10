@@ -17,6 +17,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import type { User } from "@/interfaces/Profile";
+import Image from "next/image";
 
 interface EditProfileFormModalProps {
   isOpen: boolean;
@@ -186,7 +187,8 @@ export function EditProfileFormModal({
                   type="button"
                   onClick={() => {
                     const updated =
-                      formData.social_media?.filter((_, i) => i !== index) || [];
+                      formData.social_media?.filter((_, i) => i !== index) ||
+                      [];
                     setFormData({ ...formData, social_media: updated });
                   }}
                 >
@@ -255,10 +257,13 @@ export function EditProfileImageModal({
         <div className="space-y-4">
           <Input type="file" accept="image/*" onChange={handleFileChange} />
           {preview && (
-            <img
+            <Image
               src={preview}
               alt="Preview"
-              className="w-32 h-32 rounded-full object-cover mx-auto"
+              width={128}
+              height={128}
+              className="w-32 h-32 object-cover rounded-md mt-2"
+              unoptimized
             />
           )}
           <Button onClick={handleSubmit} disabled={!file}>

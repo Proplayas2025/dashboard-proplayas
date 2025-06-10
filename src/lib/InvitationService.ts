@@ -1,5 +1,5 @@
 import axiosInstance from "@/lib/axiosInstance";
-import type { InviteNodeMember,  InviteNodeLeader, ApiResponse } from "@/interfaces/Invitations";
+import type { InviteNodeMember,  InviteNodeLeader, ApiResponse, RegisterNodeLeaderRequest, RegisterNodeMemberRequest } from "@/interfaces/Invitations";
 
 export default class InvitationService {
     
@@ -25,7 +25,7 @@ export default class InvitationService {
     }
 
     // Método general para registrar nuevos usuarios
-    async registerNewUser(data: any): Promise<ApiResponse<any>> {
+    async registerNewUser<T extends RegisterNodeLeaderRequest | RegisterNodeMemberRequest>(data: T): Promise<ApiResponse<RegisterNodeLeaderRequest | RegisterNodeMemberRequest>> {
         try {
             const response = await axiosInstance.post("/invitations/accept", data);
             return response.data; //{status, message, data : {user:{}, node:}}

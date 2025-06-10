@@ -48,6 +48,10 @@ export const system: SystemConfig = {
         send: {
             authorization(): string | null {
                 try {
+                    // Verificar si estamos en el navegador
+                    if (typeof window === 'undefined') {
+                        return null; // Estamos en el servidor, retornamos null
+                    }
                     // Busca el token en cookies (cliente)
                     return getCookie("Authorization") || null;
                 } catch (error) {
@@ -59,6 +63,9 @@ export const system: SystemConfig = {
 
         check: {
             live(): boolean {
+                if (typeof window === 'undefined') {
+                    return false; // Estamos en el servidor
+                }
                 const token = getCookie("Authorization");
                 if (!token) {
                     system.handlerError.handleError(401, "Página no disponible.");
@@ -67,6 +74,9 @@ export const system: SystemConfig = {
                 return true;
             },
             auth(): boolean {
+                if (typeof window === 'undefined') {
+                    return false; // Estamos en el servidor
+                }
                 return !!getCookie("Authorization");
             },
         },

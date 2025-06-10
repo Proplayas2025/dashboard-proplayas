@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
 // Props genéricos para reutilizar en cualquier tipo de contenido
-interface EditFileModalProps<T = any> {
+interface EditFileModalProps<T> {
   isOpen: boolean;
   item: T | null;
   onClose: () => void;
@@ -17,7 +17,7 @@ interface EditFileModalProps<T = any> {
 }
 
 // Modal genérico para archivos (imagen o archivo adjunto)
-export function EditFileModal<T = any>({
+export function EditFileModal<T>({
   isOpen,
   item,
   onClose,
@@ -73,7 +73,7 @@ export function EditFileModal<T = any>({
 }
 
 // Alias para imagen de portada
-export function EditCoverImageModal<T = any>(props: Omit<EditFileModalProps<T>, "accept" | "label" | "title">) {
+export function EditCoverImageModal<T>(props: Omit<EditFileModalProps<T>, "accept" | "label" | "title">) {
   return (
     <EditFileModal
       {...props}
@@ -85,7 +85,7 @@ export function EditCoverImageModal<T = any>(props: Omit<EditFileModalProps<T>, 
 }
 
 // Alias para archivo adjunto
-export function EditAttachmentFileModal<T = any>(props: Omit<EditFileModalProps<T>, "accept" | "label" | "title">) {
+export function EditAttachmentFileModal<T>(props: Omit<EditFileModalProps<T>, "accept" | "label" | "title">) {
   return (
     <EditFileModal
       {...props}

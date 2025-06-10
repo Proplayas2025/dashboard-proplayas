@@ -1,10 +1,17 @@
 "use client";
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import Image from "next/image";
 
 interface CreateBookModalProps {
   isOpen: boolean;
@@ -32,7 +39,9 @@ export const CreateBookModal: React.FC<CreateBookModalProps> = ({
 
   const [preview, setPreview] = useState<string | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value, type } = e.target;
     if (type === "file") {
       const file = (e.target as HTMLInputElement).files?.[0] || null;
@@ -57,11 +66,14 @@ export const CreateBookModal: React.FC<CreateBookModalProps> = ({
     data.append("title", formData.title);
     data.append("book_author", formData.book_author);
     data.append("description", formData.description);
-    if (formData.publication_date) data.append("publication_date", formData.publication_date);
+    if (formData.publication_date)
+      data.append("publication_date", formData.publication_date);
     if (formData.isbn) data.append("isbn", formData.isbn);
     if (formData.link) data.append("link", formData.link);
-    if (formData.cover_image_file) data.append("cover_image_file", formData.cover_image_file);
-    if (formData.cover_image_url) data.append("cover_image_url", formData.cover_image_url);
+    if (formData.cover_image_file)
+      data.append("cover_image_file", formData.cover_image_file);
+    if (formData.cover_image_url)
+      data.append("cover_image_url", formData.cover_image_url);
     if (formData.file_file) data.append("file_file", formData.file_file);
     if (formData.file_url) data.append("file_url", formData.file_url);
 
@@ -91,7 +103,11 @@ export const CreateBookModal: React.FC<CreateBookModalProps> = ({
         <DialogHeader>
           <DialogTitle>Crear Libro</DialogTitle>
         </DialogHeader>
-        <form className="space-y-4" onSubmit={handleSubmit} encType="multipart/form-data">
+        <form
+          className="space-y-4"
+          onSubmit={handleSubmit}
+          encType="multipart/form-data"
+        >
           <div className="flex flex-col gap-1">
             <Label htmlFor="title">Título</Label>
             <Input
@@ -166,10 +182,13 @@ export const CreateBookModal: React.FC<CreateBookModalProps> = ({
               onChange={handleChange}
             />
             {preview && (
-              <img
+              <Image
                 src={preview}
                 alt="Preview"
-                className="w-32 h-44 object-cover rounded-md mt-2"
+                width={128}
+                height={128}
+                className="w-32 h-32 object-cover rounded-md mt-2"
+                unoptimized
               />
             )}
           </div>
@@ -216,4 +235,3 @@ export const CreateBookModal: React.FC<CreateBookModalProps> = ({
     </Dialog>
   );
 };
-

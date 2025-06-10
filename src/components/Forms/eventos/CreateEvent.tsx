@@ -1,14 +1,35 @@
 "use client";
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import Image from "next/image";
 
 const eventTypes = [
-  "event", "taller", "clase", "curso", "seminario", "foro", "conferencia", "congreso", "webinar"
+  "event",
+  "taller",
+  "clase",
+  "curso",
+  "seminario",
+  "foro",
+  "conferencia",
+  "congreso",
+  "webinar",
 ] as const;
 
 const formats = ["presencial", "online"] as const;
@@ -41,7 +62,9 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
 
   const [preview, setPreview] = useState<string | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value, type } = e.target;
     if (type === "file") {
       const file = (e.target as HTMLInputElement).files?.[0] || null;
@@ -103,11 +126,19 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
     data.append("link", formData.link);
     data.append("format", formData.format);
     if (formData.location) data.append("location", formData.location);
-    if (formData.participants && formData.participants.filter(Boolean).length > 0) {
-      data.append("participants", JSON.stringify(formData.participants.filter(Boolean)));
+    if (
+      formData.participants &&
+      formData.participants.filter(Boolean).length > 0
+    ) {
+      data.append(
+        "participants",
+        JSON.stringify(formData.participants.filter(Boolean))
+      );
     }
-    if (formData.cover_image_file) data.append("cover_image_file", formData.cover_image_file);
-    if (formData.cover_image_url) data.append("cover_image_url", formData.cover_image_url);
+    if (formData.cover_image_file)
+      data.append("cover_image_file", formData.cover_image_file);
+    if (formData.cover_image_url)
+      data.append("cover_image_url", formData.cover_image_url);
     if (formData.file_file) data.append("file_file", formData.file_file);
     if (formData.file_url) data.append("file_url", formData.file_url);
 
@@ -139,7 +170,11 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
         <DialogHeader>
           <DialogTitle>Crear Evento</DialogTitle>
         </DialogHeader>
-        <form className="space-y-4" onSubmit={handleSubmit} encType="multipart/form-data">
+        <form
+          className="space-y-4"
+          onSubmit={handleSubmit}
+          encType="multipart/form-data"
+        >
           <div className="flex flex-col gap-1">
             <Label htmlFor="title">Título</Label>
             <Input
@@ -238,7 +273,7 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
               <div key={idx} className="flex gap-2 mb-1">
                 <Input
                   value={p}
-                  onChange={e => handleParticipantChange(idx, e.target.value)}
+                  onChange={(e) => handleParticipantChange(idx, e.target.value)}
                   placeholder={`Participante ${idx + 1}`}
                 />
                 <Button
@@ -251,7 +286,12 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
                 </Button>
               </div>
             ))}
-            <Button type="button" variant="outline" onClick={addParticipant} size="sm">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={addParticipant}
+              size="sm"
+            >
               + Agregar participante
             </Button>
           </div>
@@ -265,10 +305,13 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
               onChange={handleChange}
             />
             {preview && (
-              <img
+              <Image
                 src={preview}
                 alt="Preview"
+                width={128}
+                height={128}
                 className="w-32 h-32 object-cover rounded-md mt-2"
+                unoptimized
               />
             )}
           </div>

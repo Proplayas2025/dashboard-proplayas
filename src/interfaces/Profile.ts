@@ -17,7 +17,7 @@ export interface User {
     status: string;
 }
 export interface Users {
-    user_id: number;
+    id: number;
     name: string;
     email: string;
     role: string;
@@ -29,9 +29,17 @@ export interface ApiResponse<T> {
     status: number;
     message: string;
     data: T;
+    meta?: PaginationMeta; 
 }
 
 export interface SocialLink {
     platform: 'linkedin' | 'github' | 'twitter' | 'website' | 'facebook' | 'instagram' | 'youtube' | 'research_gate' | 'phone';
     url: string;
+}
+
+export interface PaginationMeta {
+  current_page: number;
+  per_page: number;
+  total: number;
+  last_page: number;
 }

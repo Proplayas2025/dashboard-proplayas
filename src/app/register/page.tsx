@@ -1,11 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import RegisterNodeLeaderForm from "@/components/Forms/register/RegisterNodeLeaderForm";
 import RegisterNodeMemberForm from "@/components/Forms/register/RegisterNodeMemberForm";
+
+import {
+  RegisterNodeLeaderRequest,
+  RegisterNodeMemberRequest,
+} from "@/interfaces/Invitations";
 
 import { toast } from "sonner";
 import InvitationService from "@/lib/InvitationService";
@@ -15,10 +20,18 @@ interface DecodedToken {
   email: string;
   role_type: string;
   node_type?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div className="flex flex-col items-center justify-center min-h-[60vh]"><p className="text-lg font-semibold">Cargando...</p></div>}>
+      <RegisterContent />
+    </Suspense>
+  );
+}
+
+function RegisterContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const [decoded, setDecoded] = useState<DecodedToken | null>(null);
@@ -48,17 +61,24 @@ export default function RegisterPage() {
       if (typeof confirmPassword === "string") {
         formData.set("confirm_password", btoa(confirmPassword));
       }
-      const response = await invitationService.registerNewUser(formData);
+      const plainObject = Object.fromEntries(formData.entries());
+      const response = await invitationService.registerNewUser(
+        plainObject as unknown as
+          | RegisterNodeLeaderRequest
+          | RegisterNodeMemberRequest
+      );
       const { status, message, data } = response;
 
       if (status === 201 && data) {
         toast.success("Registro exitoso. ¡Bienvenido!");
-        router.push('/login');
+        router.push("/login");
         return;
       }
 
       if (status === 400) {
-        toast.error("El token ya fue utilizado o ha expirado. Solicita una nueva invitación.");
+        toast.error(
+          "El token ya fue utilizado o ha expirado. Solicita una nueva invitación."
+        );
         return;
       }
 
@@ -69,7 +89,7 @@ export default function RegisterPage() {
 
       // Otros errores
       toast.error(message || "Error al registrar. Intenta de nuevo.");
-    } catch  {
+    } catch {
       toast.error("Error inesperado al registrar. Intenta de nuevo.");
     } finally {
       setLoading(false);
@@ -79,7 +99,9 @@ export default function RegisterPage() {
   if (!token) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh]">
-        <p className="text-lg font-semibold">No se encontró un token de invitación.</p>
+        <p className="text-lg font-semibold">
+          No se encontró un token de invitación.
+        </p>
       </div>
     );
   }
@@ -128,7 +150,8 @@ export default function RegisterPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh]">
       <p className="text-lg font-semibold">
-        El tipo de invitación no es soportado aún: <span className="font-mono">{decoded.role_type}</span>
+        El tipo de invitación no es soportado aún:{" "}
+        <span className="font-mono">{decoded.role_type}</span>
       </p>
     </div>
   );
