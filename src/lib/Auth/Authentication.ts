@@ -49,6 +49,7 @@ export class Authentication {
     localStorage.removeItem("Authorization");
     localStorage.removeItem("role");
     localStorage.removeItem("node_id");
+    localStorage.removeItem("email");
     system.authToken = null;
     system.role = null;
   }
