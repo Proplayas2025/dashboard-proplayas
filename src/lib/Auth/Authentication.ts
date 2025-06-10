@@ -86,20 +86,12 @@ export class Authentication {
         message: message || (status === 200 ? "Sesión cerrada correctamente" : "Error al cerrar sesión"),
         data: null
       };
-    } catch (error: any) {
-      console.error("Error al cerrar sesión");
+    } catch (err: unknown) {
       this.clearSession();
-      if (error?.response?.data) {
-        const { status, message } = error.response.data;
-        return {
-          status: status || 500,
-          message: message || "Error al cerrar sesión",
-          data: null
-        };
-      }
+      const error = err as { response?: { data?: { status?: number; message?: string } } };
       return {
-        status: 500,
-        message: "Error al cerrar sesión",
+        status: error.response?.data?.status ?? 500,
+        message: error.response?.data?.message ?? "Error al cerrar sesión",
         data: null
       };
     }
@@ -114,18 +106,11 @@ export class Authentication {
         message: message || "Recuperación no exitosa",
         data: null
       };
-    } catch (error: any) {
-      if (error?.response?.data) {
-        const { status, message } = error.response.data;
-        return {
-          status: status || 500,
-          message: message || "Hubo un error en la recuperación",
-          data: null
-        };
-      }
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { status?: number; message?: string } } };
       return {
-        status: 500,
-        message: "Hubo un error en la recuperación",
+        status: error.response?.data?.status ?? 500,
+        message: error.response?.data?.message ?? "Hubo un error en la recuperación",
         data: null
       };
     }
@@ -143,18 +128,11 @@ export class Authentication {
         message: message || "Recuperación no exitosa",
         data: null
       };
-    } catch (error: any) {
-      if (error?.response?.data) {
-        const { status, message } = error.response.data;
-        return {
-          status: status || 500,
-          message: message || "Hubo un error en la recuperación",
-          data: null
-        };
-      }
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { status?: number; message?: string } } };
       return {
-        status: 500,
-        message: "Hubo un error en la recuperación",
+        status: error.response?.data?.status ?? 500,
+        message: error.response?.data?.message ?? "Hubo un error en la recuperación",
         data: null
       };
     }

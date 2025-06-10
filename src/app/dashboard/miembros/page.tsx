@@ -11,6 +11,8 @@ import { IconPlus } from "@tabler/icons-react";
 import { Loader2 } from "lucide-react";
 import InviteNodeMemberForm from "@/components/Forms/invitations/InviteNodeMember";
 import InvitationService from "@/lib/InvitationService";
+import type { InviteNodeMember } from "@/interfaces/Invitations";
+
 import { toast } from "sonner";
 
 export default function Page() {
@@ -49,7 +51,7 @@ export default function Page() {
     setShowModal(true);
   };
 
-  const handleInviteSubmit = async (data: any) => {
+  const handleInviteSubmit = async (data: InviteNodeMember) => {
     setInviteLoading(true);
     try {
       await invitationService.createInvitationToNodeMember(data);

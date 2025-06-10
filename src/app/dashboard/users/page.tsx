@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import { UsersTable } from "@/components/users-table";
 import { UserService } from "@/lib/UserController";
 import { SiteHeader } from "@/components/site-header";
-import { Users } from "@/interfaces/Profile";
+import { Users, PaginationMeta } from "@/interfaces/Profile";
 import { Loader2 } from "lucide-react";
 
 export default function Page() {
@@ -12,7 +12,8 @@ export default function Page() {
   const [users, setUsers] = useState<Users[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [meta, setMeta] = useState({
+
+  const [meta, setMeta] = useState<PaginationMeta>({
     current_page: 1,
     per_page: 10,
     total: 0,
@@ -26,16 +27,27 @@ export default function Page() {
       try {
         const res = await userService.fetchUsers(page, pageSize);
         setUsers(res?.data || []);
-        setMeta(res?.meta || {});
-      } catch (e) {
+        setMeta(
+          res?.meta ?? {
+            current_page: 1,
+            per_page: 10,
+            total: 0,
+            last_page: 1,
+          }
+        );
+      } catch {
         setUsers([]);
-        setMeta({});
+        setMeta({
+          current_page: 1,
+          per_page: 10,
+          total: 0,
+          last_page: 1,
+        });
       }
       setLoading(false);
     },
     [userService]
   );
-
   const handleDelete = async (email: string) => {
     const user = users.find((u) => u.email === email);
     if (!user) return;
@@ -45,6 +57,7 @@ export default function Page() {
 
   const handleToggleStatus = async (email: string) => {
     // Aquí podrías implementar la lógica para activar/desactivar usuario si tu API lo permite
+    console.log(`Usuario con email ${email} cambiando de status`);
     fetchUsers(page, pageSize);
   };
 

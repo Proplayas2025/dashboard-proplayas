@@ -13,7 +13,7 @@ export default function Home() {
     } else {
       router.replace('/login') // o alguna pantalla pública o de error
     }
-  }, [])
+  }, [router])
 
   return null
 }

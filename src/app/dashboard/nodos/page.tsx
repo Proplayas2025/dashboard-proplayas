@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { IconPlus } from "@tabler/icons-react";
 import InviteNodeForm from "@/components/Forms/invitations/InviteNodeLeaderForm";
 import InvitationService from "@/lib/InvitationService";
+import {InviteNodeLeader} from "@/interfaces/Invitations";
 import { toast } from "sonner"; // Si usas alguna librería de notificaciones
 
 export default function Page() {
@@ -32,6 +33,7 @@ export default function Page() {
   }, [nodoService]);
 
   const handleToggleStatus = async (id: number) => {
+    console.log(`usuario con id ${id} desactivado`);
     // Aquí podrías implementar la lógica para activar/desactivar el nodo si tu API lo permite
     // Por ahora solo recargamos la lista
     fetchNodes();
@@ -47,7 +49,7 @@ export default function Page() {
     // Aquí puedes abrir tu modal
   };
 
-  const handleInviteSubmit = async (data: any) => {
+  const handleInviteSubmit = async (data: InviteNodeLeader) => {
     setInviteLoading(true);
     try {
       await invitationService.createInvitationToNodeLeader(data);

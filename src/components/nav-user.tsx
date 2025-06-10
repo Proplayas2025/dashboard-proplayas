@@ -36,7 +36,7 @@ export function NavUser({
   const handleLogout = async () => {
     const { status, message, data} = await auth.logout();
     if (status !== 200) {
-      toast.error(`Error al cerrar sesión: ${message}`);
+      toast.error(`Error al cerrar sesión: ${message} and data is ${data}`);
       router.push("/login"); // Cambia la ruta si tu login está en otra URL
       return;
     }
