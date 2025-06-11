@@ -1,13 +1,15 @@
-// filepath: /app/public/layout.tsx
+// filepath: /app/public/layout.tsx esta es la envoltura de todas las paginas publicas
 "use client";
 import { AppHeader } from "@/components/app-header";
+import { ReactLenis } from "lenis/react";
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col min-h-screen">
-      <header>
+      <header className="h-16">
         <AppHeader />
       </header>
+      <ReactLenis root />
       <main className="flex-1">{children}</main>
     </div>
   );

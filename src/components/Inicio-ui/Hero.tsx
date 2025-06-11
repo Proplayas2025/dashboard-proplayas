@@ -8,7 +8,7 @@ export default function Hero() {
   return (
     <section className="w-full py-12 md:py-20 bg-blue-100 dark:bg-zinc-700">
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-center gap-8">
-        {/* Texto a la izquierda */}
+        {/* Columna a la izquierda */}
         <div className="flex-1 max-w-xl flex flex-col items-center md:items-start text-center md:text-left">
           <h1 className="text-4xl md:text-6xl font-bold text-cyan-800 dark:text-white mb-4">
             Red Proplayas
@@ -27,7 +27,7 @@ export default function Hero() {
           </Button>
         </div>
         {/* Logo a la derecha */}
-        <div className="flex-1 flex justify-center items-center">
+        <div className="flex-1 max-w-md flex flex-col items-center">
           <div className="flex justify-center items-center w-full h-full">
             <Image
               src="/proplayas_logo.svg"
