@@ -12,16 +12,31 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { useEffect, useState } from "react";
+import { Authentication } from "@/lib/Auth/Authentication";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { ChevronDown } from "lucide-react";
 
 export function AppHeader() {
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     // Busca el email en la cookie (ajusta el nombre si es diferente)
     const email = localStorage.getItem("email");
     setUserEmail(email ?? null);
   }, []);
-
+  const handleLogout = async () => {
+    const auth = new Authentication();
+    const { status, message } = await auth.logout();
+    if (status !== 200) {
+      toast.error(`Error al cerrar sesión: ${message}`);
+      router.push("/login");
+      return;
+    }
+    toast.success("Sesión cerrada correctamente");
+    router.push("/login");
+  };
   return (
     <header className="w-full bg-white dark:bg-zinc-900 border-b shadow-sm">
       <nav className="container mx-auto flex items-center h-16 px-4 gap-6 relative">
@@ -49,36 +64,48 @@ export function AppHeader() {
             Inicio
           </Link>
           <Link
-            href="/quienes-somos"
+            href="/public/quienes-somos"
             className="text-gray-700 dark:text-white hover:text-blue-600 transition font-medium"
           >
             Quienes Somos
           </Link>
           <Link
-            href="/actividades"
+            href="/public/actividades/eventos"
             className="text-gray-700 dark:text-white hover:text-blue-600 transition font-medium"
           >
             Actividades
           </Link>
           <Link
-            href="/nodos"
+            href="/public/nodos"
             className="text-gray-700 dark:text-white hover:text-blue-600 transition font-medium"
           >
             Nodos
           </Link>
           {userEmail ? (
-            <Button asChild variant="outline">
-              <Link href="/dashboard/perfil">{userEmail}</Link>
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="flex items-center gap-2">
+                  {userEmail}
+                  <ChevronDown size={16} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <Link href="/dashboard/perfil">Perfil</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>
+                  Cerrar sesión
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
-            <Button
-              asChild variant="outline">
+            <Button asChild variant="outline">
               <Link href="/login">Login</Link>
             </Button>
           )}
         </nav>
         <div>
-          <ModeToggle/>
+          <ModeToggle />
         </div>
         {/* Dropdown menú en mobile */}
         <div className="md:hidden">
@@ -96,21 +123,37 @@ export function AppHeader() {
                 <Link href="/">Inicio</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/quienes-somos">Quienes Somos</Link>
+                <Link href="/public/quienes-somos">Quienes Somos</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/actividades">Actividades</Link>
+                <Link href="/public/actividades">Actividades</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/nodos">Nodos</Link>
+                <Link href="/public/nodos">Nodos</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 {userEmail ? (
-                  <Button asChild variant={"outline"}>
-                    <Link href="/dashboard/perfil">{userEmail}</Link>
-                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full flex items-center gap-2"
+                      >
+                        {userEmail}
+                        <ChevronDown size={16} />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem asChild>
+                        <Link href="/dashboard/perfil">Perfil</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={handleLogout}>
+                        Cerrar sesión
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 ) : (
-                  <Button asChild variant={"outline"}>
+                  <Button asChild variant="outline">
                     <Link href="/login">Login</Link>
                   </Button>
                 )}

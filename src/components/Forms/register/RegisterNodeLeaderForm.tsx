@@ -51,7 +51,6 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
     email: initialValues?.email || "",
     password: "",
     confirm_password: "",
-    username: "",
     about_user: "",
     degree: "",
     postgraduate: "",
@@ -68,11 +67,9 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
     about_node: "",
     country_node: "",
     city_node: "",
-    ip_address: "",
     coordinates: "",
     alt_places: "",
     joined_in: undefined,
-    id: "",
     social_media_node: [],
     memorandum: "",
     node_type: initialValues?.node_type || "",
@@ -148,7 +145,7 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-[70vh] overflow-y-auto pr-2">
         {/* Columna izquierda: Datos personales */}
-        <div className="flex flex-col gap-4 bg-gray-100 rounded-lg p-4">
+        <div className="flex flex-col gap-4 rounded-lg p-4">
           <div className="mb-2">
             <Label className="text-base font-semibold text-blue-900">Datos personales</Label>
           </div>
@@ -216,8 +213,8 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
             </div>
           )}
 
-          <Label htmlFor="username">Usuario</Label>
-          <Input id="username" name="username" value={form.username} onChange={handleChange} autoComplete="username"/>
+          {/* <Label htmlFor="username">Usuario</Label>
+          <Input id="username" name="username" value={form.username} onChange={handleChange} autoComplete="username"/> */}
 
           <Label htmlFor="degree">Grado académico</Label>
           <Input id="degree" name="degree" value={form.degree} onChange={handleChange} />
@@ -237,10 +234,10 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
           <Label htmlFor="profile_picture">URL foto de perfil</Label>
           <Input id="profile_picture" name="profile_picture" value={form.profile_picture} onChange={handleChange} />
 
-          <Label htmlFor="country_user">País (usuario)</Label>
+          <Label htmlFor="country_user">País* (usuario)</Label>
           <Input id="country_user" name="country_user" value={form.country_user} onChange={handleChange} />
 
-          <Label htmlFor="city_user">Ciudad (usuario)</Label>
+          <Label htmlFor="city_user">Ciudad* (usuario)</Label>
           <Input id="city_user" name="city_user" value={form.city_user} onChange={handleChange} />
 
           <Label htmlFor="about_user">Sobre el usuario</Label>
@@ -310,7 +307,7 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
 
         </div>
         {/* Columna derecha: Datos del nodo */}
-        <div className="flex flex-col gap-4 bg-gray-100 rounded-lg p-4">
+        <div className="flex flex-col gap-4 rounded-lg p-4">
           <div className="mb-2">
             <Label className="text-base font-semibold text-green-900">Datos del nodo</Label>
           </div>
@@ -323,14 +320,11 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
           <Label htmlFor="profile_picture_node">URL foto nodo</Label>
           <Input id="profile_picture_node" name="profile_picture_node" value={form.profile_picture_node} onChange={handleChange} />
 
-          <Label htmlFor="country_node">País (nodo)</Label>
+          <Label htmlFor="country_node">País* (nodo)</Label>
           <Input id="country_node" name="country_node" value={form.country_node} onChange={handleChange} />
 
-          <Label htmlFor="city_node">Ciudad (nodo)</Label>
+          <Label htmlFor="city_node">Ciudad* (nodo)</Label>
           <Input id="city_node" name="city_node" value={form.city_node} onChange={handleChange} />
-
-          <Label htmlFor="ip_address">IP</Label>
-          <Input id="ip_address" name="ip_address" value={form.ip_address} onChange={handleChange} />
 
           <Label htmlFor="coordinates">Coordenadas</Label>
           <Input id="coordinates" name="coordinates" value={form.coordinates} onChange={handleChange} />
@@ -338,11 +332,9 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
           <Label htmlFor="alt_places">Lugares alternos</Label>
           <Input id="alt_places" name="alt_places" value={form.alt_places} onChange={handleChange} />
 
-          <Label htmlFor="joined_in">Año de ingreso</Label>
+          <Label htmlFor="joined_in">Año de ingreso*</Label>
           <Input id="joined_in" name="joined_in" type="number" min={2000} max={new Date().getFullYear()} value={form.joined_in || ""} onChange={handleChange} />
 
-          <Label htmlFor="id">ID</Label>
-          <Input id="id" name="id" value={form.id} onChange={handleChange} />
 
           <Label htmlFor="about_node">Sobre el nodo</Label>
           <Textarea id="about_node" name="about_node" value={form.about_node} onChange={handleChange} />

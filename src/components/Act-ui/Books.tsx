@@ -1,51 +1,27 @@
 "use client";
-import React from "react";
+
 import { Books } from "@/interfaces/Content";
-import {
-  IconPencil,
-  IconTrash,
-  IconFileText,
-  IconExternalLink,
-  IconPhoto,
-  IconUpload,
-} from "@tabler/icons-react";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { IconFileText, IconExternalLink } from "@tabler/icons-react";
 
 const COVER_URL = process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
-const FILES_PATH = process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
+const FILES_URL = process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
 
 interface BookCardProps {
   book: Books;
-  onEdit?: (book: Books) => void;
-  onDelete?: (book: Books) => void;
-  onChangeImage?: (book: Books) => void;
-  onChangeFile?: (book: Books) => void;
 }
 
-export const BookCard: React.FC<BookCardProps> = ({
-  book,
-  onEdit,
-  onDelete,
-  onChangeImage,
-  onChangeFile,
-}) => {
-  // Usa cover_image_url si viene completa, si no, arma la ruta con COVER_URL y cover_image
+export const BookCard: React.FC<BookCardProps> = ({ book }) => {
   const imageUrl =
     book.cover_image_url ||
     (book.cover_image && COVER_URL
       ? `${COVER_URL}/${book.cover_image}`
       : undefined);
 
-  // Construye la ruta completa del archivo si existe
-  // filePath: Si book.file_path existe y NO empieza con http, concatena FILES_PATH + "/" + file_path
-  // Si empieza con http, úsalo tal cual. Si no existe, undefined.
-  const filePath =
-    book.file_path
-      ? book.file_path.startsWith("http")
-        ? book.file_path
-        : `${FILES_PATH}/${book.file_path.replace(/^\/+/, "")}`
-      : undefined;
+  const fileUrl =
+    book.file_url && !book.file_url.startsWith("http")
+      ? `${FILES_URL}/${book.file_url}`
+      : book.file_url || undefined;
 
   return (
     <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-md p-4 flex flex-col md:flex-row gap-4 items-center">
@@ -88,10 +64,10 @@ export const BookCard: React.FC<BookCardProps> = ({
           {book.description}
         </p>
         {/* Enlace al archivo */}
-        {filePath && (
+        {fileUrl && (
           <div className="flex items-center gap-2 mt-2">
             <a
-              href={filePath}
+              href={fileUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-blue-600 dark:text-blue-400 underline text-sm"
@@ -115,42 +91,6 @@ export const BookCard: React.FC<BookCardProps> = ({
             Ver libro
           </a>
         )}
-        <div className="flex gap-2 mt-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => onEdit?.(book)}
-            title="Editar"
-          >
-            <IconPencil size={18} />
-          </Button>
-          <Button
-            variant="destructive"
-            size="icon"
-            onClick={() => onDelete?.(book)}
-            title="Eliminar"
-          >
-            <IconTrash size={18} />
-          </Button>
-          {/* Botón para cambiar imagen de portada */}
-          <Button
-            variant="secondary"
-            size="icon"
-            onClick={() => onChangeImage?.(book)}
-            title="Cambiar imagen de portada"
-          >
-            <IconPhoto size={18} />
-          </Button>
-          {/* Botón para cambiar archivo adjunto */}
-          <Button
-            variant="secondary"
-            size="icon"
-            onClick={() => onChangeFile?.(book)}
-            title="Cambiar archivo adjunto"
-          >
-            <IconUpload size={18} />
-          </Button>
-        </div>
       </div>
     </div>
   );

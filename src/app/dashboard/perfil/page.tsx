@@ -8,7 +8,18 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { IconPencil, IconWorld, IconPin } from "@tabler/icons-react";
 // Puedes crear estos componentes modales como en el nodo, o usar los mismos si son genéricos
-import { EditProfileFormModal, EditProfileImageModal } from "@/components/Forms/perfil/EditProfile";
+import {
+  EditProfileFormModal,
+  EditProfileImageModal,
+} from "@/components/Forms/perfil/EditProfile";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default function Page() {
   const profileService = useMemo(() => new ProfileService(), []);
@@ -63,6 +74,7 @@ export default function Page() {
     <>
       <SiteHeader />
       <div className="flex flex-1 flex-col">
+        {/* Esta es la card que muestra informacion */}
         <div className="@container/main flex flex-1 flex-col gap-2 mb-3">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-12">
@@ -72,117 +84,117 @@ export default function Page() {
               </span>
             </div>
           ) : user ? (
-            <div className="bg-white dark:bg-zinc-700 shadow-md rounded-lg p-6 grid grid-cols-1 md:grid-cols-[300px_minmax(600px,_1fr)] gap-6 relative">
-              <div className="flex flex-col items-center md:items-start">
-                <div className="relative w-32 h-32 md:w-48 md:h-48 group">
-                  {user.profile_picture ? (
-                    <Image
-                      width={192}
-                      height={192}
-                      src={
-                        typeof user.profile_picture === "string"
-                          ? `${
-                              process.env.NEXT_PUBLIC_PROFILE_COVER_URL || ""
-                            }${user.profile_picture}`
-                          : URL.createObjectURL(user.profile_picture as never)
-                      }
-                      alt="Foto de perfil"
-                      className="w-full h-full rounded-full border-2 border-gray-300 object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gray-200 rounded-full border-2 border-gray-300">
-                      <span className="text-gray-400">Sin foto</span>
-                    </div>
-                  )}
-                  <button
-                    onClick={() => setShowEditImage(true)}
-                    className="bg-white dark:bg-zinc-800 dark:hover:bg-zinc-700 hover:bg-gray-100 absolute top-2 right-2 p-1 rounded-full shadow"
-                  >
-                    <IconPencil size={18} />
-                  </button>
+            <Card className="p-6 grid grid-cols-1 md:grid-cols-[300px_minmax(600px,_1fr)] gap-6 relative">
+              <CardContent className="flex flex-col items-center md:items-start p-0">
+              <div className="relative w-32 h-32 md:w-48 md:h-48 group">
+                {user.profile_picture ? (
+                <Image
+                  width={192}
+                  height={192}
+                  src={
+                  typeof user.profile_picture === "string"
+                    ? `${
+                      process.env.NEXT_PUBLIC_PROFILE_COVER_URL || ""
+                    }${user.profile_picture}`
+                    : URL.createObjectURL(user.profile_picture as never)
+                  }
+                  alt="Foto de perfil"
+                  className="w-full h-full rounded-full border-2 border-gray-300 object-cover"
+                />
+                ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gray-200 rounded-full border-2 border-gray-300">
+                  <span className="text-gray-400">Sin foto</span>
                 </div>
-                <div className="my-3 text-center md:text-left">
-                  <h1 className="text-2xl font-semibold text-gray-500 dark:text-white">
-                    {user.name}
-                  </h1>
-                  <p className="text-gray-400">@{user.username}</p>
-                </div>
-                <div className="flex gap-2 text-gray-500 dark:text-white">
-                  <p>{user.degree}</p>
-                  {user.postgraduate && <span>- {user.postgraduate}</span>}
-                </div>
-                <p className="text-gray-400 dark:text-white text-center md:text-left">
-                  {user.email}
-                </p>
-                {/* País y ciudad */}
-                <div className="flex flex-col gap-1 text-gray-500 dark:text-white mt-2">
-                  <span>
-                    <IconWorld size={16} className="inline mr-1" />
-                    <span className="font-semibold">País:</span> {user.country}
-                  </span>
-                  <span>
-                    <IconPin size={16} className="inline mr-1" />
-                    <span className="font-semibold">Ciudad:</span> {user.city}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex flex-col justify-between relative">
-                <div className="absolute top-4 right-4">
-                  <button
-                    onClick={() => setShowEditInfo(true)}
-                    className="bg-white dark:bg-zinc-800 dark:hover:bg-zinc-700 hover:bg-gray-100 p-1 rounded-full shadow"
-                  >
-                    <IconPencil size={18} />
-                  </button>
-                </div>
-                <div>
-                  <h1 className="text-2xl font-semibold text-gray-500 dark:text-white">
-                    Sobre mí
-                  </h1>
-                  <p className="text-gray-600 dark:text-white mt-2">
-                    {user.about}
-                  </p>
-                  <div className="mt-4">
-                    <h2 className="text-lg font-semibold text-gray-500 dark:text-white">
-                      Área de experiencia
-                    </h2>
-                    <p className="text-gray-600 dark:text-white">
-                      {user.expertise_area}
-                    </p>
-                  </div>
-                  <div className="mt-4">
-                    <h2 className="text-lg font-semibold text-gray-500 dark:text-white">
-                      Trabajo de investigación
-                    </h2>
-                    <p className="text-gray-600 dark:text-white">
-                      {user.research_work}
-                    </p>
-                  </div>
-                </div>
-
-                {user.social_media && user.social_media.length > 0 && (
-                  <div className="mt-6">
-                    <h2 className="text-lg font-semibold text-gray-500 dark:text-white">
-                      Redes Sociales:
-                    </h2>
-                    <div className="flex flex-wrap gap-3 mt-2">
-                      {user.social_media.map((link) => (
-                        <a
-                          key={link.platform + link.url}
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-500 transition"
-                        >
-                          {link.platform}
-                        </a>
-                      ))}
-                    </div>
-                  </div>
                 )}
+                <CardAction className="absolute top-2 right-2">
+                <button
+                  onClick={() => setShowEditImage(true)}
+                  className="bg-white dark:bg-zinc-800 dark:hover:bg-zinc-700 hover:bg-gray-100 p-1 rounded-full shadow"
+                >
+                  <IconPencil size={18} />
+                </button>
+                </CardAction>
               </div>
-            </div>
+              <div className="my-3 text-center md:text-left">
+                <CardTitle className="text-2xl font-semibold text-gray-500 dark:text-white">
+                {user.name}
+                </CardTitle>
+                <CardDescription className="text-gray-400">@{user.username}</CardDescription>
+              </div>
+              <div className="flex gap-2 text-gray-500 dark:text-white">
+                <p>{user.degree}</p>
+                {user.postgraduate && <span>- {user.postgraduate}</span>}
+              </div>
+              <p className="text-gray-400 dark:text-white text-center md:text-left">
+                {user.email}
+              </p>
+              <div className="flex flex-col gap-1 text-gray-500 dark:text-white mt-2">
+                <span>
+                <IconWorld size={16} className="inline mr-1" />
+                <span className="font-semibold">País:</span> {user.country}
+                </span>
+                <span>
+                <IconPin size={16} className="inline mr-1" />
+                <span className="font-semibold">Ciudad:</span> {user.city}
+                </span>
+              </div>
+              </CardContent>
+
+              <CardContent className="flex flex-col justify-between relative p-0">
+              <CardAction className="absolute top-4 right-4">
+                <button
+                onClick={() => setShowEditInfo(true)}
+                className="bg-white dark:bg-zinc-800 dark:hover:bg-zinc-700 hover:bg-gray-100 p-1 rounded-full shadow"
+                >
+                <IconPencil size={18} />
+                </button>
+              </CardAction>
+              <div>
+                <CardTitle className="text-2xl font-semibold text-gray-500 dark:text-white">
+                Sobre mí
+                </CardTitle>
+                <CardDescription className="text-gray-600 dark:text-white mt-2">
+                {user.about}
+                </CardDescription>
+                <div className="mt-4">
+                <h2 className="text-lg font-semibold text-gray-500 dark:text-white">
+                  Área de experiencia
+                </h2>
+                <p className="text-gray-600 dark:text-white">
+                  {user.expertise_area}
+                </p>
+                </div>
+                <div className="mt-4">
+                <h2 className="text-lg font-semibold text-gray-500 dark:text-white">
+                  Trabajo de investigación
+                </h2>
+                <p className="text-gray-600 dark:text-white">
+                  {user.research_work}
+                </p>
+                </div>
+              </div>
+              {user.social_media && user.social_media.length > 0 && (
+                <div className="mt-6">
+                <h2 className="text-lg font-semibold text-gray-500 dark:text-white">
+                  Redes Sociales:
+                </h2>
+                <div className="flex flex-wrap gap-3 mt-2">
+                  {user.social_media.map((link) => (
+                  <a
+                    key={link.platform + link.url}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-500 transition"
+                  >
+                    {link.platform}
+                  </a>
+                  ))}
+                </div>
+                </div>
+              )}
+              </CardContent>
+            </Card>
           ) : (
             <div className="text-center text-gray-500 dark:text-gray-400">
               No se pudo cargar el perfil.
@@ -204,7 +216,6 @@ export default function Page() {
         <EditProfileImageModal
           isOpen={showEditImage}
           onClose={() => setShowEditImage(false)}
-
           onUpload={handleUploadImage}
         />
       )}

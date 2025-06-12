@@ -19,6 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { NodosService } from "@/lib/NodoService";
 import { Node } from "@/interfaces/Nodes";
 import Image from "next/image";
+import { useRef } from "react";
 
 interface EditNodeFormModalProps {
   isOpen: boolean;
@@ -249,6 +250,80 @@ export function EditNodeImageModal({
           )}
           <Button onClick={handleSubmit} disabled={!file}>
             Subir Imagen
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+interface EditNodeMemorandumModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onUpload: (fileName: string) => void;
+  nodeCode: string;
+}
+
+export function EditNodeMemorandumModal({
+  isOpen,
+  onClose,
+  onUpload,
+}: EditNodeMemorandumModalProps) {
+  const [file, setFile] = useState<File | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      if (selectedFile.type !== "application/pdf") {
+        setError("Solo se permiten archivos PDF.");
+        setFile(null);
+        setFileName(null);
+        return;
+      }
+      setFile(selectedFile);
+      setFileName(selectedFile.name);
+      setError(null);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!file) return;
+    const formData = new FormData();
+    formData.append("file", file);
+    const nodoService = new NodosService();
+    const response = await nodoService.uploadNodeMemorandum(formData);
+    if (response?.data?.memorandum) {
+      onUpload(response.data.memorandum);
+      onClose();
+    }
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Subir Memorándum (PDF)</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <Input
+            ref={inputRef}
+            type="file"
+            accept="application/pdf"
+            onChange={handleFileChange}
+          />
+          {fileName && (
+            <div className="text-sm text-gray-700">
+              Archivo seleccionado: <span className="font-medium">{fileName}</span>
+            </div>
+          )}
+          {error && (
+            <div className="text-sm text-red-600">{error}</div>
+          )}
+          <Button onClick={handleSubmit} disabled={!file}>
+            Subir Memorándum
           </Button>
         </div>
       </DialogContent>

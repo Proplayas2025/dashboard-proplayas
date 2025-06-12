@@ -1,42 +1,28 @@
 "use client";
-import React, { useState } from "react";
-import { Events } from "@/interfaces/Content";
-import { IconPencil, IconTrash, IconFileText, IconUpload, IconPhoto, IconChevronUp, IconChevronDown } from "@tabler/icons-react";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
 
-const PROFILE_COVER_URL =
-  process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
-const FILES_PATH = process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
+import { Events } from "@/interfaces/Content";
+import Image from "next/image";
 
 interface EventCardProps {
   event: Events;
-  onEdit?: (event: Events) => void;
-  onDelete?: (event: Events) => void;
-  onChangeImage?: (event: Events) => void;
-  onChangeFile?: (event: Events) => void;
 }
 
-export const EventCard: React.FC<EventCardProps> = ({
-  event,
-  onEdit,
-  onDelete,
-  onChangeImage,
-  onChangeFile,
-}) => {
-  const [showParticipants, setShowParticipants] = useState(false);
+export const EventCard: React.FC<EventCardProps> = ({ event }) => {
+  const PROFILE_COVER_URL =
+    process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
+  const FILES_URL =
+    process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
+
   const imageUrl =
     event.cover_image_url ||
     (event.cover_image && PROFILE_COVER_URL
       ? `${PROFILE_COVER_URL}/${event.cover_image}`
       : undefined);
 
-  const filePath =
-    event.file_path
-      ? event.file_path.startsWith("http")
-        ? event.file_path
-        : `${FILES_PATH}/${event.file_path.replace(/^\/+/, "")}`
-      : undefined;
+  const fileUrl =
+    event.file_url && !event.file_url.startsWith("http")
+      ? `${FILES_URL}/${event.file_url}`
+      : event.file_url || undefined;
 
   const participants: string[] =
     typeof event.participants === "string" && (event.participants as string).trim().startsWith("[")
@@ -95,39 +81,29 @@ export const EventCard: React.FC<EventCardProps> = ({
             </span>
           )}
         </div>
-        {/* Participantes colapsable */}
+        {/* Participantes */}
         {participants.length > 0 && (
           <div className="mt-2">
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="flex items-center gap-1"
-              onClick={() => setShowParticipants((v) => !v)}
-            >
-              <span>Participantes ({participants.length})</span>
-              {showParticipants ? <IconChevronUp size={16} /> : <IconChevronDown size={16} />}
-            </Button>
-            {showParticipants && (
-              <ul className="mt-2 ml-2 list-disc text-xs text-gray-700 dark:text-gray-300">
-                {participants.map((p, idx) => (
-                  <li key={idx}>{p}</li>
-                ))}
-              </ul>
-            )}
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Participantes ({participants.length}):
+            </span>
+            <ul className="ml-2 list-disc text-xs text-gray-700 dark:text-gray-300">
+              {participants.map((p, idx) => (
+                <li key={idx}>{p}</li>
+              ))}
+            </ul>
           </div>
         )}
         {/* Enlace al archivo */}
-        {filePath && (
+        {fileUrl && (
           <div className="flex items-center gap-2 mt-2">
             <a
-              href={filePath}
+              href={fileUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-blue-600 dark:text-blue-400 underline text-sm"
               title="Ver archivo adjunto"
             >
-              <IconFileText size={18} />
               Archivo adjunto
             </a>
           </div>
@@ -142,42 +118,6 @@ export const EventCard: React.FC<EventCardProps> = ({
             Más información
           </a>
         )}
-        <div className="flex gap-2 mt-2 flex-wrap">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => onEdit?.(event)}
-            title="Editar"
-          >
-            <IconPencil size={18} />
-          </Button>
-          <Button
-            variant="destructive"
-            size="icon"
-            onClick={() => onDelete?.(event)}
-            title="Eliminar"
-          >
-            <IconTrash size={18} />
-          </Button>
-          {/* Botón para cambiar imagen de portada */}
-          <Button
-            variant="secondary"
-            size="icon"
-            onClick={() => onChangeImage?.(event)}
-            title="Cambiar imagen de portada"
-          >
-            <IconPhoto size={18} />
-          </Button>
-          {/* Botón para cambiar archivo adjunto */}
-          <Button
-            variant="secondary"
-            size="icon"
-            onClick={() => onChangeFile?.(event)}
-            title="Cambiar archivo adjunto"
-          >
-            <IconUpload size={18} />
-          </Button>
-        </div>
       </div>
     </div>
   );

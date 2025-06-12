@@ -1,44 +1,29 @@
 "use client";
-import React from "react";
+
 import { Publications } from "@/interfaces/Content";
-import { IconPencil, IconTrash, IconFileText, IconExternalLink, IconUpload, IconPhoto } from "@tabler/icons-react";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { IconFileText, IconExternalLink } from "@tabler/icons-react";
 
 const COVER_URL =
   process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
-const FILES_PATH =
+const FILES_URL =
   process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
 
 interface PublicationCardProps {
   publication: Publications;
-  onEdit?: (publication: Publications) => void;
-  onDelete?: (publication: Publications) => void;
-  // Nuevo: props para cambiar imagen y archivo
-  onChangeImage?: (publication: Publications) => void;
-  onChangeFile?: (publication: Publications) => void;
 }
 
-export const PublicationCard: React.FC<PublicationCardProps> = ({
-  publication,
-  onEdit,
-  onDelete,
-  onChangeImage,
-  onChangeFile,
-}) => {
+export const PublicationCard: React.FC<PublicationCardProps> = ({ publication }) => {
   const imageUrl =
     publication.cover_image_url ||
     (publication.cover_image && COVER_URL
       ? `${COVER_URL}/${publication.cover_image}`
       : undefined);
 
-  const filePath =
-    publication.file_path
-      ? publication.file_path.startsWith("http")
-        ? publication.file_path
-        : `${FILES_PATH}/${publication.file_path.replace(/^\/+/, "")}`
-      : undefined;
-
+  const fileUrl =
+    publication.file_url && !publication.file_url.startsWith("http")
+      ? `${FILES_URL}/${publication.file_url}`
+      : publication.file_url || undefined;
 
   return (
     <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-md p-4 flex flex-col md:flex-row gap-4 items-center">
@@ -78,10 +63,10 @@ export const PublicationCard: React.FC<PublicationCardProps> = ({
             </span>
           )}
         </div>
-        {filePath && (
+        {fileUrl && (
           <div className="flex items-center gap-2 mt-2">
             <a
-              href={filePath}
+              href={fileUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-blue-600 dark:text-blue-400 underline text-sm"
@@ -104,42 +89,6 @@ export const PublicationCard: React.FC<PublicationCardProps> = ({
             Ver publicación
           </a>
         )}
-        <div className="flex gap-2 mt-2 flex-wrap">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => onEdit?.(publication)}
-            title="Editar"
-          >
-            <IconPencil size={18} />
-          </Button>
-          <Button
-            variant="destructive"
-            size="icon"
-            onClick={() => onDelete?.(publication)}
-            title="Eliminar"
-          >
-            <IconTrash size={18} />
-          </Button>
-          {/* Nuevo: Botón para cambiar imagen de portada */}
-          <Button
-            variant="secondary"
-            size="icon"
-            onClick={() => onChangeImage?.(publication)}
-            title="Cambiar imagen de portada"
-          >
-            <IconPhoto size={18} />
-          </Button>
-          {/* Nuevo: Botón para cambiar archivo adjunto */}
-          <Button
-            variant="secondary"
-            size="icon"
-            onClick={() => onChangeFile?.(publication)}
-            title="Cambiar archivo adjunto"
-          >
-            <IconUpload size={18} />
-          </Button>
-        </div>
       </div>
     </div>
   );

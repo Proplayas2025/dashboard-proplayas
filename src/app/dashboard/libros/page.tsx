@@ -8,7 +8,10 @@ import { EditBookModal } from "@/components/Forms/libros/EditBook";
 import { CreateBookModal } from "@/components/Forms/libros/CreateBook";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import { EditCoverImageModal, EditAttachmentFileModal } from "@/components/Forms/Acomposables/EditFiles";
+import {
+  EditCoverImageModal,
+  EditAttachmentFileModal,
+} from "@/components/Forms/Acomposables/EditFiles";
 import { toast } from "sonner";
 
 export default function Page() {
@@ -143,6 +146,8 @@ export default function Page() {
               book={book}
               onEdit={handleEdit}
               onDelete={handleDelete}
+              onChangeImage={setShowImageModal}
+              onChangeFile={setShowFileModal}
             />
           ))
         ) : (

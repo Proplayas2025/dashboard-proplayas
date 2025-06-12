@@ -4,6 +4,8 @@ import Hero from "@/components/Inicio-ui/Hero"
 import About from "@/components/Inicio-ui/About"
 import Structure from "@/components/Inicio-ui/Structure"
 import Activities from "@/components/Inicio-ui/Activities"
+import Donation from "@/components/Inicio-ui/Donation"
+
 export default function Page() {
   return (
     <>
@@ -11,6 +13,7 @@ export default function Page() {
     <About/>
     <Structure/>
     <Activities/>
+    <Donation/>
     </>
   );
 }

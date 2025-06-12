@@ -3,7 +3,7 @@ import api from '@/lib/axiosInstance';
 export class ContentController {
   async getContent(content: string) {
     const response = await api.get(`/${content}`);
-    return response.data;
+    return response.data.data;
   }
 
   async getContentAuthor(content: string) {

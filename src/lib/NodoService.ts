@@ -54,6 +54,16 @@ export class NodosService {
             throw error;
         }
     }
+    
+    async uploadNodeMemorandum(file: FormData): Promise<ApiResponse<Node>> {
+        try {
+            const response = await api.post(`/node/upload-memorandum`,file);
+            return response.data;
+        } catch (error) {
+            console.error("Error al subir la foto de perfil del nodo:", error);
+            throw error;
+        }
+    }
 
     async toggleMemberStatus(memberId: number): Promise<ApiResponse<Member>> {
         try {

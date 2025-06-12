@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 const COVER_URL = process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
-const FILES_URL = process.env.NEXT_PUBLIC_FILES_URL?.replace(/\/$/, "") || "";
+const FILES_PATH = process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
 
 interface ProyectoCardProps {
   proyecto: Projects;
@@ -31,10 +31,12 @@ export const ProyectoCard: React.FC<ProyectoCardProps> = ({
       ? `${COVER_URL}/${proyecto.cover_image}`
       : undefined);
 
-  const fileUrl =
-    proyecto.file_url && !proyecto.file_url.startsWith("http")
-      ? `${FILES_URL}/${proyecto.file_url}`
-      : proyecto.file_url || undefined;
+  const filePath =
+    proyecto.file_path
+      ? proyecto.file_path.startsWith("http")
+        ? proyecto.file_path
+        : `${FILES_PATH}/${proyecto.file_path.replace(/^\/+/, "")}`
+      : undefined;
 
   const participants: string[] =
     typeof proyecto.participants === "string" && (proyecto.participants as string).trim().startsWith("[")
@@ -92,10 +94,10 @@ export const ProyectoCard: React.FC<ProyectoCardProps> = ({
             Más información
           </a>
         )}
-        {fileUrl && (
+        {filePath && (
           <div className="flex items-center gap-2 mt-2">
             <a
-              href={fileUrl}
+              href={filePath}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-blue-600 dark:text-blue-400 underline text-sm"

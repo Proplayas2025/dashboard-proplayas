@@ -24,7 +24,7 @@ export interface RegisterNodeLeaderRequest {
   email: string;
   password: string;
   confirm_password: string;
-  username?: string;
+  //username?: string;
   about_user?: string;
   degree?: string;
   postgraduate?: string;
@@ -42,11 +42,11 @@ export interface RegisterNodeLeaderRequest {
   about_node?: string;
   country_node?: string;
   city_node?: string;
-  ip_address?: string;
+  //ip_address?: string;
   coordinates?: string;
   alt_places?: string;
   joined_in?: number;
-  id?: string;
+  
   social_media_node?: SocialMediaItem[]; // Cambiado de string[] a SocialMediaItem[]
   memorandum?: string;
 }
