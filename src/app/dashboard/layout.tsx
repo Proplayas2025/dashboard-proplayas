@@ -1,25 +1,21 @@
 "use client";
 
 //este es el layout del dashboard, que se renderiza en la ruta /dashboard
-import { useEffect, useState } from "react";
+
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppHeader } from "@/components/app-header";
-
+import { useDashboardAccess } from "@/hooks/use-dashboard-access"
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [role, setRole] = useState<string | null>(null);
 
-  useEffect(() => {
-    const storedRole = document.cookie
-      .split("; ")
-      .find((c) => c.startsWith("role="))
-      ?.split("=")[1];
-    setRole(storedRole ?? null);
-  }, []);
+  const { isAuthorized, loading, role } = useDashboardAccess();
+
+  if (loading) return null;
+  if (!isAuthorized) return null; // Aunque el router.replace() ya lo mandó
 
   return (
     <div className="flex flex-col min-h-screen">

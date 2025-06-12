@@ -7,8 +7,7 @@ import Image from "next/image";
 
 const PROFILE_COVER_URL =
   process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
-const FILES_URL =
-  process.env.NEXT_PUBLIC_FILES_URL?.replace(/\/$/, "") || "";
+const FILES_PATH = process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
 
 interface EventCardProps {
   event: Events;
@@ -32,10 +31,12 @@ export const EventCard: React.FC<EventCardProps> = ({
       ? `${PROFILE_COVER_URL}/${event.cover_image}`
       : undefined);
 
-  const fileUrl =
-    event.file_url && !event.file_url.startsWith("http")
-      ? `${FILES_URL}/${event.file_url}`
-      : event.file_url || undefined;
+  const filePath =
+    event.file_path
+      ? event.file_path.startsWith("http")
+        ? event.file_path
+        : `${FILES_PATH}/${event.file_path.replace(/^\/+/, "")}`
+      : undefined;
 
   const participants: string[] =
     typeof event.participants === "string" && (event.participants as string).trim().startsWith("[")
@@ -117,10 +118,10 @@ export const EventCard: React.FC<EventCardProps> = ({
           </div>
         )}
         {/* Enlace al archivo */}
-        {fileUrl && (
+        {filePath && (
           <div className="flex items-center gap-2 mt-2">
             <a
-              href={fileUrl}
+              href={filePath}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-blue-600 dark:text-blue-400 underline text-sm"

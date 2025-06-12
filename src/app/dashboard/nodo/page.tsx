@@ -6,15 +6,26 @@ import { Node } from "@/interfaces/Nodes";
 import { getCookie } from "@/lib/cookies";
 import Image from "next/image";
 
-import { EditNodeFormModal, EditNodeImageModal } from "@/components/Forms/nodo/EditNode";
+import {
+  EditNodeFormModal,
+  EditNodeImageModal,
+  EditNodeMemorandumModal
+} from "@/components/Forms/nodo/EditNode";
 import { IconPencil } from "@tabler/icons-react";
-import { Loader2 } from "lucide-react";
+import { Loader2, FileText } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default function Page() {
   const nodoService = useMemo(() => new NodosService(), []);
   const [nodo, setNodo] = useState<Node>();
   const [showEditInfo, setShowEditInfo] = useState(false);
   const [showEditImage, setShowEditImage] = useState(false);
+  const [showEditMemorandum, setShowEditMemorandum] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const fetchNodeBio = useCallback(async () => {
@@ -38,17 +49,21 @@ export default function Page() {
     <>
       <SiteHeader />
       <div className="flex flex-1 flex-col">
+        {/* Esta es  la card que muestra la informacion */}
         <div className="@container/main flex flex-1 flex-col gap-2 mb-3">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-12">
               <Loader2 className="animate-spin h-8 w-8 text-gray-400 mb-2" />
-              <span className="text-gray-500 dark:text-gray-400">Cargando nodo...</span>
+              <span className="text-gray-500 dark:text-gray-400">
+                Cargando nodo...
+              </span>
             </div>
           ) : (
-            <div className="bg-white dark:bg-zinc-700 shadow-md rounded-lg p-6 grid grid-cols-1 md:grid-cols-[300px_minmax(600px,_1fr)] gap-6 relative">
+            <Card className="p-6 grid grid-cols-1 md:grid-cols-[300px_minmax(600px,_1fr)] gap-6 relative">
               <div className="flex flex-col items-center md:items-start">
                 <div className="relative w-32 h-32 md:w-48 md:h-48 group">
-                  {process.env.NEXT_PUBLIC_PROFILE_COVER_URL && nodo?.profile_picture ? (
+                  {process.env.NEXT_PUBLIC_PROFILE_COVER_URL &&
+                  nodo?.profile_picture ? (
                     <Image
                       width={192}
                       height={192}
@@ -61,12 +76,15 @@ export default function Page() {
                       <span className="text-gray-400">Sin foto</span>
                     </div>
                   )}
-                    <button
+                  <button
                     onClick={() => setShowEditImage(true)}
                     className="absolute top-2 right-2 bg-white dark:bg-zinc-800 p-1 rounded-full shadow hover:bg-gray-100 dark:hover:bg-zinc-700"
-                    >
-                    <IconPencil size={18} className="text-gray-700 dark:text-zinc-200" />
-                    </button>
+                  >
+                    <IconPencil
+                      size={18}
+                      className="text-gray-700 dark:text-zinc-200"
+                    />
+                  </button>
                 </div>
                 <div className="my-3 text-center md:text-left">
                   <h1 className="text-2xl font-semibold text-gray-500 dark:text-white">
@@ -121,10 +139,68 @@ export default function Page() {
                   </div>
                 )}
               </div>
-            </div>
+            </Card>
+          )}
+        </div>
+        {/* esta parte solo mostrara el memorandum el cual es un archivo */}
+        <div className="flex justify-start items-center gap-4">
+          {nodo?.memorandum ? (
+            <Card className="w-full max-w-md flex flex-col items-center p-6 border border-gray-200 dark:border-zinc-700 relative">
+              <button
+                onClick={() => setShowEditMemorandum(true)}
+                className="absolute top-4 right-4 bg-white dark:bg-zinc-800 p-1 rounded-full shadow hover:bg-gray-100 dark:hover:bg-zinc-700"
+                title="Editar Memorándum"
+              >
+                <IconPencil
+                  size={18}
+                  className="text-gray-700 dark:text-zinc-200"
+                />
+              </button>
+              <CardHeader className="flex flex-col items-center">
+                <CardTitle className="text-xl font-bold text-gray-700 dark:text-white mb-2">
+                  Memorándum
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col items-center">
+                <a
+                  href={`${process.env.NEXT_PUBLIC_FILES_PATH}${nodo.memorandum}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-col items-center group"
+                >
+                  <FileText className="h-16 w-16 text-blue-500 group-hover:text-blue-700 transition mb-2" />
+                  <span className="text-blue-600 group-hover:underline dark:text-blue-400">
+                    Ver Memorándum PDF
+                  </span>
+                </a>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card className="w-full max-w-md flex flex-col items-center p-6 border border-gray-200 dark:border-zinc-700 relative">
+              <button
+                onClick={() => setShowEditMemorandum(true)}
+                className="absolute top-4 right-4 bg-white dark:bg-zinc-800 p-1 rounded-full shadow hover:bg-gray-100 dark:hover:bg-zinc-700"
+                title="Subir Memorándum"
+              >
+                <IconPencil
+                  size={18}
+                  className="text-gray-700 dark:text-zinc-200"
+                />
+              </button>
+              <CardHeader className="flex flex-col items-center">
+                <CardTitle className="text-xl font-bold text-gray-700 dark:text-white mb-2">
+                  Memorándum
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col items-center">
+                <FileText className="h-16 w-16 text-gray-400 mb-2" />
+                <span className="text-gray-400">No disponible</span>
+              </CardContent>
+            </Card>
           )}
         </div>
       </div>
+      {/* modales de edicion */}
       {nodo && (
         <>
           <EditNodeFormModal
@@ -138,7 +214,19 @@ export default function Page() {
             onClose={() => setShowEditImage(false)}
             nodeCode={nodo.code}
             onUpload={(newFileName) =>
-              setNodo((prev) => (prev ? { ...prev, profile_picture: newFileName } : prev))
+              setNodo((prev) =>
+                prev ? { ...prev, profile_picture: newFileName } : prev
+              )
+            }
+          />
+          <EditNodeMemorandumModal
+            isOpen={showEditMemorandum}
+            onClose={() => setShowEditMemorandum(false)}
+            nodeCode={nodo.code}
+            onUpload={(newFileUrl) =>
+              setNodo((prev) =>
+                prev ? { ...prev, memorandum: newFileUrl } : prev
+              )
             }
           />
         </>

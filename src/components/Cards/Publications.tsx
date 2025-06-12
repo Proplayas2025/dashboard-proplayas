@@ -7,8 +7,8 @@ import Image from "next/image";
 
 const COVER_URL =
   process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
-const FILES_URL =
-  process.env.NEXT_PUBLIC_FILES_URL?.replace(/\/$/, "") || "";
+const FILES_PATH =
+  process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
 
 interface PublicationCardProps {
   publication: Publications;
@@ -32,10 +32,13 @@ export const PublicationCard: React.FC<PublicationCardProps> = ({
       ? `${COVER_URL}/${publication.cover_image}`
       : undefined);
 
-  const fileUrl =
-    publication.file_url && !publication.file_url.startsWith("http")
-      ? `${FILES_URL}/${publication.file_url}`
-      : publication.file_url || undefined;
+  const filePath =
+    publication.file_path
+      ? publication.file_path.startsWith("http")
+        ? publication.file_path
+        : `${FILES_PATH}/${publication.file_path.replace(/^\/+/, "")}`
+      : undefined;
+
 
   return (
     <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-md p-4 flex flex-col md:flex-row gap-4 items-center">
@@ -75,10 +78,10 @@ export const PublicationCard: React.FC<PublicationCardProps> = ({
             </span>
           )}
         </div>
-        {fileUrl && (
+        {filePath && (
           <div className="flex items-center gap-2 mt-2">
             <a
-              href={fileUrl}
+              href={filePath}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-blue-600 dark:text-blue-400 underline text-sm"

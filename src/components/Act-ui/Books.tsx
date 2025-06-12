@@ -5,7 +5,7 @@ import Image from "next/image";
 import { IconFileText, IconExternalLink } from "@tabler/icons-react";
 
 const COVER_URL = process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
-const FILES_URL = process.env.NEXT_PUBLIC_FILES_URL?.replace(/\/$/, "") || "";
+const FILES_URL = process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
 
 interface BookCardProps {
   book: Books;

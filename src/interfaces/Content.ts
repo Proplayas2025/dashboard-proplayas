@@ -15,7 +15,7 @@ export interface Projects {
     date: string; // ISO date string, required
     location?: string | null; // nullable, max 255
     link?: string | null; // nullable, must be a URL
-    file_file?: string | null; // nullable, file path or name
+    file_path?: string | null; // nullable, file path or name
     file_url?: string | null; // nullable, must be a URL
     cover_image?: string | null; // nullable, image file path or name
     cover_image_url?: string | null; // nullable, must be a URL
@@ -36,6 +36,7 @@ export interface Events {
     cover_image?: string | null;
     cover_image_url?: string | null;
     file_url?: string | null;
+    file_path?: string | null;
     author?: Author | null; // nullable, author details
 }
 
@@ -71,7 +72,7 @@ export interface Publications {
     cover_image?: string | null;
     cover_image_url?: string | null;
     file_url?: string | null;
-    file_file?: string | null;
+    file_path?: string | null;
 }
 
 // Libros
@@ -83,7 +84,7 @@ export interface Books {
     isbn?: string | null; // nullable, max 255
     description: string; // required
     link?: string | null; // nullable, must be a URL
-    file_file?: string | null; // nullable, file path or name
+    file_path?: string | null; // nullable, file path or name
     file_url?: string | null; // nullable, must be a URL
     cover_image?: string | null; // nullable, image file path or name
     cover_image_url?: string | null; // nullable, must be a URL

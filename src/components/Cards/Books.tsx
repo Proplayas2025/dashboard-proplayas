@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 const COVER_URL = process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
-const FILES_URL = process.env.NEXT_PUBLIC_FILES_URL?.replace(/\/$/, "") || "";
+const FILES_PATH = process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
 
 interface BookCardProps {
   book: Books;
@@ -38,10 +38,14 @@ export const BookCard: React.FC<BookCardProps> = ({
       : undefined);
 
   // Construye la ruta completa del archivo si existe
-  const fileUrl =
-    book.file_url && !book.file_url.startsWith("http")
-      ? `${FILES_URL}/${book.file_url}`
-      : book.file_url || undefined;
+  // filePath: Si book.file_path existe y NO empieza con http, concatena FILES_PATH + "/" + file_path
+  // Si empieza con http, úsalo tal cual. Si no existe, undefined.
+  const filePath =
+    book.file_path
+      ? book.file_path.startsWith("http")
+        ? book.file_path
+        : `${FILES_PATH}/${book.file_path.replace(/^\/+/, "")}`
+      : undefined;
 
   return (
     <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-md p-4 flex flex-col md:flex-row gap-4 items-center">
@@ -84,10 +88,10 @@ export const BookCard: React.FC<BookCardProps> = ({
           {book.description}
         </p>
         {/* Enlace al archivo */}
-        {fileUrl && (
+        {filePath && (
           <div className="flex items-center gap-2 mt-2">
             <a
-              href={fileUrl}
+              href={filePath}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-blue-600 dark:text-blue-400 underline text-sm"

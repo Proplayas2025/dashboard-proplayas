@@ -11,7 +11,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
   const PROFILE_COVER_URL =
     process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
   const FILES_URL =
-    process.env.NEXT_PUBLIC_FILES_URL?.replace(/\/$/, "") || "";
+    process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
 
   const imageUrl =
     event.cover_image_url ||
