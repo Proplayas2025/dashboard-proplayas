@@ -2,6 +2,7 @@
 
 import { Projects } from "@/interfaces/Content";
 import Image from "next/image";
+import { buildImageUrl } from "@/lib/image-utils";
 
 interface ProyectoCardProps {
   proyecto: Projects;
@@ -11,11 +12,11 @@ export const ProyectoCard: React.FC<ProyectoCardProps> = ({ proyecto }) => {
   const COVER_URL = process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
   const FILES_URL = process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
 
-  const imageUrl =
-    proyecto.cover_image_url ||
-    (proyecto.cover_image && COVER_URL
-      ? `${COVER_URL}/${proyecto.cover_image}`
-      : undefined);
+  const imageUrl = buildImageUrl({
+    coverImageUrl: proyecto.cover_image_url,
+    coverImage: proyecto.cover_image,
+    baseUrl: COVER_URL,
+  });
 
   const fileUrl =
     proyecto.file_url && !proyecto.file_url.startsWith("http")

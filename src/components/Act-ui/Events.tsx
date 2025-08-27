@@ -2,6 +2,7 @@
 
 import { Events } from "@/interfaces/Content";
 import Image from "next/image";
+import { buildImageUrl } from "@/lib/image-utils";
 
 interface EventCardProps {
   event: Events;
@@ -13,11 +14,11 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
   const FILES_URL =
     process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
 
-  const imageUrl =
-    event.cover_image_url ||
-    (event.cover_image && PROFILE_COVER_URL
-      ? `${PROFILE_COVER_URL}/${event.cover_image}`
-      : undefined);
+  const imageUrl = buildImageUrl({
+    coverImageUrl: event.cover_image_url,
+    coverImage: event.cover_image,
+    baseUrl: PROFILE_COVER_URL,
+  });
 
   const fileUrl =
     event.file_url && !event.file_url.startsWith("http")

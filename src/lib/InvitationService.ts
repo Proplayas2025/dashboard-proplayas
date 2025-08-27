@@ -3,6 +3,33 @@ import type { InviteNodeMember,  InviteNodeLeader, ApiResponse, RegisterNodeLead
 
 export default class InvitationService {
     
+    // aceptar la invitacion y hacer post al servidor
+    async validateInvitationToken(token: string): Promise<ApiResponse<any>> {
+        try {
+            const response = await axiosInstance.get(`/invitations/${token}`);
+            return response.data;
+        } catch (error: any) {
+            console.error("Error al validar la invitación:", error);
+            
+            // Retornar información más específica del error
+            if (error.response) {
+                const errorData = error.response.data;
+                throw {
+                    status: error.response.status,
+                    message: errorData.message || "Error al validar la invitación",
+                    response: error.response
+                };
+            }
+            
+            throw {
+                status: 500,
+                message: "Error de conexión al validar la invitación",
+                response: null
+            };
+        }
+    }
+
+
     // Miembros
     async createInvitationToNodeMember(data: InviteNodeMember): Promise<ApiResponse<InviteNodeMember>> {
         try {

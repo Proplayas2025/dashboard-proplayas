@@ -11,6 +11,7 @@ import {
 } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { buildImageUrl } from "@/lib/image-utils";
 
 const COVER_URL = process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
 const FILES_PATH = process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
@@ -31,11 +32,11 @@ export const BookCard: React.FC<BookCardProps> = ({
   onChangeFile,
 }) => {
   // Usa cover_image_url si viene completa, si no, arma la ruta con COVER_URL y cover_image
-  const imageUrl =
-    book.cover_image_url ||
-    (book.cover_image && COVER_URL
-      ? `${COVER_URL}/${book.cover_image}`
-      : undefined);
+  const imageUrl = buildImageUrl({
+    coverImageUrl: book.cover_image_url,
+    coverImage: book.cover_image,
+    baseUrl: COVER_URL,
+  });
 
   // Construye la ruta completa del archivo si existe
   // filePath: Si book.file_path existe y NO empieza con http, concatena FILES_PATH + "/" + file_path
