@@ -4,6 +4,7 @@ import { Projects } from "@/interfaces/Content";
 import { IconPencil, IconTrash, IconFileText, IconUpload, IconPhoto, IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { buildImageUrl } from "@/lib/image-utils";
 
 const COVER_URL = process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
 const FILES_PATH = process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
@@ -25,11 +26,11 @@ export const ProyectoCard: React.FC<ProyectoCardProps> = ({
 }) => {
   const [showParticipants, setShowParticipants] = useState(false);
 
-  const imageUrl =
-    proyecto.cover_image_url ||
-    (proyecto.cover_image && COVER_URL
-      ? `${COVER_URL}/${proyecto.cover_image}`
-      : undefined);
+  const imageUrl = buildImageUrl({
+    coverImageUrl: proyecto.cover_image_url,
+    coverImage: proyecto.cover_image,
+    baseUrl: COVER_URL,
+  });
 
   const filePath =
     proyecto.file_path

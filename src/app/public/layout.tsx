@@ -2,6 +2,7 @@
 "use client";
 import { AppHeader } from "@/components/app-header";
 import { ReactLenis } from "lenis/react";
+import Footer from "@/components/footer";
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,6 +12,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       </header>
       <ReactLenis root />
       <main className="flex-1">{children}</main>
+      <Footer />
     </div>
   );
 }

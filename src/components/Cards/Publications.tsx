@@ -4,6 +4,7 @@ import { Publications } from "@/interfaces/Content";
 import { IconPencil, IconTrash, IconFileText, IconExternalLink, IconUpload, IconPhoto } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { buildImageUrl } from "@/lib/image-utils";
 
 const COVER_URL =
   process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
@@ -26,11 +27,11 @@ export const PublicationCard: React.FC<PublicationCardProps> = ({
   onChangeImage,
   onChangeFile,
 }) => {
-  const imageUrl =
-    publication.cover_image_url ||
-    (publication.cover_image && COVER_URL
-      ? `${COVER_URL}/${publication.cover_image}`
-      : undefined);
+  const imageUrl = buildImageUrl({
+    coverImageUrl: publication.cover_image_url,
+    coverImage: publication.cover_image,
+    baseUrl: COVER_URL,
+  });
 
   const filePath =
     publication.file_path

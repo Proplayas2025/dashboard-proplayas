@@ -3,6 +3,7 @@
 import { Books } from "@/interfaces/Content";
 import Image from "next/image";
 import { IconFileText, IconExternalLink } from "@tabler/icons-react";
+import { buildImageUrl } from "@/lib/image-utils";
 
 const COVER_URL = process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
 const FILES_URL = process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
@@ -12,11 +13,11 @@ interface BookCardProps {
 }
 
 export const BookCard: React.FC<BookCardProps> = ({ book }) => {
-  const imageUrl =
-    book.cover_image_url ||
-    (book.cover_image && COVER_URL
-      ? `${COVER_URL}/${book.cover_image}`
-      : undefined);
+  const imageUrl = buildImageUrl({
+    coverImageUrl: book.cover_image_url,
+    coverImage: book.cover_image,
+    baseUrl: COVER_URL,
+  });
 
   const fileUrl =
     book.file_url && !book.file_url.startsWith("http")

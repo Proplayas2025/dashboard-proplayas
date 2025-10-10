@@ -48,7 +48,7 @@ export default function Structure() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
             <Users className="w-5 h-5 text-cyan-700 dark:text-cyan-300" />
-            Tipos de Participantes
+            Tipos de Nodos
               </CardTitle>
             </CardHeader>
             <CardContent>

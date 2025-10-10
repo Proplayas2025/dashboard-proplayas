@@ -4,6 +4,7 @@ import { Events } from "@/interfaces/Content";
 import { IconPencil, IconTrash, IconFileText, IconUpload, IconPhoto, IconChevronUp, IconChevronDown } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { buildImageUrl } from "@/lib/image-utils";
 
 const PROFILE_COVER_URL =
   process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
@@ -25,11 +26,11 @@ export const EventCard: React.FC<EventCardProps> = ({
   onChangeFile,
 }) => {
   const [showParticipants, setShowParticipants] = useState(false);
-  const imageUrl =
-    event.cover_image_url ||
-    (event.cover_image && PROFILE_COVER_URL
-      ? `${PROFILE_COVER_URL}/${event.cover_image}`
-      : undefined);
+  const imageUrl = buildImageUrl({
+    coverImageUrl: event.cover_image_url,
+    coverImage: event.cover_image,
+    baseUrl: PROFILE_COVER_URL,
+  });
 
   const filePath =
     event.file_path

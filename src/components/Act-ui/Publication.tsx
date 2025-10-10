@@ -3,6 +3,7 @@
 import { Publications } from "@/interfaces/Content";
 import Image from "next/image";
 import { IconFileText, IconExternalLink } from "@tabler/icons-react";
+import { buildImageUrl } from "@/lib/image-utils";
 
 const COVER_URL =
   process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
@@ -14,11 +15,11 @@ interface PublicationCardProps {
 }
 
 export const PublicationCard: React.FC<PublicationCardProps> = ({ publication }) => {
-  const imageUrl =
-    publication.cover_image_url ||
-    (publication.cover_image && COVER_URL
-      ? `${COVER_URL}/${publication.cover_image}`
-      : undefined);
+  const imageUrl = buildImageUrl({
+    coverImageUrl: publication.cover_image_url,
+    coverImage: publication.cover_image,
+    baseUrl: COVER_URL,
+  });
 
   const fileUrl =
     publication.file_url && !publication.file_url.startsWith("http")
