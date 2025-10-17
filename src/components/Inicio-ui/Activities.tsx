@@ -30,7 +30,7 @@ const activities = [
     desc: "Información de investigadores",
     href: "/public/actividades/publicaciones",
     color: "bg-cyan-50 dark:bg-zinc-800",
-    image: "/home_img/publication.jpg"
+    image: "/home_img/about1.JPG"
   },
   {
     title: "Series",

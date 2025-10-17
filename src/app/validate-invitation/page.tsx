@@ -6,11 +6,11 @@ import { useRouter } from "next/navigation";
 export default function ValidateInvitationPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const validateToken = new InvitationService();
   const router = useRouter();
 
   useEffect(() => {
     const validarToken = async () => {
+      const validateToken = new InvitationService();
       const token = new URLSearchParams(window.location.search).get("token");
       if (!token) {
         setError("No se proporcionó un token de invitación válido.");
@@ -27,17 +27,19 @@ export default function ValidateInvitationPage() {
           setError(response.message || "Token de invitación inválido o expirado.");
           setLoading(false);
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error("Error al validar invitación:", error);
-        setError(
-          error?.response?.data?.message || 
-          "Error al validar la invitación. Por favor, verifica que el enlace sea correcto."
-        );
+        const errorMessage = error && typeof error === 'object' && 'response' in error &&
+          error.response && typeof error.response === 'object' && 'data' in error.response &&
+          error.response.data && typeof error.response.data === 'object' && 'message' in error.response.data
+          ? (error.response.data.message as string)
+          : "Error al validar la invitación. Por favor, verifica que el enlace sea correcto.";
+        setError(errorMessage);
         setLoading(false);
       }
     };
     validarToken();
-  }, [router, validateToken]);
+  }, [router]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
