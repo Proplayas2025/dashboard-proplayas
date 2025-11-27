@@ -10,10 +10,10 @@ import {
 } from "@/components/ui/navigation-menu";
 
 const panels = [
-  { href: "/public/actividades/eventos", label: "Eventos" },
-  { href: "/public/actividades/proyectos", label: "Proyectos" },
-  { href: "/public/actividades/libros", label: "Libros" },
-  { href: "/public/actividades/publicaciones", label: "Publicaciones" },
+  { href: "/actividades/eventos", label: "Eventos" },
+  { href: "/actividades/proyectos", label: "Proyectos" },
+  { href: "/actividades/libros", label: "Libros" },
+  { href: "/actividades/publicaciones", label: "Publicaciones" },
 ];
 
 export default function ActividadesLayout({

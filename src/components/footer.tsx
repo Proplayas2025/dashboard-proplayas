@@ -18,10 +18,10 @@ export default function Footer() {
         </div>
         <Separator className="md:hidden my-4" />
         <nav className="flex flex-wrap gap-4 text-sm text-neutral-600 dark:text-neutral-400">
-          <Link href="/public/inicio" className="hover:text-primary transition">Inicio</Link>
-          <Link href="/public/quienes-somos" className="hover:text-primary transition">Quiénes somos</Link>
-          <Link href="/public/nodos" className="hover:text-primary transition">Nodos</Link>
-          <Link href="/public/actividades" className="hover:text-primary transition">Actividades</Link>
+          <Link href="/inicio" className="hover:text-primary transition">Inicio</Link>
+          <Link href="/quienes-somos" className="hover:text-primary transition">Quiénes somos</Link>
+          <Link href="/nodos" className="hover:text-primary transition">Nodos</Link>
+          <Link href="/actividades" className="hover:text-primary transition">Actividades</Link>
         </nav>
         <div className="text-xs text-neutral-500 dark:text-neutral-400 text-center md:text-right">
           © {new Date().getFullYear()} Proplayas. Todos los derechos reservados.

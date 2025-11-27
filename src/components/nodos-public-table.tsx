@@ -135,7 +135,7 @@ export function NodesTable({
 function NodeCellViewer({ item }: { item: Node }) {
   return (
     <Link
-      href={`/public/nodo/${item.code}`}
+      href={`/nodo/${item.code}`}
       className="font-medium text-cyan-700 hover:underline dark:text-cyan-300"
     >
       {item.name}

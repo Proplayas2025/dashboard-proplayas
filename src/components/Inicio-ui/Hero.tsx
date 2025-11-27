@@ -23,7 +23,7 @@ export default function Hero() {
             <li>• Presencia internacional</li>
           </ul>
           <Button asChild variant="outline">
-            <Link href="/public/quienes-somos">Conócenos</Link>
+            <Link href="/quienes-somos">Conócenos</Link>
           </Button>
         </div>
         {/* Logo a la derecha */}

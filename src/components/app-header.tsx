@@ -64,19 +64,19 @@ export function AppHeader() {
             Inicio
           </Link>
           <Link
-            href="/public/quienes-somos"
+            href="/quienes-somos"
             className="text-gray-700 dark:text-white hover:text-blue-600 transition font-medium"
           >
             Quienes Somos
           </Link>
           <Link
-            href="/public/actividades/eventos"
+            href="/actividades/eventos"
             className="text-gray-700 dark:text-white hover:text-blue-600 transition font-medium"
           >
             Actividades
           </Link>
           <Link
-            href="/public/nodos"
+            href="/nodos"
             className="text-gray-700 dark:text-white hover:text-blue-600 transition font-medium"
           >
             Nodos
@@ -123,13 +123,13 @@ export function AppHeader() {
                 <Link href="/">Inicio</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/public/quienes-somos">Quienes Somos</Link>
+                <Link href="/quienes-somos">Quienes Somos</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/public/actividades">Actividades</Link>
+                <Link href="/actividades">Actividades</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/public/nodos">Nodos</Link>
+                <Link href="/nodos">Nodos</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 {userEmail ? (

@@ -33,7 +33,7 @@ export default function About() {
           </p>
           <div className="flex gap-4 mt-4 flex-wrap">
             <Button asChild  className="bg-yellow-500 hover:bg-yellow-600 text-white">
-              <Link href="/public/quienes-somos">Conócenos</Link>
+              <Link href="/quienes-somos">Conócenos</Link>
             </Button>
             <Button
               asChild

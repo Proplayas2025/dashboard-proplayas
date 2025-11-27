@@ -1,4 +1,4 @@
-// filepath: /app/public/layout.tsx esta es la envoltura de todas las paginas publicas
+// filepath: /app/layout.tsx esta es la envoltura de todas las paginas publicas
 "use client";
 import { AppHeader } from "@/components/app-header";
 import { ReactLenis } from "lenis/react";

@@ -7,35 +7,35 @@ const activities = [
   {
     title: "Proyectos Colaborativos De Bajo Costo",
     desc: "Participa y colabora en proyectos y obten recompensas.",
-    href: "/public/actividades/proyectos",
+    href: "/actividades/proyectos",
     color: "bg-cyan-200 dark:bg-zinc-800",
     image: "/home_img/proyect.jpeg"
   },
   {
     title: "Eventos",
     desc: "Talleres impartidos por profesionales.",
-    href: "/public/actividades/eventos",
+    href: "/actividades/eventos",
     color: "bg-cyan-100 dark:bg-zinc-700",
     image: "/home_img/event.jpg"
   },
   {
     title: "Libros",
     desc: "Accede a libros de la comunidad.",
-    href: "/public/actividades/libros",
+    href: "/actividades/libros",
     color: "bg-cyan-300 dark:bg-zinc-900",
     image: "/home_img/books.jpg"
   },
   {
     title: "Publicaciones",
     desc: "Información de investigadores",
-    href: "/public/actividades/publicaciones",
+    href: "/actividades/publicaciones",
     color: "bg-cyan-50 dark:bg-zinc-800",
     image: "/home_img/about1.JPG"
   },
   {
     title: "Series",
     desc: "Contenido digital de la comunidad.",
-    href: "/public/content#series",
+    href: "/content#series",
     color: "bg-cyan-400 dark:bg-zinc-700",
     image: "/home_img/series.jpg"
   },
