@@ -123,24 +123,47 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Usar FormData para enviar archivos
     const data = new FormData();
+
     Object.entries(form).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        if (Array.isArray(value)) {
-          value.forEach((v) => data.append(`${key}[]`, v));
-        } else {
-          data.append(key, value as string);
+      if (value === undefined || value === null || value === "") {
+        return; // Omitir campos vacíos
+      }
+
+      // Manejar archivos (File objects) - solo si tienen contenido
+      if (value instanceof File) {
+        if (value.size > 0) {
+          data.append(key, value);
         }
       }
+      // Manejar arrays (social_media, social_media_node)
+      else if (Array.isArray(value)) {
+        if (value.length > 0) {
+          // Enviar arrays en formato que Laravel puede entender
+          value.forEach((item, index) => {
+            if (typeof item === 'object') {
+              Object.entries(item).forEach(([itemKey, itemValue]) => {
+                data.append(`${key}[${index}][${itemKey}]`, String(itemValue));
+              });
+            } else {
+              data.append(`${key}[${index}]`, String(item));
+            }
+          });
+        }
+      }
+      // Manejar otros valores
+      else {
+        data.append(key, String(value));
+      }
     });
+
     onSubmit(data);
   };
 
   return (
     <form className="space-y-4 w-full max-w-5xl mx-auto" onSubmit={handleSubmit}>
       <h1 className="text-2xl font-bold text-center mb-4">Registro de Líder de Nodo</h1>
-      <p className="text-center text-sm text-gray-600 mb-4">
+      <p className="text-center text-sm text-gray-600 dark:text-gray-400 mb-4">
         Completa el formulario para registrarte como líder de nodo. Los campos marcados con * son obligatorios.
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-[70vh] overflow-y-auto pr-2">
@@ -174,14 +197,14 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
-          <div className="text-xs text-gray-600 mt-1">
+          <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
             La contraseña debe tener al menos:
             <ul className="list-disc ml-5">
-              <li className={passwordInfo.length ? "text-green-600" : ""}>8 caracteres</li>
-              <li className={passwordInfo.upper ? "text-green-600" : ""}>Una letra mayúscula</li>
-              <li className={passwordInfo.lower ? "text-green-600" : ""}>Una letra minúscula</li>
-              <li className={passwordInfo.number ? "text-green-600" : ""}>Un número</li>
-              <li className={passwordInfo.special ? "text-green-600" : ""}>Un carácter especial</li>
+              <li className={passwordInfo.length ? "text-green-600 dark:text-green-400" : ""}>8 caracteres</li>
+              <li className={passwordInfo.upper ? "text-green-600 dark:text-green-400" : ""}>Una letra mayúscula</li>
+              <li className={passwordInfo.lower ? "text-green-600 dark:text-green-400" : ""}>Una letra minúscula</li>
+              <li className={passwordInfo.number ? "text-green-600 dark:text-green-400" : ""}>Un número</li>
+              <li className={passwordInfo.special ? "text-green-600 dark:text-green-400" : ""}>Un carácter especial</li>
             </ul>
           </div>
 
@@ -402,7 +425,7 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
               + Agregar
             </Button>
           </div>
-          
+
           <Label htmlFor="memorandum">Memorándum</Label>
           <Input id="memorandum" name="memorandum" value={form.memorandum} onChange={handleChange} />
 
