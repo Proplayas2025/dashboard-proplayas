@@ -2,100 +2,138 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowRight, BookOpen, Calendar, FileText, Lightbulb, Video } from "lucide-react";
 
 const activities = [
   {
     title: "Proyectos Colaborativos De Bajo Costo",
-    desc: "Participa y colabora en proyectos y obten recompensas.",
+    desc: "Participa y colabora en proyectos con impacto real en la conservación de playas.",
     href: "/actividades/proyectos",
-    color: "bg-cyan-200 dark:bg-zinc-800",
-    image: "/home_img/proyect.jpeg"
+    image: "/home_img/proyect.jpeg",
+    icon: Lightbulb,
+    gradient: "from-blue-600/90 to-cyan-600/90"
   },
   {
     title: "Eventos",
-    desc: "Talleres impartidos por profesionales.",
+    desc: "Talleres, conferencias y seminarios impartidos por expertos en gestión costera.",
     href: "/actividades/eventos",
-    color: "bg-cyan-100 dark:bg-zinc-700",
-    image: "/home_img/event.jpg"
+    image: "/home_img/event.jpg",
+    icon: Calendar,
+    gradient: "from-purple-600/90 to-pink-600/90"
   },
   {
     title: "Libros",
-    desc: "Accede a libros de la comunidad.",
+    desc: "Biblioteca digital con publicaciones especializadas de la comunidad.",
     href: "/actividades/libros",
-    color: "bg-cyan-300 dark:bg-zinc-900",
-    image: "/home_img/books.jpg"
+    image: "/home_img/books.jpg",
+    icon: BookOpen,
+    gradient: "from-green-600/90 to-emerald-600/90"
   },
   {
     title: "Publicaciones",
-    desc: "Información de investigadores",
+    desc: "Investigaciones científicas y artículos de nuestros colaboradores.",
     href: "/actividades/publicaciones",
-    color: "bg-cyan-50 dark:bg-zinc-800",
-    image: "/home_img/about1.JPG"
+    image: "/home_img/about1.JPG",
+    icon: FileText,
+    gradient: "from-orange-600/90 to-red-600/90"
   },
-  {
-    title: "Series",
-    desc: "Contenido digital de la comunidad.",
-    href: "/content#series",
-    color: "bg-cyan-400 dark:bg-zinc-700",
-    image: "/home_img/series.jpg"
-  },
+  // {
+  //   title: "Series",
+  //   desc: "Contenido multimedia educativo y documental sobre gestión de playas.",
+  //   href: "/content#series",
+  //   image: "/home_img/series.jpg",
+  //   icon: Video,
+  //   gradient: "from-indigo-600/90 to-purple-600/90"
+  // },
 ];
 
 export default function Activities() {
   return (
-    <section className="w-full py-12 md:py-20 bg-white dark:bg-zinc-900">
-      <div className="container mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-cyan-800 dark:text-white mb-10 text-center">
-          Conocimientos y experiencias para fortalecer la gestión sostenible de
-          las playas.
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[180px]">
-          {/* Primer elemento grande */}
+    <section className="w-full py-16 md:py-24 bg-gradient-to-b from-gray-50 to-white dark:from-zinc-950 dark:to-zinc-900">
+      <div className="container mx-auto px-4">
+        {/* Header Section */}
+        <div className="text-center mb-16 max-w-4xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-bold text-cyan-800 dark:text-white mb-6">
+            Nuestras Actividades
+          </h2>
+          <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
+            Conocimientos y experiencias para fortalecer la gestión sostenible de las playas
+          </p>
+        </div>
+
+        {/* Activities Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+          {activities.map((activity, index) => {
+            const Icon = activity.icon;
+            return (
+              <Link
+                key={activity.title}
+                href={activity.href}
+                className="group relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-white dark:bg-zinc-800"
+                style={{ minHeight: index === 0 ? '400px' : '320px' }}
+              >
+                {/* Image Background */}
+                <div className="absolute inset-0 overflow-hidden">
+                  <Image
+                    src={activity.image}
+                    alt={activity.title}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    priority={index === 0}
+                  />
+                  {/* Gradient Overlay */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${activity.gradient} opacity-80 group-hover:opacity-90 transition-opacity duration-500`} />
+                </div>
+
+                {/* Content */}
+                <div className="relative h-full flex flex-col justify-between p-8 text-white z-10">
+                  {/* Icon */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl group-hover:bg-white/30 transition-colors duration-300">
+                      <Icon className="w-8 h-8" />
+                    </div>
+                    <div className="p-2 bg-white/20 backdrop-blur-sm rounded-full group-hover:translate-x-1 transition-transform duration-300">
+                      <ArrowRight className="w-6 h-6" />
+                    </div>
+                  </div>
+
+                  {/* Text Content */}
+                  <div>
+                    <h3 className="text-2xl md:text-3xl font-bold mb-3 group-hover:translate-x-1 transition-transform duration-300">
+                      {activity.title}
+                    </h3>
+                    <p className="text-white/90 text-base md:text-lg leading-relaxed">
+                      {activity.desc}
+                    </p>
+                  </div>
+
+                  {/* Bottom decoration */}
+                  <div className="mt-6 flex items-center gap-2 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span>Explorar</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                  </div>
+                </div>
+
+                {/* Border glow effect on hover */}
+                <div className="absolute inset-0 border-2 border-white/0 group-hover:border-white/30 rounded-2xl transition-colors duration-500 pointer-events-none" />
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Bottom CTA */}
+        <div className="text-center mt-16">
+          <p className="text-gray-600 dark:text-gray-400 text-lg mb-6">
+            ¿Quieres participar en alguna de nuestras actividades?
+          </p>
           <Link
-            href={activities[0].href}
-            className="col-span-1 md:col-span-2 row-span-2 rounded-xl p-0 flex flex-col justify-center shadow transition hover:scale-[1.02] hover:shadow-lg cursor-pointer relative overflow-hidden"
+            href="/nodos"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
           >
-            <Image
-              src={activities[0].image}
-              alt={activities[0].title}
-              fill
-              className="object-cover w-full h-full absolute inset-0 z-0 filter blur-sm brightness-85"
-              sizes="(max-width: 768px) 100vw, 66vw"
-              priority
-            />
-            <div className="relative z-10 p-8">
-              <span className="text-xl md:text-2xl font-bold mb-2 text-white  drop-shadow">
-                {activities[0].title}
-              </span>
-              <span className="text-white md:text-xl block drop-shadow">
-                {activities[0].desc}
-              </span>
-            </div>
+            Únete a un Nodo
+            <ArrowRight className="w-5 h-5" />
           </Link>
-          {/* Los otros 4 elementos */}
-          {activities.slice(1).map((item) => (
-            <Link
-              key={item.title}
-              href={item.href}
-              className="rounded-xl p-0 flex flex-col justify-center shadow transition hover:scale-[1.03] hover:shadow-lg cursor-pointer relative overflow-hidden"
-            >
-              <Image
-                src={item.image}
-                alt={item.title}
-                fill
-                className="object-cover w-full h-full absolute inset-0 z-0 filter blur-sm brightness-85"
-                sizes="(max-width: 768px) 100vw, 33vw"
-              />
-              <div className="relative z-10 p-8">
-                <span className="text-lg md:text-2xl font-bold mb-2 text-white drop-shadow">
-                  {item.title}
-                </span>
-                <span className="text-white md:text-xl block drop-shadow">
-                  {item.desc}
-                </span>
-              </div>
-            </Link>
-          ))}
         </div>
       </div>
     </section>
