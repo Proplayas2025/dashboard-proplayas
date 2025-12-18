@@ -87,19 +87,18 @@ export default function Page() {
               <CardContent className="flex flex-col items-center md:items-start p-0">
               <div className="relative w-32 h-32 md:w-48 md:h-48 group">
                 {user.profile_picture ? (
-                <Image
-                  width={192}
-                  height={192}
-                  src={
-                  typeof user.profile_picture === "string"
-                    ? `${
-                      process.env.NEXT_PUBLIC_PROFILE_COVER_URL || ""
-                    }${user.profile_picture}`
-                    : URL.createObjectURL(user.profile_picture as never)
-                  }
-                  alt="Foto de perfil"
-                  className="w-full h-full rounded-full border-2 border-gray-300 object-cover"
-                />
+                  <Image
+                    width={192}
+                    height={192}
+                    src={
+                      typeof user.profile_picture === "string"
+                        ? `${process.env.NEXT_PUBLIC_PROFILE_COVER_URL || ""}${user.profile_picture}`
+                        : URL.createObjectURL(user.profile_picture as never)
+                    }
+                    alt="Foto de perfil"
+                    className="w-full h-full rounded-full border-2 border-gray-300 object-cover"
+                    unoptimized
+                  />
                 ) : (
                 <div className="w-full h-full flex items-center justify-center bg-gray-200 rounded-full border-2 border-gray-300">
                   <span className="text-gray-400">Sin foto</span>

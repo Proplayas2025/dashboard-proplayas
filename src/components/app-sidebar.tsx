@@ -33,8 +33,10 @@ export function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar> & { role: string | null }) {
   const [email, setEmail] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
     setEmail(localStorage.getItem("email"));
   }, []);
 

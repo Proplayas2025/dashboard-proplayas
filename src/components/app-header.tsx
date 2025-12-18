@@ -19,9 +19,11 @@ import { ChevronDown } from "lucide-react";
 
 export function AppHeader() {
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    setIsMounted(true);
     // Busca el email en la cookie (ajusta el nombre si es diferente)
     const email = localStorage.getItem("email");
     setUserEmail(email ?? null);
@@ -81,7 +83,7 @@ export function AppHeader() {
           >
             Nodos
           </Link>
-          {userEmail ? (
+          {isMounted && (userEmail ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="flex items-center gap-2">
@@ -102,7 +104,7 @@ export function AppHeader() {
             <Button asChild variant="outline">
               <Link href="/login">Login</Link>
             </Button>
-          )}
+          ))}
         </nav>
         <div>
           <ModeToggle />
@@ -131,33 +133,35 @@ export function AppHeader() {
               <DropdownMenuItem asChild>
                 <Link href="/nodos">Nodos</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                {userEmail ? (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-full flex items-center gap-2"
-                      >
-                        {userEmail}
-                        <ChevronDown size={16} />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem asChild>
-                        <Link href="/dashboard/perfil">Perfil</Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={handleLogout}>
-                        Cerrar sesión
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                ) : (
-                  <Button asChild variant="outline">
-                    <Link href="/login">Login</Link>
-                  </Button>
-                )}
-              </DropdownMenuItem>
+              {isMounted && (
+                <DropdownMenuItem asChild>
+                  {userEmail ? (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full flex items-center gap-2"
+                        >
+                          {userEmail}
+                          <ChevronDown size={16} />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem asChild>
+                          <Link href="/dashboard/perfil">Perfil</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleLogout}>
+                          Cerrar sesión
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  ) : (
+                    <Button asChild variant="outline">
+                      <Link href="/login">Login</Link>
+                    </Button>
+                  )}
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
