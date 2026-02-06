@@ -9,15 +9,20 @@ import { Loader2 } from "lucide-react";
 export default function Page() {
   const nodoService = useMemo(() => new NodosService(), []);
   const [nodes, setNodes] = useState<Nodes[]>([]);
+  const [pagination, setPagination] = useState({ current_page: 1, per_page: 50, total: 0, last_page: 1 });
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const fetchNodes = useCallback(async () => {
+  const fetchNodes = useCallback(async (page: number = 1) => {
     setLoading(true);
     try {
-      const res = await nodoService.getPublicNodes();
-      setNodes(res?.data || []);
+      const res = await nodoService.getPublicNodes(page);
+      setNodes(res?.data?.data || []);
+      setPagination(res?.data?.pagination || { current_page: 1, per_page: 50, total: 0, last_page: 1 });
+      setCurrentPage(page);
     } catch {
       setNodes([]);
+      setPagination({ current_page: 1, per_page: 50, total: 0, last_page: 1 });
     }
     setLoading(false);
   }, [nodoService]);
@@ -42,7 +47,13 @@ export default function Page() {
                 </span>
               </div>
             ) : (
-              <NodesTable data={nodes} />
+              <NodesTable 
+                data={nodes} 
+                page={currentPage}
+                pageSize={pagination.per_page}
+                total={pagination.total}
+                onPageChange={fetchNodes}
+              />
             )}
           </div>
         </div>

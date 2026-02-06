@@ -77,20 +77,7 @@ export function NodesTable({
                     <TableCell>{item.country}</TableCell>
                     <TableCell>{item.city}</TableCell>
                     <TableCell>{item.joined_in}</TableCell>
-                    <TableCell>{item.members_count}</TableCell>
-                    {/* <TableCell>
-                      <Badge
-                        variant="outline"
-                        className="text-muted-foreground px-1.5"
-                      >
-                        {item.status === "activo" ? (
-                          <IconCircleCheckFilled className="fill-green-500 dark:fill-green-400" />
-                        ) : (
-                          <IconLoader />
-                        )}
-                        {item.status}
-                      </Badge>
-                    </TableCell> */}
+                    <TableCell>{item.members_count}</TableCell> 
                   </TableRow>
                 ))
               ) : (

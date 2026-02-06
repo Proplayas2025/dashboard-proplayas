@@ -1,10 +1,20 @@
 import api from '@/lib/axiosInstance';
 import type { Nodes, Node, NodeMembers, Member, ApiResponse } from "@/interfaces/Nodes";
 
+export interface NodesListResponse {
+    data: Nodes[];
+    pagination: {
+        current_page: number;
+        per_page: number;
+        total: number;
+        last_page: number;
+    };
+}
+
 export class NodosService {
-    async getPublicNodes(): Promise<ApiResponse<Nodes[] | null>> {
+    async getPublicNodes(page: number = 1): Promise<ApiResponse<NodesListResponse>> {
         try {
-            const response = await api.get("/nodes");
+            const response = await api.get("/nodes", { params: { page } });
             return response.data;
         } catch (e) {
             console.error("Error al obtener los nodos públicos:", e);
