@@ -25,7 +25,7 @@ export class NodosService {
     // Traer informacion del nodo como su biografia
     async getNodeBio(code: string): Promise<ApiResponse<Node>> {
         try {
-            const response = await api.get(`/node/${code}`);
+            const response = await api.get(`/nodes/${code}`);
             return response.data;
         } catch (err) {
             console.error(`Error al obtener el nodo con code ${code}:`, err);
@@ -36,7 +36,7 @@ export class NodosService {
     // Traer miembros del nodo
     async getNodoMembers(code: string): Promise<ApiResponse<NodeMembers[]>> {
         try {
-            const response = await api.get(`/node/members/${code}`);
+            const response = await api.get(`/nodes/members/${code}`);
             return response.data;
         } catch (err) {
             console.error(`Error al obtener los miembros del nodo con code ${code}:`, err);
@@ -46,7 +46,7 @@ export class NodosService {
 
     async editNodeBio(id: number, editData: Partial<Node>): Promise<ApiResponse<Node>> {
         try {
-            const response = await api.put(`/node/${id}`, editData);
+            const response = await api.put(`/nodes/${id}`, editData);
             return response.data;
         } catch (error) {
             console.error("Error al actualizar el perfil del miembro:", error);
@@ -57,7 +57,7 @@ export class NodosService {
     // aqui lo envia a la api
     async uploadNodeProfilePicture(file: FormData): Promise<ApiResponse<Node>> {
         try {
-            const response = await api.post(`/node/upload-profile-picture`,file);
+            const response = await api.post(`/nodes/upload-profile-picture`,file);
             return response.data;
         } catch (error) {
             console.error("Error al subir la foto de perfil del nodo:", error);
@@ -67,17 +67,17 @@ export class NodosService {
     
     async uploadNodeMemorandum(file: FormData): Promise<ApiResponse<Node>> {
         try {
-            const response = await api.post(`/node/upload-memorandum`,file);
+            const response = await api.post(`/nodes/upload-memorandum`,file);
             return response.data;
         } catch (error) {
-            console.error("Error al subir la foto de perfil del nodo:", error);
+            console.error("Error al subir el memorandum del nodo:", error);
             throw error;
         }
     }
 
     async toggleMemberStatus(memberId: number): Promise<ApiResponse<Member>> {
         try {
-            const response = await api.put(`/member/${memberId}`);
+            const response = await api.put(`/nodes/member/${memberId}`);
             return response.data;
         } catch (error) {
             console.error("Error al actualizar el perfil del miembro:", error);
@@ -89,7 +89,7 @@ export class NodosService {
     // no elimina el miembro de la base de datos
     async deleteMember(memberId: number): Promise<ApiResponse<Member>> {
         try {
-            const response = await api.delete(`/member/${memberId}`);
+            const response = await api.delete(`/nodes/member/${memberId}`);
             return response.data;
         } catch (error) {
             console.error("Error al eliminar el miembro:", error);
@@ -99,7 +99,7 @@ export class NodosService {
 
     async deleteNode(nodeId: number): Promise<ApiResponse<Nodes>> {
         try {
-            const response = await api.delete(`/node/${nodeId}`);
+            const response = await api.delete(`/nodes/${nodeId}`);
             return response.data;
         } catch (error) {
             console.error("Error al eliminar el nodo:", error);
