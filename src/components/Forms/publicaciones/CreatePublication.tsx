@@ -25,7 +25,7 @@ const publicationTypes = ["boletin", "guia", "articulo"] as const;
 interface CreatePublicationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (data: FormData) => void;
+  onSave: (data: Record<string, unknown>, coverImage?: File, attachmentFile?: File) => void;
 }
 
 export const CreatePublicationModal: React.FC<CreatePublicationModalProps> = ({
@@ -78,21 +78,18 @@ export const CreatePublicationModal: React.FC<CreatePublicationModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const data = new FormData();
-    data.append("title", formData.title);
-    data.append("type", formData.type);
-    data.append("description", formData.description);
-    if (formData.link) data.append("link", formData.link);
-    if (formData.doi) data.append("doi", formData.doi);
-    if (formData.issn) data.append("issn", formData.issn);
-    if (formData.cover_image_file)
-      data.append("cover_image_file", formData.cover_image_file);
-    if (formData.cover_image_url)
-      data.append("cover_image_url", formData.cover_image_url);
-    if (formData.file_file) data.append("file_file", formData.file_file);
-    if (formData.file_url) data.append("file_url", formData.file_url);
+    const data = {
+      title: formData.title,
+      publication_type: formData.type,
+      description: formData.description,
+      link: formData.link || undefined,
+      doi: formData.doi || undefined,
+      issn: formData.issn || undefined,
+      cover_image_url: formData.cover_image_url || undefined,
+      file_url: formData.file_url || undefined,
+    };
 
-    onSave(data);
+    onSave(data, formData.cover_image_file || undefined, formData.file_file || undefined);
     onClose();
     setFormData({
       title: "",

@@ -19,6 +19,8 @@ export default function Page() {
   const [showEdit, setShowEdit] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const [showImageModal, setShowImageModal] = useState<Publications | null>(null);
   const [showFileModal, setShowFileModal] = useState<Publications | null>(null);
@@ -66,11 +68,18 @@ export default function Page() {
     setShowEdit(false);
   };
 
-  const handleCreate = async (formData: FormData) => {
+  const handleCreate = async (data: Record<string, unknown>, coverImage?: File, attachmentFile?: File) => {
     try {
-      const res = await content.createContent("publication", formData);
+      const res = await content.createContent("publication", data);
       if (res?.data) {
-        setPublications((prev) => [res.data, ...prev]);
+        // Si hay archivos, subirlos después de crear el contenido
+        if (coverImage) {
+          await content.uploadImage("publication", res.data.id, coverImage);
+        }
+        if (attachmentFile) {
+          await content.uploadFile("publication", res.data.id, attachmentFile);
+        }
+        await fetchPublications(); // Refrescar la lista para mostrar los archivos subidos
         toast.success("La publicación se ha creado con éxito");
       }
     } catch{
@@ -106,13 +115,14 @@ export default function Page() {
   const fetchPublications = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await content.getContentAuthor("publications");
+      const res = await content.getContentAuthor("publications", page, 20);
       setPublications(res?.data || []);
+      setTotalPages(res?.meta?.last_page || 1);
     } catch {
       toast.error("Ocurrió un error al cargar las publicaciones");
     }
     setLoading(false);
-  }, [content]);
+  }, [content, page]);
 
   useEffect(() => {
     fetchPublications();
@@ -147,6 +157,27 @@ export default function Page() {
           </div>
         )}
       </div>
+      {!loading && publications.length > 0 && totalPages > 1 && (
+        <div className="flex justify-center items-center gap-4 p-4">
+          <Button
+            variant="outline"
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+            disabled={page === 1}
+          >
+            Anterior
+          </Button>
+          <span className="text-sm text-gray-600 dark:text-gray-400">
+            Página {page} de {totalPages}
+          </span>
+          <Button
+            variant="outline"
+            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+          >
+            Siguiente
+          </Button>
+        </div>
+      )}
       <EditPublicationModal
         isOpen={showEdit}
         onClose={() => setShowEdit(false)}

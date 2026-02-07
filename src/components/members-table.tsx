@@ -43,8 +43,8 @@ export const schema = z.object({
   name: z.string(),
   email: z.string(),
   username: z.string(),
-  research_line: z.string(),
-  work_area: z.string(),
+  research_line: z.string().nullable(),
+  work_area: z.string().nullable(),
   status: z.string(),
 });
 
@@ -96,8 +96,8 @@ export function DataTable({
                     <TableCell>{item.email}</TableCell>
                     <TableCell>{item.username}</TableCell>
                     <TableCell>{item.member_code}</TableCell>
-                    <TableCell>{item.research_line}</TableCell>
-                    <TableCell>{item.work_area}</TableCell>
+                    <TableCell>{item.research_line || "-"}</TableCell>
+                    <TableCell>{item.work_area || "-"}</TableCell>
                     <TableCell>
                       <Badge
                         variant="outline"
@@ -193,11 +193,11 @@ function TableCellViewer({ item }: { item: Member }) {
             </div>
             <div className="flex flex-col gap-3">
               <Label htmlFor="research_line">Research Line</Label>
-              <Input id="research_line" value={item.research_line} readOnly />
+              <Input id="research_line" value={item.research_line ?? ""} readOnly />
             </div>
             <div className="flex flex-col gap-3">
               <Label htmlFor="work_area">Work Area</Label>
-              <Input id="work_area" value={item.work_area} readOnly />
+              <Input id="work_area" value={item.work_area ?? ""} readOnly />
             </div>
             <div className="flex flex-col gap-3">
               <Label htmlFor="status">Status</Label>

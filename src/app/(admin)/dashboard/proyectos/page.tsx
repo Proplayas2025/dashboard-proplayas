@@ -18,6 +18,8 @@ export default function Page() {
   const [showEdit, setShowEdit] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   // Estados para los modales de imagen y archivo
   const [showImageModal, setShowImageModal] = useState<Projects | null>(null);
@@ -66,11 +68,18 @@ export default function Page() {
     setShowEdit(false);
   };
 
-  const handleCreate = async (formData: FormData) => {
+  const handleCreate = async (data: Record<string, unknown>, coverImage?: File, attachmentFile?: File) => {
     try {
-      const res = await content.createContent("project", formData);
+      const res = await content.createContent("project", data);
       if (res?.data) {
-        setProjects((prev) => [res.data, ...prev]);
+        // Si hay archivos, subirlos después de crear el contenido
+        if (coverImage) {
+          await content.uploadImage("project", res.data.id, coverImage);
+        }
+        if (attachmentFile) {
+          await content.uploadFile("project", res.data.id, attachmentFile);
+        }
+        await fetchProjects(); // Refrescar la lista para mostrar los archivos subidos
         toast.success("El proyecto se ha creado con éxito");
       }
     } catch (err) {
@@ -109,13 +118,14 @@ export default function Page() {
   const fetchProjects = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await content.getContentAuthor("projects");
+      const res = await content.getContentAuthor("projects", page, 20);
       setProjects(res?.data || []);
+      setTotalPages(res?.meta?.last_page || 1);
     } catch {
       toast.error("Ocurrió un error al cargar los proyectos");
     }
     setLoading(false);
-  }, [content]);
+  }, [content, page]);
 
   useEffect(() => {
     fetchProjects();
@@ -150,6 +160,27 @@ export default function Page() {
           </div>
         )}
       </div>
+      {!loading && projects.length > 0 && totalPages > 1 && (
+        <div className="flex justify-center items-center gap-4 p-4">
+          <Button
+            variant="outline"
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+            disabled={page === 1}
+          >
+            Anterior
+          </Button>
+          <span className="text-sm text-gray-600 dark:text-gray-400">
+            Página {page} de {totalPages}
+          </span>
+          <Button
+            variant="outline"
+            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+          >
+            Siguiente
+          </Button>
+        </div>
+      )}
       <EditProyectoModal
         isOpen={showEdit}
         onClose={() => setShowEdit(false)}

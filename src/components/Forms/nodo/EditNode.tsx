@@ -106,19 +106,19 @@ export function EditNodeFormModal({
           />
           <Input
             name="city"
-            value={formData.city}
+            value={formData.city ?? ""}
             onChange={handleChange}
             placeholder="Ciudad"
           />
           <Input
             name="country"
-            value={formData.country}
+            value={formData.country ?? ""}
             onChange={handleChange}
             placeholder="País"
           />
           <Textarea
             name="about"
-            value={formData.about}
+            value={formData.about ?? ""}
             onChange={handleChange}
             placeholder="Descripción"
           />

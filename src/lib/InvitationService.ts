@@ -3,7 +3,7 @@ import type { InviteNodeMember,  InviteNodeLeader, ApiResponse, RegisterNodeLead
 
 export default class InvitationService {
     
-    // aceptar la invitacion y hacer post al servidor
+    // Validar token de invitación
     async validateInvitationToken(token: string): Promise<ApiResponse<unknown>> {
         try {
             const response = await axiosInstance.get(`/invitations/${token}`);
@@ -11,7 +11,6 @@ export default class InvitationService {
         } catch (error: unknown) {
             console.error("Error al validar la invitación:", error);
             
-            // Retornar información más específica del error
             if (error && typeof error === 'object' && 'response' in error && error.response) {
                 const errorResponse = error.response as { status: number; data?: { message?: string } };
                 throw {
@@ -30,20 +29,20 @@ export default class InvitationService {
     }
 
 
-    // Miembros
+    // Invitar miembro (líder de nodo invita)
     async createInvitationToNodeMember(data: InviteNodeMember): Promise<ApiResponse<InviteNodeMember>> {
         try {
-            const response = await axiosInstance.post("/member/invite", { ...data, role_type: "member" });
+            const response = await axiosInstance.post("/invitations/member", data);
             return response.data;
         } catch (error) {
             console.error("Error al enviar la invitación:", error);
             throw error;
         }
     }
-    // Lider de nodo
+    // Invitar líder de nodo (admin invita)
     async createInvitationToNodeLeader(data: InviteNodeLeader): Promise<ApiResponse<InviteNodeLeader>> {
         try {
-            const response = await axiosInstance.post("/node/invite",{ ...data, role_type: "node_leader" });
+            const response = await axiosInstance.post("/invitations/node-leader", data);
             return response.data;
         } catch (error) {
             console.error("Error al enviar la invitación:", error);
@@ -51,11 +50,11 @@ export default class InvitationService {
         }
     }
 
-    // Método general para registrar nuevos usuarios
+    // Aceptar invitación y registrar usuario
     async registerNewUser<T extends RegisterNodeLeaderRequest | RegisterNodeMemberRequest>(data: T): Promise<ApiResponse<RegisterNodeLeaderRequest | RegisterNodeMemberRequest>> {
         try {
             const response = await axiosInstance.post("/invitations/accept", data);
-            return response.data; //{status, message, data : {user:{}, node:}}
+            return response.data;
         } catch (error) {
             console.error("Error al registrar el usuario:", error);
             throw error;

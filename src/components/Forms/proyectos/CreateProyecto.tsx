@@ -16,7 +16,7 @@ import Image from "next/image";
 interface CreateProyectoModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (data: FormData) => void;
+  onSave: (data: Record<string, unknown>, coverImage?: File, attachmentFile?: File) => void;
 }
 
 export const CreateProyectoModal: React.FC<CreateProyectoModalProps> = ({
@@ -88,29 +88,18 @@ export const CreateProyectoModal: React.FC<CreateProyectoModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const data = new FormData();
-    data.append("title", formData.title);
-    data.append("description", formData.description);
-    data.append("date", formData.date);
-    if (formData.location) data.append("location", formData.location);
-    if (formData.link) data.append("link", formData.link);
-    if (formData.file_file) data.append("file_file", formData.file_file);
-    if (formData.file_url) data.append("file_url", formData.file_url);
-    if (formData.cover_image_file)
-      data.append("cover_image_file", formData.cover_image_file);
-    if (formData.cover_image_url)
-      data.append("cover_image_url", formData.cover_image_url);
-    if (
-      formData.participants &&
-      formData.participants.filter(Boolean).length > 0
-    ) {
-      data.append(
-        "participants",
-        JSON.stringify(formData.participants.filter(Boolean))
-      );
-    }
+    const data = {
+      title: formData.title,
+      description: formData.description,
+      event_date: formData.date,
+      location: formData.location || undefined,
+      link: formData.link || undefined,
+      participants: formData.participants?.filter(Boolean).length > 0 ? formData.participants.filter(Boolean) : undefined,
+      cover_image_url: formData.cover_image_url || undefined,
+      file_url: formData.file_url || undefined,
+    };
 
-    onSave(data);
+    onSave(data, formData.cover_image_file || undefined, formData.file_file || undefined);
     onClose();
     setFormData({
       title: "",

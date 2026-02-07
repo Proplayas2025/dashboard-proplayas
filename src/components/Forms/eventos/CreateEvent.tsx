@@ -37,7 +37,7 @@ const formats = ["presencial", "online"] as const;
 interface CreateEventModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (data: FormData) => void;
+  onSave: (data: Record<string, unknown>, coverImage?: File, attachmentFile?: File) => void;
 }
 
 export const CreateEventModal: React.FC<CreateEventModalProps> = ({
@@ -117,32 +117,20 @@ export const CreateEventModal: React.FC<CreateEventModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Prepara el FormData para enviar archivos y campos
-    const data = new FormData();
-    data.append("title", formData.title);
-    data.append("type", formData.type);
-    data.append("description", formData.description);
-    data.append("date", formData.date);
-    data.append("link", formData.link);
-    data.append("format", formData.format);
-    if (formData.location) data.append("location", formData.location);
-    if (
-      formData.participants &&
-      formData.participants.filter(Boolean).length > 0
-    ) {
-      data.append(
-        "participants",
-        JSON.stringify(formData.participants.filter(Boolean))
-      );
-    }
-    if (formData.cover_image_file)
-      data.append("cover_image_file", formData.cover_image_file);
-    if (formData.cover_image_url)
-      data.append("cover_image_url", formData.cover_image_url);
-    if (formData.file_file) data.append("file_file", formData.file_file);
-    if (formData.file_url) data.append("file_url", formData.file_url);
+    const data = {
+      title: formData.title,
+      event_type: formData.type,
+      description: formData.description,
+      event_date: formData.date,
+      link: formData.link || undefined,
+      event_format: formData.format,
+      location: formData.location || undefined,
+      participants: formData.participants?.filter(Boolean).length > 0 ? formData.participants.filter(Boolean) : undefined,
+      cover_image_url: formData.cover_image_url || undefined,
+      file_url: formData.file_url || undefined,
+    };
 
-    onSave(data);
+    onSave(data, formData.cover_image_file || undefined, formData.file_file || undefined);
     onClose();
     setFormData({
       title: "",

@@ -17,8 +17,8 @@ export default function Page() {
     setLoading(true);
     try {
       const res = await nodoService.getPublicNodes(page);
-      setNodes(res?.data?.data || []);
-      setPagination(res?.data?.pagination || { current_page: 1, per_page: 50, total: 0, last_page: 1 });
+      setNodes(res.data || []);
+      setPagination(res.meta || { current_page: 1, per_page: 50, total: 0, last_page: 1 });
       setCurrentPage(page);
     } catch {
       setNodes([]);

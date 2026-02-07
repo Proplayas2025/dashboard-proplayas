@@ -1,29 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { PublicationCard } from "@/components/Act-ui/Publication";
 import { Publications } from "@/interfaces/Content";
 import { ContentController } from "@/lib/ContentController";
 import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function PublicacionesPage() {
   const [publications, setPublications] = useState<Publications[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const fetchPublications = useCallback(async () => {
+    setLoading(true);
+    try {
+      const content = new ContentController();
+      const res = await content.getContent("publications", page, 20);
+      setPublications(res?.data || []);
+      setTotalPages(res?.meta?.last_page || 1);
+    } catch {
+      setPublications([]);
+    }
+    setLoading(false);
+  }, [page]);
 
   useEffect(() => {
-    const fetchPublications = async () => {
-      setLoading(true);
-      try {
-        const content = new ContentController();
-        const res = await content.getContent("publications");
-        setPublications(res.data || []);
-      } catch {
-        setPublications([]);
-      }
-      setLoading(false);
-    };
     fetchPublications();
-  }, []);
+  }, [fetchPublications]);
 
   return (
     <div>
@@ -46,6 +51,27 @@ export default function PublicacionesPage() {
           </div>
         )}
       </div>
+      {!loading && publications.length > 0 && totalPages > 1 && (
+        <div className="flex justify-center items-center gap-4 p-4 mt-4">
+          <Button
+            variant="outline"
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+            disabled={page === 1}
+          >
+            Anterior
+          </Button>
+          <span className="text-sm text-gray-600 dark:text-gray-400">
+            Página {page} de {totalPages}
+          </span>
+          <Button
+            variant="outline"
+            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+          >
+            Siguiente
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

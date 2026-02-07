@@ -29,7 +29,7 @@ export class Authentication {
       const payloadBase64 = token.split(".")[1];
       const payloadJson = atob(payloadBase64.replace(/-/g, "+").replace(/_/g, "/"));
       const payload = JSON.parse(payloadJson);
-      email = payload.email || "";
+      email = payload.sub || payload.email || "";
     } catch {
       email = "";
     }
@@ -40,6 +40,9 @@ export class Authentication {
     localStorage.setItem("email", email);
     system.authToken = token;
     system.role = role;
+    
+    // Disparar evento custom para notificar cambios de autenticación
+    window.dispatchEvent(new Event("auth-change"));
   }
 
   private clearSession() {
@@ -52,6 +55,9 @@ export class Authentication {
     localStorage.removeItem("email");
     system.authToken = null;
     system.role = null;
+    
+    // Disparar evento custom para notificar cambios de autenticación
+    window.dispatchEvent(new Event("auth-change"));
   }
 
   async login(credentials: LoginRequest): Promise<ApiResponse<LoginResponse>> {

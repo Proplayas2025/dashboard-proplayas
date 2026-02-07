@@ -1,29 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { ProyectoCard } from "@/components/Act-ui/Proyectos";
 import { Projects } from "@/interfaces/Content";
 import { ContentController } from "@/lib/ContentController";
 import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function ProyectosPage() {
   const [projects, setProjects] = useState<Projects[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const fetchProjects = useCallback(async () => {
+    setLoading(true);
+    try {
+      const content = new ContentController();
+      const res = await content.getContent("projects", page, 20);
+      setProjects(res?.data || []);
+      setTotalPages(res?.meta?.last_page || 1);
+    } catch {
+      setProjects([]);
+    }
+    setLoading(false);
+  }, [page]);
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      setLoading(true);
-      try {
-        const content = new ContentController();
-        const res = await content.getContent("projects");
-        setProjects(res || []);
-      } catch {
-        setProjects([]);
-      }
-      setLoading(false);
-    };
     fetchProjects();
-  }, []);
+  }, [fetchProjects]);
 
   return (
     <div>
@@ -46,6 +51,27 @@ export default function ProyectosPage() {
           </div>
         )}
       </div>
+      {!loading && projects.length > 0 && totalPages > 1 && (
+        <div className="flex justify-center items-center gap-4 p-4 mt-4">
+          <Button
+            variant="outline"
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+            disabled={page === 1}
+          >
+            Anterior
+          </Button>
+          <span className="text-sm text-gray-600 dark:text-gray-400">
+            Página {page} de {totalPages}
+          </span>
+          <Button
+            variant="outline"
+            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+          >
+            Siguiente
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

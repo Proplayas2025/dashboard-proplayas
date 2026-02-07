@@ -10,30 +10,28 @@ const contentTypeMap: Record<string, string> = {
 };
 
 export class ContentController {
-  async getContent(content: string) {
+  async getContent(content: string, page = 1, per_page = 20) {
     const contentType = contentTypeMap[content] || content;
-    const response = await api.get(`/content?content_type=${contentType}`);
-    return response.data.data;
+    const response = await api.get(`/content?content_type=${contentType}&page=${page}&per_page=${per_page}`);
+    return { data: response.data.data, meta: response.data.meta };
   }
 
-  async getContentAuthor(content: string) {
+  async getContentAuthor(content: string, page = 1, per_page = 20) {
     const contentType = contentTypeMap[content] || content;
-    const response = await api.get(`/content/own?content_type=${contentType}`);
-    return response.data;
+    const response = await api.get(`/content/own?content_type=${contentType}&page=${page}&per_page=${per_page}`);
+    return { data: response.data.data, meta: response.data.meta };
   }
 
-  async createContent(content: string, payload: unknown) {
+  async createContent(content: string, payload: Record<string, unknown>) {
     const contentType = contentTypeMap[content] || content;
     const response = await api.post(`/content`, {
       ...payload,
       content_type: contentType
-    }, {
-      headers: { 'Content-Type': 'multipart/form-data' },
     });
     return response.data;
   }
 
-  async updateContent(content: string, id: number, payload: unknown) {
+  async updateContent(content: string, id: number, payload: Record<string, unknown>) {
     const response = await api.put(`/content/${id}`, payload);
     return response.data;
   }

@@ -20,9 +20,9 @@ export const nodeSchema = z.object({
   code: z.string(),
   type: z.string(),
   name: z.string(),
-  country: z.string(),
-  city: z.string(),
-  joined_in: z.number(),
+  country: z.string().nullable(),
+  city: z.string().nullable(),
+  joined_in: z.number().nullable(),
   members_count: z.number(),
   status: z.string(),
 });
@@ -74,9 +74,9 @@ export function NodesTable({
                     <TableCell>
                       <NodeCellViewer item={item} />
                     </TableCell>
-                    <TableCell>{item.country}</TableCell>
-                    <TableCell>{item.city}</TableCell>
-                    <TableCell>{item.joined_in}</TableCell>
+                    <TableCell>{item.country || "-"}</TableCell>
+                    <TableCell>{item.city || "-"}</TableCell>
+                    <TableCell>{item.joined_in || "-"}</TableCell>
                     <TableCell>{item.members_count}</TableCell> 
                   </TableRow>
                 ))

@@ -16,7 +16,7 @@ import Image from "next/image";
 interface CreateBookModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (data: FormData) => void;
+  onSave: (data: Record<string, unknown>, coverImage?: File, attachmentFile?: File) => void;
 }
 
 export const CreateBookModal: React.FC<CreateBookModalProps> = ({
@@ -62,22 +62,18 @@ export const CreateBookModal: React.FC<CreateBookModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const data = new FormData();
-    data.append("title", formData.title);
-    data.append("book_author", formData.book_author);
-    data.append("description", formData.description);
-    if (formData.publication_date)
-      data.append("publication_date", formData.publication_date);
-    if (formData.isbn) data.append("isbn", formData.isbn);
-    if (formData.link) data.append("link", formData.link);
-    if (formData.cover_image_file)
-      data.append("cover_image_file", formData.cover_image_file);
-    if (formData.cover_image_url)
-      data.append("cover_image_url", formData.cover_image_url);
-    if (formData.file_file) data.append("file_file", formData.file_file);
-    if (formData.file_url) data.append("file_url", formData.file_url);
+    const data = {
+      title: formData.title,
+      book_author: formData.book_author,
+      description: formData.description,
+      publication_date: formData.publication_date || undefined,
+      isbn: formData.isbn || undefined,
+      link: formData.link || undefined,
+      cover_image_url: formData.cover_image_url || undefined,
+      file_url: formData.file_url || undefined,
+    };
 
-    onSave(data);
+    onSave(data, formData.cover_image_file || undefined, formData.file_file || undefined);
     onClose();
     setFormData({
       title: "",

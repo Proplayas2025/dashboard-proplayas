@@ -5,54 +5,54 @@ export interface Nodes {
     code: string; // se muestra
     type: string; // se muestra
     name: string; // se muestra
-    country: string;// se muestra
-    city: string;// se muestra
-    joined_in: number;// se muestra
+    country: string | null;// se muestra
+    city: string | null;// se muestra
+    joined_in: number | null;// se muestra
     members_count: number;// se muestra
     status: string;
 }
 
 export interface NodeMembers {
-    id: number; // id del miembro
+    id: number; // id del miembro (NodeMember.id)
     user_id: number; // id del usuario
     node_id: number;
     member_code: string;
     name: string;
     email: string;
-    research_line: string;
-    work_area: string;
+    research_line: string | null;
+    work_area: string | null;
     username: string;
     status: string;
 }
 
 export interface Node {
     id: number;
-    leader_id: string;
+    leader_id: number | null;
     code: string;// se muestra
     type: string;// se muestra
     name: string;// se muestra
-    profile_picture: string;// foto del nodo
-    about: string;// se muestra
-    country: string;// se muestra
-    city: string;// se muestra
-    ip_address: string;
-    coordinates: string;
-    alt_places: string;// se muestra
-    joined_in: number;// se muestra
+    profile_picture: string | null;// foto del nodo
+    about: string | null;// se muestra
+    country: string | null;// se muestra
+    city: string | null;// se muestra
+    ip_address: string | null;
+    coordinates: string | null;
+    alt_places: string | null;// se muestra
+    joined_in: number | null;// se muestra
     members_count: number;// se muestra
     //id_photo: string;
     social_media: SocialLink[] | null;// se muestra
-    memorandum: string;// se muestra
+    memorandum: string | null;// se muestra
     status: string;
-    leader: Leader; // se muestra
+    leader: Leader | null; // se muestra
 }
 
 export interface Leader {
     id: number;
-    degree: string;
+    degree: string | null;
     email: string;
     name: string;
-    postgraduate:string;
+    postgraduate: string | null;
 }
 
 export interface Member {
@@ -63,8 +63,8 @@ export interface Member {
     name: string;
     member_code: string;
     email: string;
-    research_line: string;
-    work_area: string;
+    research_line: string | null;
+    work_area: string | null;
     status: string;
 }
 
@@ -72,4 +72,12 @@ export interface ApiResponse<T>{
     status: number;
     message: string;
     data: T;
+    meta?: PaginationMeta;
+}
+
+export interface PaginationMeta {
+    current_page: number;
+    per_page: number;
+    total: number;
+    last_page: number;
 }

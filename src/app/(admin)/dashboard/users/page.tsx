@@ -51,7 +51,7 @@ export default function Page() {
   const handleDelete = async (email: string) => {
     const user = users.find((u) => u.email === email);
     if (!user) return;
-    await userService.deleteUser(String(user.id));
+    await userService.deleteUser(Number(user.id));
     fetchUsers(page, pageSize);
   };
 

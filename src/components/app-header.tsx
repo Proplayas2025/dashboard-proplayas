@@ -24,9 +24,24 @@ export function AppHeader() {
 
   useEffect(() => {
     setIsMounted(true);
-    // Busca el email en la cookie (ajusta el nombre si es diferente)
+    // Busca el email en localStorage
     const email = localStorage.getItem("email");
     setUserEmail(email ?? null);
+
+    // Listener para detectar cambios en localStorage (cuando el usuario hace login)
+    const handleStorageChange = () => {
+      const updatedEmail = localStorage.getItem("email");
+      setUserEmail(updatedEmail ?? null);
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    // Custom event para cambios en la misma pestaña
+    window.addEventListener("auth-change", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("auth-change", handleStorageChange);
+    };
   }, []);
   const handleLogout = async () => {
     const auth = new Authentication();
