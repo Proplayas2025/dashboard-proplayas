@@ -6,6 +6,7 @@ import { UserService } from "@/lib/UserController";
 import { SiteHeader } from "@/components/site-header";
 import { Users, PaginationMeta } from "@/interfaces/Profile";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 export default function Page() {
   const userService = useMemo(() => new UserService(), []);
@@ -15,14 +16,14 @@ export default function Page() {
 
   const [meta, setMeta] = useState<PaginationMeta>({
     current_page: 1,
-    per_page: 10,
+    per_page: 25,
     total: 0,
     last_page: 1,
   });
-  const pageSize = 10;
+  const pageSize = 25;
 
   const fetchUsers = useCallback(
-    async (page = 1, pageSize = 10) => {
+    async (page = 1, pageSize = 25) => {
       setLoading(true);
       try {
         const res = await userService.fetchUsers(page, pageSize);
@@ -30,7 +31,7 @@ export default function Page() {
         setMeta(
           res?.meta ?? {
             current_page: 1,
-            per_page: 10,
+            per_page: 25,
             total: 0,
             last_page: 1,
           }
@@ -39,7 +40,7 @@ export default function Page() {
         setUsers([]);
         setMeta({
           current_page: 1,
-          per_page: 10,
+          per_page: 25,
           total: 0,
           last_page: 1,
         });
@@ -48,17 +49,15 @@ export default function Page() {
     },
     [userService]
   );
-  const handleDelete = async (email: string) => {
-    const user = users.find((u) => u.email === email);
-    if (!user) return;
-    await userService.deleteUser(Number(user.id));
-    fetchUsers(page, pageSize);
-  };
 
-  const handleToggleStatus = async (email: string) => {
-    // Aquí podrías implementar la lógica para activar/desactivar usuario si tu API lo permite
-    console.log(`Usuario con email ${email} cambiando de status`);
-    fetchUsers(page, pageSize);
+  const handleToggleStatus = async (id: number) => {
+    try {
+      await userService.toggleUserStatus(id);
+      toast.success("Estado del usuario actualizado");
+      fetchUsers(page, pageSize);
+    } catch {
+      toast.error("Error al cambiar el estado del usuario");
+    }
   };
 
   useEffect(() => {
@@ -81,7 +80,6 @@ export default function Page() {
             <UsersTable
               data={users}
               onToggleStatus={handleToggleStatus}
-              onDelete={handleDelete}
               page={meta.current_page}
               pageSize={meta.per_page}
               total={meta.total}

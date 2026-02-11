@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { ProfileService } from "@/lib/ProfileController";
 import type { User } from "@/interfaces/Profile";
+import { getProfileUrl } from "@/lib/image-utils";
 import Image from "next/image";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -92,7 +93,7 @@ export default function Page() {
                     height={192}
                     src={
                       typeof user.profile_picture === "string"
-                        ? `${process.env.NEXT_PUBLIC_PROFILE_COVER_URL || ""}${user.profile_picture}`
+                        ? getProfileUrl(user.profile_picture) || ""
                         : URL.createObjectURL(user.profile_picture as never)
                     }
                     alt="Foto de perfil"

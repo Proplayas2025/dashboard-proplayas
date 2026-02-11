@@ -1,5 +1,5 @@
 import axiosInstance from "@/lib/axiosInstance";
-import type { InviteNodeMember,  InviteNodeLeader, ApiResponse, RegisterNodeLeaderRequest, RegisterNodeMemberRequest } from "@/interfaces/Invitations";
+import type { InviteNodeMember, InviteNodeLeader, ApiResponse, InvitationResponseData, RegisterNodeLeaderRequest, RegisterNodeMemberRequest } from "@/interfaces/Invitations";
 
 export default class InvitationService {
     
@@ -30,7 +30,7 @@ export default class InvitationService {
 
 
     // Invitar miembro (líder de nodo invita)
-    async createInvitationToNodeMember(data: InviteNodeMember): Promise<ApiResponse<InviteNodeMember>> {
+    async createInvitationToNodeMember(data: InviteNodeMember): Promise<ApiResponse<InvitationResponseData>> {
         try {
             const response = await axiosInstance.post("/invitations/member", data);
             return response.data;
@@ -40,7 +40,7 @@ export default class InvitationService {
         }
     }
     // Invitar líder de nodo (admin invita)
-    async createInvitationToNodeLeader(data: InviteNodeLeader): Promise<ApiResponse<InviteNodeLeader>> {
+    async createInvitationToNodeLeader(data: InviteNodeLeader): Promise<ApiResponse<InvitationResponseData>> {
         try {
             const response = await axiosInstance.post("/invitations/node-leader", data);
             return response.data;

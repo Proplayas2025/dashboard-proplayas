@@ -4,12 +4,7 @@ import { Publications } from "@/interfaces/Content";
 import { IconPencil, IconTrash, IconFileText, IconExternalLink, IconUpload, IconPhoto } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { buildImageUrl } from "@/lib/image-utils";
-
-const COVER_URL =
-  process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
-const FILES_PATH =
-  process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
+import { getCoverUrl, getFileUrl } from "@/lib/image-utils";
 
 interface PublicationCardProps {
   publication: Publications;
@@ -27,18 +22,8 @@ export const PublicationCard: React.FC<PublicationCardProps> = ({
   onChangeImage,
   onChangeFile,
 }) => {
-  const imageUrl = buildImageUrl({
-    coverImageUrl: publication.cover_image_url,
-    coverImage: publication.cover_image,
-    baseUrl: COVER_URL,
-  });
-
-  const filePath =
-    publication.file_path
-      ? publication.file_path.startsWith("http")
-        ? publication.file_path
-        : `${FILES_PATH}/${publication.file_path.replace(/^\/+/, "")}`
-      : undefined;
+  const imageUrl = getCoverUrl(publication.cover_image);
+  const filePath = getFileUrl(publication.file_path);
 
 
   return (
@@ -52,6 +37,7 @@ export const PublicationCard: React.FC<PublicationCardProps> = ({
             className="object-cover rounded-md"
             sizes="128px"
             priority={false}
+            unoptimized
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-zinc-700 rounded-md">

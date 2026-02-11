@@ -91,7 +91,7 @@ export function DataTable({
                         variant="outline"
                         className="text-muted-foreground px-1.5"
                       >
-                        {item.status === "Done" ? (
+                        {item.status === "active" ? (
                           <IconCircleCheckFilled className="fill-green-500 dark:fill-green-400" />
                         ) : (
                           <IconLoader />

@@ -3,7 +3,7 @@ import { ApiResponse, User, Users, PaginationMeta } from '@/interfaces/Profile';
 
 export class UserService {
     // Trae la lista de usuarios (solo admin)
-  async fetchUsers(page = 1, per_page = 10): Promise<{ data: Users[]; meta?: PaginationMeta }> {
+  async fetchUsers(page = 1, per_page = 25): Promise<{ data: Users[]; meta?: PaginationMeta }> {
     try {
       const response = await axiosInstance.get<ApiResponse<Users[]>>(`/users?page=${page}&per_page=${per_page}`);
       return {
@@ -58,6 +58,17 @@ export class UserService {
             return response.data.data;
         } catch (error) {
             console.error("Error al subir la foto de perfil:", error);
+            throw error;
+        }
+    }
+
+    // Activar/desactivar usuario (SOLO ADMIN)
+    async toggleUserStatus(id: number): Promise<Users> {
+        try {
+            const response = await axiosInstance.put<ApiResponse<Users>>(`/users/${id}/toggle-status`);
+            return response.data.data;
+        } catch (error) {
+            console.error("Error al cambiar el estado del usuario:", error);
             throw error;
         }
     }

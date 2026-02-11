@@ -12,6 +12,7 @@ import { Loader2 } from "lucide-react";
 import InviteNodeMemberForm from "@/components/Forms/invitations/InviteNodeMember";
 import InvitationService from "@/lib/InvitationService";
 import type { InviteNodeMember } from "@/interfaces/Invitations";
+import InvitationLinkDialog from "@/components/Forms/invitations/InvitationLinkDialog";
 
 import { toast } from "sonner";
 
@@ -22,6 +23,9 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [inviteLoading, setInviteLoading] = useState(false);
+  const [showLinkDialog, setShowLinkDialog] = useState(false);
+  const [invitationToken, setInvitationToken] = useState<string | null>(null);
+  const [invitedInfo, setInvitedInfo] = useState({ name: "", email: "" });
 
   const fetchMembers = useCallback(async () => {
     setLoading(true);
@@ -38,13 +42,13 @@ export default function Page() {
   }, [nodo]);
 
   const handleToggleStatus = async (id: number) => {
-    await nodo.toggleMemberStatus(id);
-    fetchMembers();
-  };
-
-  const handleDelete = async (id: number) => {
-    await nodo.deleteMember(id);
-    fetchMembers();
+    try {
+      await nodo.toggleMemberStatus(id);
+      toast.success("Estado del miembro actualizado");
+      fetchMembers();
+    } catch {
+      toast.error("Error al cambiar el estado del miembro");
+    }
   };
 
   const handleAdd = () => {
@@ -54,8 +58,15 @@ export default function Page() {
   const handleInviteSubmit = async (data: InviteNodeMember) => {
     setInviteLoading(true);
     try {
-      await invitationService.createInvitationToNodeMember(data);
+      const res = await invitationService.createInvitationToNodeMember(data);
       toast.success("Invitación enviada correctamente");
+      // Show invitation link dialog for manual sharing
+      const token = res?.data?.token;
+      if (token) {
+        setInvitationToken(token);
+        setInvitedInfo({ name: data.name, email: data.email });
+        setShowLinkDialog(true);
+      }
       fetchMembers();
     } catch {
       toast.error("Error al enviar la invitación");
@@ -91,7 +102,6 @@ export default function Page() {
               <DataTable
                 data={members}
                 onToggleStatus={handleToggleStatus}
-                onDelete={handleDelete}
               />
             )}
           </div>
@@ -102,6 +112,13 @@ export default function Page() {
         onOpenChange={setShowModal}
         onSubmit={handleInviteSubmit}
         loading={inviteLoading}
+      />
+      <InvitationLinkDialog
+        open={showLinkDialog}
+        onOpenChange={setShowLinkDialog}
+        invitationToken={invitationToken}
+        invitedName={invitedInfo.name}
+        invitedEmail={invitedInfo.email}
       />
     </>
   );

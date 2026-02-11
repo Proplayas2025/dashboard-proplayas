@@ -22,6 +22,12 @@ export class ContentController {
     return { data: response.data.data, meta: response.data.meta };
   }
 
+  async getContentAll(content: string, page = 1, per_page = 20) {
+    const contentType = contentTypeMap[content] || content;
+    const response = await api.get(`/content/all?content_type=${contentType}&page=${page}&per_page=${per_page}`);
+    return { data: response.data.data, meta: response.data.meta };
+  }
+
   async createContent(content: string, payload: Record<string, unknown>) {
     const contentType = contentTypeMap[content] || content;
     const response = await api.post(`/content`, {

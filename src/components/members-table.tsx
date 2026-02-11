@@ -30,7 +30,6 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import {
   IconCircleCheckFilled,
   IconLoader,
-  IconTrash,
   IconPower,
 } from "@tabler/icons-react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -53,13 +52,11 @@ type Member = z.infer<typeof schema>;
 type DataTableProps = {
   data: Member[];
   onToggleStatus: (id: number) => void;
-  onDelete: (id: number) => void;
 };
 
 export function DataTable({
   data,
   onToggleStatus,
-  onDelete,
 }: DataTableProps) {
   return (
     <Tabs defaultValue="outline" className="w-full flex-col justify-start gap-6">
@@ -103,7 +100,7 @@ export function DataTable({
                         variant="outline"
                         className="text-muted-foreground px-1.5"
                       >
-                        {item.status === "Done" ? (
+                        {item.status === "active" ? (
                           <IconCircleCheckFilled className="fill-green-500 dark:fill-green-400" />
                         ) : (
                           <IconLoader />
@@ -115,27 +112,19 @@ export function DataTable({
                       <div className="flex gap-2">
                         <Button
                           size="icon"
-                          variant={item.status === "Done" ? "secondary" : "outline"}
+                          variant={item.status === "active" ? "secondary" : "outline"}
                           title={
-                            item.status === "Done"
+                            item.status === "active"
                               ? "Desactivar miembro"
                               : "Activar miembro"
                           }
                           onClick={() => onToggleStatus(item.id)}
                         >
-                          {item.status === "Done" ? (
+                          {item.status === "active" ? (
                             <IconPower className="text-red-500" />
                           ) : (
                             <IconPower className="text-green-500" />
                           )}
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="destructive"
-                          title="Eliminar miembro"
-                          onClick={() => onDelete(item.id)}
-                        >
-                          <IconTrash />
                         </Button>
                       </div>
                     </TableCell>

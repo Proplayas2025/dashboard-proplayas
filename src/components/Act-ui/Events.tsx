@@ -2,28 +2,16 @@
 
 import { Events } from "@/interfaces/Content";
 import Image from "next/image";
-import { buildImageUrl } from "@/lib/image-utils";
+import { getCoverUrl, getFileUrl } from "@/lib/image-utils";
 
 interface EventCardProps {
   event: Events;
 }
 
 export const EventCard: React.FC<EventCardProps> = ({ event }) => {
-  const PROFILE_COVER_URL =
-    process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
-  const FILES_URL =
-    process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
+  const imageUrl = getCoverUrl(event.cover_image);
 
-  const imageUrl = buildImageUrl({
-    coverImageUrl: event.cover_image_url,
-    coverImage: event.cover_image,
-    baseUrl: PROFILE_COVER_URL,
-  });
-
-  const fileUrl =
-    event.file_url && !event.file_url.startsWith("http")
-      ? `${FILES_URL}/${event.file_url}`
-      : event.file_url || undefined;
+  const fileUrl = getFileUrl(event.file_url);
 
   const participants: string[] =
     typeof event.participants === "string" && (event.participants as string).trim().startsWith("[")
@@ -43,6 +31,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
             className="object-cover rounded-md"
             sizes="128px"
             priority={false}
+            unoptimized
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-zinc-700 rounded-md">
@@ -54,7 +43,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">{event.title}</h2>
           <span className="text-xs px-2 py-1 rounded bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300">
-            {event.type}
+            {event.event_type}
           </span>
         </div>
         <p className="text-gray-600 dark:text-gray-300 line-clamp-2">{event.description}</p>

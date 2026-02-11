@@ -1,36 +1,45 @@
-// Utilities para manejar URLs de imágenes (nombres vs URLs completas)
+// Utilidad centralizada para URLs de imágenes del servidor.
+// Usa una sola variable de entorno: NEXT_PUBLIC_STORAGE_URL
 
-export function isUrl(value: string): boolean {
+const STORAGE_URL = (process.env.NEXT_PUBLIC_STORAGE_URL || '').replace(/\/$/, '');
+
+export type ImageFolder = 'covers' | 'profiles' | 'docs';
+
+/**
+ * Construye la URL completa de una imagen almacenada en el servidor.
+ * Si filename es null/undefined, retorna undefined.
+ * Si filename ya es una URL completa, la retorna tal cual.
+ */
+export function getImageUrl(filename: string | null | undefined, folder: ImageFolder): string | undefined {
+  if (!filename) return undefined;
+
+  // Si ya es URL completa, retornarla
   try {
-    new URL(value);
-    return true;
-  } catch {
-    return false;
-  }
+    new URL(filename);
+    return filename;
+  } catch { /* es un nombre de archivo */ }
+
+  const cleanFile = filename.replace(/^\/+/, '');
+  return `${STORAGE_URL}/${folder}/${cleanFile}`;
 }
 
-export function buildImageUrl(options: {
-  coverImageUrl?: string | null;      // campo cover_image_url del backend
-  coverImage?: string | null;         // campo cover_image (puede ser nombre o URL)
-  baseUrl?: string | null;            // env base (ej. NEXT_PUBLIC_COVER_URL)
-}): string | undefined {
-  const { coverImageUrl, coverImage, baseUrl } = options;
-  
-  // 1. Si hay cover_image_url, usarlo directamente
-  if (coverImageUrl) return coverImageUrl;
-  
-  // 2. Si no hay cover_image, retornar undefined
-  if (!coverImage) return undefined;
-  
-  // 3. Si cover_image es una URL completa, usarla directamente
-  if (isUrl(coverImage)) return coverImage;
-  
-  // 4. Si cover_image es un nombre de archivo y hay baseUrl, construir la URL
-  if (baseUrl) {
-    const cleanBase = baseUrl.replace(/\/$/, '');
-    const cleanFile = coverImage.replace(/^\/+/, '');
-    return `${cleanBase}/${cleanFile}`;
-  }
-  
-  return undefined;
+/**
+ * Construye la URL de una imagen de portada de contenido (covers/).
+ */
+export function getCoverUrl(filename: string | null | undefined): string | undefined {
+  return getImageUrl(filename, 'covers');
+}
+
+/**
+ * Construye la URL de una foto de perfil (profiles/).
+ */
+export function getProfileUrl(filename: string | null | undefined): string | undefined {
+  return getImageUrl(filename, 'profiles');
+}
+
+/**
+ * Construye la URL de un archivo/documento (docs/).
+ */
+export function getFileUrl(filename: string | null | undefined): string | undefined {
+  return getImageUrl(filename, 'docs');
 }

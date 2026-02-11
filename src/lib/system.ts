@@ -3,8 +3,6 @@ import { getCookie } from "./cookies";
 
 // Variables de entorno para Next.js
 export const V_Global_API = process.env.NEXT_PUBLIC_API_URL || "";
-export const V_Global_PROFILE_IMG = process.env.NEXT_PUBLIC_PROFILE_COVER_URL || "";
-export const V_Global_PROFILE_COVER = process.env.NEXT_PUBLIC_COVER_URL || "";
 export const V_Domain = "";
 
 // Interfaz para la configuración del sistema

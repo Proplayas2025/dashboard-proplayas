@@ -89,8 +89,16 @@ function RegisterContent() {
 
       // Otros errores
       toast.error(message || "Error al registrar. Intenta de nuevo.");
-    } catch {
-      toast.error("Error inesperado al registrar. Intenta de nuevo.");
+    } catch (error: unknown) {
+      // Extraer mensaje descriptivo del backend (HTTPException → { detail: "..." })
+      let errorMessage = "Error inesperado al registrar. Intenta de nuevo.";
+      if (error && typeof error === "object" && "response" in error) {
+        const axiosError = error as { response?: { data?: { detail?: string } } };
+        if (axiosError.response?.data?.detail) {
+          errorMessage = axiosError.response.data.detail;
+        }
+      }
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

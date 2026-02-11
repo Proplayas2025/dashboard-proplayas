@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { EditCoverImageModal, EditAttachmentFileModal } from "@/components/Forms/Acomposables/EditFiles";
 import { toast } from "sonner";
+import { getCookie } from "@/lib/cookies";
 
 export default function Page() {
   const content = useMemo(() => new ContentController(), []);
@@ -117,7 +118,10 @@ export default function Page() {
   const fetchEvents = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await content.getContentAuthor("events", page, 20);
+      const role = getCookie("role");
+      const res = role === "admin"
+        ? await content.getContentAll("events", page, 20)
+        : await content.getContentAuthor("events", page, 20);
       setEvents(res?.data || []);
       setTotalPages(res?.meta?.last_page || 1);
     } catch  {

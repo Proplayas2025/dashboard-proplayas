@@ -2,26 +2,15 @@
 
 import { Projects } from "@/interfaces/Content";
 import Image from "next/image";
-import { buildImageUrl } from "@/lib/image-utils";
+import { getCoverUrl, getFileUrl } from "@/lib/image-utils";
 
 interface ProyectoCardProps {
   proyecto: Projects;
 }
 
 export const ProyectoCard: React.FC<ProyectoCardProps> = ({ proyecto }) => {
-  const COVER_URL = process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
-  const FILES_URL = process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
-
-  const imageUrl = buildImageUrl({
-    coverImageUrl: proyecto.cover_image_url,
-    coverImage: proyecto.cover_image,
-    baseUrl: COVER_URL,
-  });
-
-  const fileUrl =
-    proyecto.file_url && !proyecto.file_url.startsWith("http")
-      ? `${FILES_URL}/${proyecto.file_url}`
-      : proyecto.file_url || undefined;
+  const imageUrl = getCoverUrl(proyecto.cover_image);
+  const fileUrl = getFileUrl(proyecto.file_url);
 
   const participants: string[] =
     typeof proyecto.participants === "string" && (proyecto.participants as string).trim().startsWith("[")
@@ -41,6 +30,7 @@ export const ProyectoCard: React.FC<ProyectoCardProps> = ({ proyecto }) => {
             className="object-cover rounded-md"
             sizes="128px"
             priority={false}
+            unoptimized
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-zinc-700 rounded-md">

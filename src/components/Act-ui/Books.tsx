@@ -3,26 +3,15 @@
 import { Books } from "@/interfaces/Content";
 import Image from "next/image";
 import { IconFileText, IconExternalLink } from "@tabler/icons-react";
-import { buildImageUrl } from "@/lib/image-utils";
-
-const COVER_URL = process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
-const FILES_URL = process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
+import { getCoverUrl, getFileUrl } from "@/lib/image-utils";
 
 interface BookCardProps {
   book: Books;
 }
 
 export const BookCard: React.FC<BookCardProps> = ({ book }) => {
-  const imageUrl = buildImageUrl({
-    coverImageUrl: book.cover_image_url,
-    coverImage: book.cover_image,
-    baseUrl: COVER_URL,
-  });
-
-  const fileUrl =
-    book.file_url && !book.file_url.startsWith("http")
-      ? `${FILES_URL}/${book.file_url}`
-      : book.file_url || undefined;
+  const imageUrl = getCoverUrl(book.cover_image);
+  const fileUrl = getFileUrl(book.file_url);
 
   return (
     <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-md p-4 flex flex-col md:flex-row gap-4 items-center">
@@ -36,6 +25,7 @@ export const BookCard: React.FC<BookCardProps> = ({ book }) => {
             sizes="112px"
             priority={false}
             style={{ objectFit: "cover" }}
+            unoptimized
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-zinc-700 rounded-md">

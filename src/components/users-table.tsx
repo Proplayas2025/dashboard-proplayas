@@ -12,16 +12,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IconCircleCheckFilled, IconLoader, IconTrash, IconPower } from "@tabler/icons-react";
+import { IconCircleCheckFilled, IconLoader, IconPower } from "@tabler/icons-react";
 import { Label } from "@/components/ui/label";
 
 // Schema basado en la interfaz Users
 export const userSchema = z.object({
+  id: z.number(),
   name: z.string(),
   email: z.string(),
   role: z.string(),
-  node_id: z.number(),
-  node_code: z.string(),
+  node_id: z.number().nullable(),
+  node_code: z.string().nullable(),
   status: z.string(),
 });
 
@@ -29,8 +30,7 @@ type User = z.infer<typeof userSchema>;
 
 type UsersTableProps = {
   data: User[];
-  onToggleStatus: (email: string) => void;
-  onDelete: (email: string) => void;
+  onToggleStatus: (id: number) => void;
   page?: number;
   pageSize?: number;
   total?: number;
@@ -40,7 +40,6 @@ type UsersTableProps = {
 export function UsersTable({
   data,
   onToggleStatus,
-  onDelete,
   page = 1,
   pageSize = 10,
   total = 0,
@@ -90,7 +89,7 @@ export function UsersTable({
                         variant="outline"
                         className="text-muted-foreground px-1.5"
                       >
-                        {item.status === "activo" ? (
+                        {item.status === "active" ? (
                           <IconCircleCheckFilled className="fill-green-500 dark:fill-green-400" />
                         ) : (
                           <IconLoader />
@@ -102,27 +101,19 @@ export function UsersTable({
                       <div className="flex gap-2">
                         <Button
                           size="icon"
-                          variant={item.status === "activo" ? "secondary" : "outline"}
+                          variant={item.status === "active" ? "secondary" : "outline"}
                           title={
-                            item.status === "activo"
+                            item.status === "active"
                               ? "Desactivar usuario"
                               : "Activar usuario"
                           }
-                          onClick={() => onToggleStatus(item.email)}
+                          onClick={() => onToggleStatus(item.id)}
                         >
-                          {item.status === "activo" ? (
+                          {item.status === "active" ? (
                             <IconPower className="text-red-500" />
                           ) : (
                             <IconPower className="text-green-500" />
                           )}
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="destructive"
-                          title="Eliminar usuario"
-                          onClick={() => onDelete(item.email)}
-                        >
-                          <IconTrash />
                         </Button>
                       </div>
                     </TableCell>

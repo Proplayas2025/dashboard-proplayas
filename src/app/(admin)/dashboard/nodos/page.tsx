@@ -11,7 +11,8 @@ import { IconPlus } from "@tabler/icons-react";
 import InviteNodeForm from "@/components/Forms/invitations/InviteNodeLeaderForm";
 import InvitationService from "@/lib/InvitationService";
 import {InviteNodeLeader} from "@/interfaces/Invitations";
-import { toast } from "sonner"; // Si usas alguna librería de notificaciones
+import InvitationLinkDialog from "@/components/Forms/invitations/InvitationLinkDialog";
+import { toast } from "sonner";
 
 export default function Page() {
   const nodoService = useMemo(() => new NodosService(), []);
@@ -20,6 +21,9 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [inviteLoading, setInviteLoading] = useState(false);
+  const [showLinkDialog, setShowLinkDialog] = useState(false);
+  const [invitationToken, setInvitationToken] = useState<string | null>(null);
+  const [invitedInfo, setInvitedInfo] = useState({ name: "", email: "" });
 
   const fetchNodes = useCallback(async () => {
     setLoading(true);
@@ -52,8 +56,15 @@ export default function Page() {
   const handleInviteSubmit = async (data: InviteNodeLeader) => {
     setInviteLoading(true);
     try {
-      await invitationService.createInvitationToNodeLeader(data);
+      const res = await invitationService.createInvitationToNodeLeader(data);
       toast.success("Invitación enviada correctamente");
+      // Show invitation link dialog for manual sharing
+      const token = res?.data?.token;
+      if (token) {
+        setInvitationToken(token);
+        setInvitedInfo({ name: data.name, email: data.email });
+        setShowLinkDialog(true);
+      }
       fetchNodes();
     } catch {
       toast.error("Error al enviar la invitación");
@@ -99,6 +110,13 @@ export default function Page() {
         onOpenChange={setShowModal}
         onSubmit={handleInviteSubmit}
         loading={inviteLoading}
+      />
+      <InvitationLinkDialog
+        open={showLinkDialog}
+        onOpenChange={setShowLinkDialog}
+        invitationToken={invitationToken}
+        invitedName={invitedInfo.name}
+        invitedEmail={invitedInfo.email}
       />
     </>
   );

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Node } from "@/interfaces/Nodes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FileText } from "lucide-react";
+import { getProfileUrl, getFileUrl } from "@/lib/image-utils";
 interface NodoBioProps {
   nodo: Node;
 }
@@ -13,14 +14,14 @@ export function NodoBio({ nodo }: NodoBioProps) {
     <Card className="p-6 grid grid-cols-1 md:grid-cols-[300px_minmax(600px,_1fr)] gap-6 relative">
       <div className="flex flex-col items-center md:items-start">
         <div className="relative w-32 h-32 md:w-48 md:h-48">
-          {process.env.NEXT_PUBLIC_PROFILE_COVER_URL &&
-          nodo?.profile_picture ? (
+          {nodo?.profile_picture ? (
             <Image
               width={192}
               height={192}
-              src={`${process.env.NEXT_PUBLIC_PROFILE_COVER_URL}${nodo.profile_picture}`}
+              src={getProfileUrl(nodo.profile_picture) || ""}
               alt="Foto de perfil"
               className="w-full h-full rounded-full border-2 border-gray-300 object-cover"
+              unoptimized
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gray-200 rounded-full border-2 border-gray-300">
@@ -61,7 +62,7 @@ export function NodoBio({ nodo }: NodoBioProps) {
               className="flex items-center gap-2 border-blue-200 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900 dark:border-blue-700 dark:hover:bg-blue-800 transition px-4 py-2"
             >
               <a
-              href={`${process.env.NEXT_PUBLIC_FILES_PATH}${nodo.memorandum}`}
+              href={getFileUrl(nodo.memorandum) || "#"}
               target="_blank"
               rel="noopener noreferrer"
               className="group flex items-center gap-2"

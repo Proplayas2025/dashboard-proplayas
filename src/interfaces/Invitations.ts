@@ -3,6 +3,21 @@ export interface ApiResponse<T>{
     message: string;
     data: T;
 }
+
+export interface InvitationResponseData {
+    id: number;
+    name: string | null;
+    email: string;
+    token: string;
+    role: string;
+    node_type: string | null;
+    status: string;
+    node_id: number | null;
+    invited_by: number;
+    created_at: string;
+    expires_at: string;
+}
+
 export interface InviteNodeLeader {
     code : string; // código del líder de nodo, por ejemplo: "C123"
     role_type: string; // tipo de rol, por ejemplo: "admin", "member", etc.

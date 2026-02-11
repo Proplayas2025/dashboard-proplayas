@@ -4,10 +4,7 @@ import { Projects } from "@/interfaces/Content";
 import { IconPencil, IconTrash, IconFileText, IconUpload, IconPhoto, IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { buildImageUrl } from "@/lib/image-utils";
-
-const COVER_URL = process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
-const FILES_PATH = process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
+import { getCoverUrl, getFileUrl } from "@/lib/image-utils";
 
 interface ProyectoCardProps {
   proyecto: Projects;
@@ -26,18 +23,8 @@ export const ProyectoCard: React.FC<ProyectoCardProps> = ({
 }) => {
   const [showParticipants, setShowParticipants] = useState(false);
 
-  const imageUrl = buildImageUrl({
-    coverImageUrl: proyecto.cover_image_url,
-    coverImage: proyecto.cover_image,
-    baseUrl: COVER_URL,
-  });
-
-  const filePath =
-    proyecto.file_path
-      ? proyecto.file_path.startsWith("http")
-        ? proyecto.file_path
-        : `${FILES_PATH}/${proyecto.file_path.replace(/^\/+/, "")}`
-      : undefined;
+  const imageUrl = getCoverUrl(proyecto.cover_image);
+  const filePath = getFileUrl(proyecto.file_path);
 
   const participants: string[] =
     typeof proyecto.participants === "string" && (proyecto.participants as string).trim().startsWith("[")
@@ -57,6 +44,7 @@ export const ProyectoCard: React.FC<ProyectoCardProps> = ({
             className="object-cover rounded-md"
             sizes="128px"
             priority={false}
+            unoptimized
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-zinc-700 rounded-md">

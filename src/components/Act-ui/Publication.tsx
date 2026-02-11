@@ -3,28 +3,15 @@
 import { Publications } from "@/interfaces/Content";
 import Image from "next/image";
 import { IconFileText, IconExternalLink } from "@tabler/icons-react";
-import { buildImageUrl } from "@/lib/image-utils";
-
-const COVER_URL =
-  process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
-const FILES_URL =
-  process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
+import { getCoverUrl, getFileUrl } from "@/lib/image-utils";
 
 interface PublicationCardProps {
   publication: Publications;
 }
 
 export const PublicationCard: React.FC<PublicationCardProps> = ({ publication }) => {
-  const imageUrl = buildImageUrl({
-    coverImageUrl: publication.cover_image_url,
-    coverImage: publication.cover_image,
-    baseUrl: COVER_URL,
-  });
-
-  const fileUrl =
-    publication.file_url && !publication.file_url.startsWith("http")
-      ? `${FILES_URL}/${publication.file_url}`
-      : publication.file_url || undefined;
+  const imageUrl = getCoverUrl(publication.cover_image);
+  const fileUrl = getFileUrl(publication.file_url);
 
   return (
     <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-md p-4 flex flex-col md:flex-row gap-4 items-center">
@@ -37,6 +24,7 @@ export const PublicationCard: React.FC<PublicationCardProps> = ({ publication })
             className="object-cover rounded-md"
             sizes="128px"
             priority={false}
+            unoptimized
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-zinc-700 rounded-md">

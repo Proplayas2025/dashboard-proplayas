@@ -26,7 +26,7 @@ export interface Projects {
 export interface Events {
     id: number;
     title: string; 
-    type: 'event' | 'taller' | 'clase' | 'curso' | 'seminario' | 'foro' | 'conferencia' | 'congreso' | 'webinar';
+    event_type: 'event' | 'taller' | 'clase' | 'curso' | 'seminario' | 'foro' | 'conferencia' | 'congreso' | 'webinar';
     description: string;
     date: string; // ISO date string, since PHP expects a date string
     link: string;

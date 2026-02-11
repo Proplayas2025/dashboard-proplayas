@@ -4,11 +4,7 @@ import { Events } from "@/interfaces/Content";
 import { IconPencil, IconTrash, IconFileText, IconUpload, IconPhoto, IconChevronUp, IconChevronDown } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { buildImageUrl } from "@/lib/image-utils";
-
-const PROFILE_COVER_URL =
-  process.env.NEXT_PUBLIC_COVER_URL?.replace(/\/$/, "") || "";
-const FILES_PATH = process.env.NEXT_PUBLIC_FILES_PATH?.replace(/\/$/, "") || "";
+import { getCoverUrl, getFileUrl } from "@/lib/image-utils";
 
 interface EventCardProps {
   event: Events;
@@ -26,18 +22,8 @@ export const EventCard: React.FC<EventCardProps> = ({
   onChangeFile,
 }) => {
   const [showParticipants, setShowParticipants] = useState(false);
-  const imageUrl = buildImageUrl({
-    coverImageUrl: event.cover_image_url,
-    coverImage: event.cover_image,
-    baseUrl: PROFILE_COVER_URL,
-  });
-
-  const filePath =
-    event.file_path
-      ? event.file_path.startsWith("http")
-        ? event.file_path
-        : `${FILES_PATH}/${event.file_path.replace(/^\/+/, "")}`
-      : undefined;
+  const imageUrl = getCoverUrl(event.cover_image);
+  const filePath = getFileUrl(event.file_path);
 
   const participants: string[] =
     typeof event.participants === "string" && (event.participants as string).trim().startsWith("[")
@@ -57,6 +43,7 @@ export const EventCard: React.FC<EventCardProps> = ({
             className="object-cover rounded-md"
             sizes="128px"
             priority={false}
+            unoptimized
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-zinc-700 rounded-md">
@@ -68,7 +55,7 @@ export const EventCard: React.FC<EventCardProps> = ({
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">{event.title}</h2>
           <span className="text-xs px-2 py-1 rounded bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300">
-            {event.type}
+            {event.event_type}
           </span>
         </div>
         <p className="text-gray-600 dark:text-gray-300 line-clamp-2">{event.description}</p>
