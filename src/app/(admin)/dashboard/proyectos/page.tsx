@@ -47,7 +47,7 @@ export default function Page() {
     const payload = {
       title: updated.title,
       description: updated.description,
-      date: updated.date,
+      event_date: updated.event_date,
       location: updated.location,
       link: updated.link,
       cover_image_url: updated.cover_image_url,

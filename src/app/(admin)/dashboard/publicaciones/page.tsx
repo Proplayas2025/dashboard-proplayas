@@ -45,7 +45,7 @@ export default function Page() {
 
   const handleSave = async (updated: Publications) => {
     const payload = {
-      type: updated.type,
+      publication_type: updated.publication_type,
       title: updated.title,
       description: updated.description,
       link: updated.link,

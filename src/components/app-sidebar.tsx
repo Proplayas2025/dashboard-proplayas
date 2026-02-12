@@ -12,6 +12,7 @@ import {
   IconUser,
   IconBook2,
   Icon,
+  IconMailForward
 } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 
@@ -94,6 +95,11 @@ export function AppSidebar({
         url: "/dashboard/miembros",
         icon: IconUsers,
       },
+      {
+        title: "Invitaciones",
+        url: "/dashboard/invitaciones",
+        icon: IconMailForward,
+      },
     ];
   } else if (role === "admin") {
     navMainFiltered = [
@@ -111,6 +117,11 @@ export function AppSidebar({
         title: "Mi Perfil",
         url: "/dashboard/perfil",
         icon: IconFolder,
+      },
+      {
+        title: "Invitaciones",
+        url: "/dashboard/invitaciones",
+        icon: IconMailForward,
       },
     ];
   } else if (role === "member") {

@@ -34,22 +34,16 @@ export const BookCard: React.FC<BookCardProps> = ({
   return (
     <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-md p-4 flex flex-col md:flex-row gap-4 items-center">
       <div className="w-28 h-44 relative flex-shrink-0">
-        {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt={book.title}
-            fill
-            className="object-cover rounded-md"
-            sizes="112px"
-            priority={false}
-            style={{ objectFit: "cover" }}
-            unoptimized
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-zinc-700 rounded-md">
-            <span className="text-gray-400 text-sm">Sin imagen</span>
-          </div>
-        )}
+        <Image
+          src={imageUrl || "/proplayas_img.jpg"}
+          alt={book.title}
+          fill
+          className="object-cover rounded-md"
+          sizes="112px"
+          priority={false}
+          style={{ objectFit: "cover" }}
+          unoptimized
+        />
       </div>
       <div className="flex-1 flex flex-col gap-2">
         <div className="flex items-center justify-between">

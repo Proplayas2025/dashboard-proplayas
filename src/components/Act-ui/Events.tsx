@@ -3,6 +3,7 @@
 import { Events } from "@/interfaces/Content";
 import Image from "next/image";
 import { getCoverUrl, getFileUrl } from "@/lib/image-utils";
+import { formatDate, formatTime } from "@/lib/date-utils";
 
 interface EventCardProps {
   event: Events;
@@ -23,9 +24,8 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
   return (
     <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-md p-4 flex flex-col md:flex-row gap-4 items-center">
       <div className="w-32 h-32 relative flex-shrink-0">
-        {imageUrl ? (
           <Image
-            src={imageUrl}
+            src={imageUrl || "/proplayas_img.jpg"}
             alt={event.title}
             fill
             className="object-cover rounded-md"
@@ -33,11 +33,6 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
             priority={false}
             unoptimized
           />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-zinc-700 rounded-md">
-            <span className="text-gray-400 text-sm">Sin imagen</span>
-          </div>
-        )}
       </div>
       <div className="flex-1 flex flex-col gap-2">
         <div className="flex items-center justify-between">
@@ -49,20 +44,12 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
         <p className="text-gray-600 dark:text-gray-300 line-clamp-2">{event.description}</p>
         <div className="flex flex-wrap gap-2 text-sm text-gray-500 dark:text-gray-400">
           <span>
-            <strong>Fecha:</strong>{" "}
-            {new Date(event.date).toLocaleDateString("en-GB", { timeZone: "UTC" })}{" "}
-            <strong>Hora (UTC):</strong>{" "}
-            {new Date(event.date).toLocaleTimeString("en-GB", {
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: false,
-              timeZone: "UTC",
-            })}{" "}
-            UTC
+            <strong>Fecha:</strong> {formatDate(event.event_date)}{" "}
+            <strong>Hora:</strong> {formatTime(event.event_date)}
           </span>
-          {event.format && (
+          {event.event_format && (
             <span>
-              <strong>Formato:</strong> {event.format}
+              <strong>Formato:</strong> {event.event_format}
             </span>
           )}
           {event.location && (

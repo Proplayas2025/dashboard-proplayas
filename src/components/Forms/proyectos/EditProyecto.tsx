@@ -113,12 +113,12 @@ export const EditProyectoModal: React.FC<EditProyectoModalProps> = ({
             />
           </div>
           <div className="flex flex-col gap-1">
-            <Label htmlFor="date">Fecha</Label>
+            <Label htmlFor="event_date">Fecha</Label>
             <Input
-              id="date"
-              name="date"
+              id="event_date"
+              name="event_date"
               type="date"
-              value={formData.date ? String(formData.date).substring(0, 10) : ""}
+              value={formData.event_date ? String(formData.event_date).substring(0, 10) : ""}
               onChange={handleChange}
               required
             />

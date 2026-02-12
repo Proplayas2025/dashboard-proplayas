@@ -4,6 +4,7 @@ import * as React from "react";
 import { z } from "zod";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -12,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IconCircleCheckFilled, IconLoader, IconPower } from "@tabler/icons-react";
+import { IconCircleCheckFilled, IconLoader, IconPower, IconSearch, IconChevronUp, IconChevronDown, IconSelector } from "@tabler/icons-react";
 import { Label } from "@/components/ui/label";
 
 // Schema basado en la interfaz Users
@@ -35,6 +36,7 @@ type UsersTableProps = {
   pageSize?: number;
   total?: number;
   onPageChange?: (page: number) => void;
+  onSearch?: (search: string) => void;
 };
 
 export function UsersTable({
@@ -44,35 +46,144 @@ export function UsersTable({
   pageSize = 10,
   total = 0,
   onPageChange,
+  onSearch,
 }: UsersTableProps) {
+  const [searchValue, setSearchValue] = React.useState("");
+  const [sortBy, setSortBy] = React.useState<keyof User | null>(null);
+  const [sortDirection, setSortDirection] = React.useState<"asc" | "desc">("asc");
+
+  const handleSearch = () => {
+    onSearch?.(searchValue.trim());
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") handleSearch();
+  };
+
+  const handleSort = (column: keyof User) => {
+    if (sortBy === column) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(column);
+      setSortDirection("asc");
+    }
+  };
+
+  const sortedData = React.useMemo(() => {
+    if (!sortBy) return data;
+    
+    return [...data].sort((a, b) => {
+      const aVal = a[sortBy];
+      const bVal = b[sortBy];
+      
+      if (aVal === null || aVal === undefined) return 1;
+      if (bVal === null || bVal === undefined) return -1;
+      
+      if (typeof aVal === "string" && typeof bVal === "string") {
+        return sortDirection === "asc"
+          ? aVal.localeCompare(bVal, "es")
+          : bVal.localeCompare(aVal, "es");
+      }
+      
+      if (typeof aVal === "number" && typeof bVal === "number") {
+        return sortDirection === "asc" ? aVal - bVal : bVal - aVal;
+      }
+      
+      return 0;
+    });
+  }, [data, sortBy, sortDirection]);
+
+  const getSortIcon = (column: keyof User) => {
+    if (sortBy !== column) {
+      return <IconSelector className="h-4 w-4" />;
+    }
+    return sortDirection === "asc" ? (
+      <IconChevronUp className="h-4 w-4" />
+    ) : (
+      <IconChevronDown className="h-4 w-4" />
+    );
+  };
+
   const totalPages = Math.ceil(total / pageSize);
 
   return (
-    <div className="w-full flex-col justify-start gap-6">
+    <div className="w-full flex-col justify-start">
       <div className="flex items-center justify-between px-4 lg:px-6">
+        <div className="flex items-center gap-2 max-w-md w-full mb-2">
+          <div className="relative flex-1">
+            <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar por nombre, email o username..."
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="pl-9"
+            />
+          </div>
+          <Button size="sm" variant="outline" onClick={handleSearch}>
+            Buscar
+          </Button>
+        </div>
         <Label htmlFor="view-selector" className="sr-only">
           View
         </Label>
-        <div className="flex items-center gap-2">
-          {/* No agregar botón de agregar usuario */}
-        </div>
       </div>
       <div className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
         <div className="overflow-hidden rounded-lg border">
           <Table>
             <TableHeader className="bg-muted sticky top-0 z-10">
               <TableRow>
-                <TableHead>Nombre</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Rol</TableHead>
-                <TableHead>Nodo</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead
+                  className="cursor-pointer select-none hover:bg-muted-foreground/10"
+                  onClick={() => handleSort("name")}
+                >
+                  <div className="flex items-center gap-1">
+                    Nombre
+                    {getSortIcon("name")}
+                  </div>
+                </TableHead>
+                <TableHead
+                  className="cursor-pointer select-none hover:bg-muted-foreground/10"
+                  onClick={() => handleSort("email")}
+                >
+                  <div className="flex items-center gap-1">
+                    Email
+                    {getSortIcon("email")}
+                  </div>
+                </TableHead>
+                <TableHead
+                  className="cursor-pointer select-none hover:bg-muted-foreground/10"
+                  onClick={() => handleSort("role")}
+                >
+                  <div className="flex items-center gap-1">
+                    Rol
+                    {getSortIcon("role")}
+                  </div>
+                </TableHead>
+                <TableHead
+                  className="cursor-pointer select-none hover:bg-muted-foreground/10"
+                  onClick={() => handleSort("node_code")}
+                >
+                  <div className="flex items-center gap-1">
+                    Nodo
+                    {getSortIcon("node_code")}
+                  </div>
+                </TableHead>
+                <TableHead
+                  className="cursor-pointer select-none hover:bg-muted-foreground/10"
+                  onClick={() => handleSort("status")}
+                >
+                  <div className="flex items-center gap-1">
+                    Status
+                    {getSortIcon("status")}
+                  </div>
+                </TableHead>
                 <TableHead>Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data && data.length > 0 ? (
-                data.map((item) => (
+              {sortedData && sortedData.length > 0 ? (
+                sortedData.map((item) => (
                   <TableRow key={item.email}>
                     <TableCell>{item.name}</TableCell>
                     <TableCell>{item.email}</TableCell>

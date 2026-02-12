@@ -3,9 +3,11 @@ import { ApiResponse, User, Users, PaginationMeta } from '@/interfaces/Profile';
 
 export class UserService {
     // Trae la lista de usuarios (solo admin)
-  async fetchUsers(page = 1, per_page = 25): Promise<{ data: Users[]; meta?: PaginationMeta }> {
+  async fetchUsers(page = 1, per_page = 25, search?: string): Promise<{ data: Users[]; meta?: PaginationMeta }> {
     try {
-      const response = await axiosInstance.get<ApiResponse<Users[]>>(`/users?page=${page}&per_page=${per_page}`);
+      const params: Record<string, unknown> = { page, per_page };
+      if (search) params.search = search;
+      const response = await axiosInstance.get<ApiResponse<Users[]>>(`/users`, { params });
       return {
         data: response.data.data,
         meta: response.data.meta

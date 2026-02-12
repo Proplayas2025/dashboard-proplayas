@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { Node } from "@/interfaces/Nodes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,24 +11,31 @@ interface NodoBioProps {
 }
 import { Button } from "@/components/ui/button";
 export function NodoBio({ nodo }: NodoBioProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  
+  const truncateText = (text: string | null | undefined, wordLimit: number) => {
+    if (!text) return "";
+    const words = text.split(/\s+/);
+    if (words.length <= wordLimit) return text;
+    return words.slice(0, wordLimit).join(" ") + "...";
+  };
+  
+  const shouldShowButton = (text: string | null | undefined, wordLimit: number) => {
+    if (!text) return false;
+    return text.split(/\s+/).length > wordLimit;
+  };
   return (
     <Card className="p-6 grid grid-cols-1 md:grid-cols-[300px_minmax(600px,_1fr)] gap-6 relative">
       <div className="flex flex-col items-center md:items-start">
         <div className="relative w-32 h-32 md:w-48 md:h-48">
-          {nodo?.profile_picture ? (
             <Image
               width={192}
               height={192}
-              src={getProfileUrl(nodo.profile_picture) || ""}
+              src={getProfileUrl(nodo.profile_picture) || "/proplayas_img.jpg"}
               alt="Foto de perfil"
               className="w-full h-full rounded-full border-2 border-gray-300 object-cover"
               unoptimized
             />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gray-200 rounded-full border-2 border-gray-300">
-              <span className="text-gray-400">Sin foto</span>
-            </div>
-          )}
         </div>
         <div className="my-3 text-center md:text-left">
           <h1 className="text-2xl font-semibold text-gray-500 dark:text-white">
@@ -51,7 +59,20 @@ export function NodoBio({ nodo }: NodoBioProps) {
               Sobre el nodo
             </CardTitle>
           </CardHeader>
-          <p className="text-gray-600 dark:text-white mt-2">{nodo?.about}</p>
+          <div className="text-gray-600 dark:text-white mt-2">
+            <p className="whitespace-pre-wrap">
+              {isExpanded ? nodo?.about : truncateText(nodo?.about, 50)}
+            </p>
+            {shouldShowButton(nodo?.about, 50) && (
+              <Button
+                variant="link"
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="p-0 h-auto text-blue-600 hover:text-blue-800 dark:text-blue-400 mt-2"
+              >
+                {isExpanded ? "Ver menos" : "Ver más"}
+              </Button>
+            )}
+          </div>
         </div>
 
         {nodo?.memorandum && (

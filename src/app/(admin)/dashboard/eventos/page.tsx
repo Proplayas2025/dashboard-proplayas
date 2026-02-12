@@ -47,9 +47,9 @@ export default function Page() {
     const payload = {
       title: updated.title,
       description: updated.description,
-      date: updated.date,
-      type: updated.type,
-      format: updated.format,
+      event_date: updated.event_date,
+      event_type: updated.event_type,
+      event_format: updated.event_format,
       location: updated.location,
       link: updated.link,
     };

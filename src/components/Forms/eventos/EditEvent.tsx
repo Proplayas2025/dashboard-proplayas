@@ -81,14 +81,14 @@ export const EditEventModal: React.FC<EditEventModalProps> = ({
             />
           </div>
           <div className="flex flex-col gap-1">
-            <Label htmlFor="date">Fecha y hora</Label>
+            <Label htmlFor="event_date">Fecha y hora</Label>
             <Input
-              id="date"
-              name="date"
+              id="event_date"
+              name="event_date"
               type="datetime-local"
               value={
-                formData.date
-                  ? new Date(formData.date).toISOString().slice(0, 16)
+                formData.event_date
+                  ? formData.event_date.toString().slice(0, 16)
                   : ""
               }
               onChange={handleChange}
@@ -98,8 +98,8 @@ export const EditEventModal: React.FC<EditEventModalProps> = ({
           <div className="flex flex-col gap-1">
             <Label>Tipo de evento</Label>
             <Select
-              value={formData.type || ""}
-              onValueChange={(value) => handleSelectChange("type", value)}
+              value={formData.event_type || ""}
+              onValueChange={(value) => handleSelectChange("event_type", value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Tipo de evento" />
@@ -116,8 +116,8 @@ export const EditEventModal: React.FC<EditEventModalProps> = ({
           <div className="flex flex-col gap-1">
             <Label>Formato</Label>
             <Select
-              value={formData.format || ""}
-              onValueChange={(value) => handleSelectChange("format", value)}
+              value={formData.event_format || ""}
+              onValueChange={(value) => handleSelectChange("event_format", value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Formato" />

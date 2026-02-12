@@ -27,6 +27,19 @@ export default function Page() {
   const [showEditInfo, setShowEditInfo] = useState(false);
   const [showEditImage, setShowEditImage] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
+  
+  const truncateText = (text: string | undefined, wordLimit: number) => {
+    if (!text) return "";
+    const words = text.split(/\s+/);
+    if (words.length <= wordLimit) return text;
+    return words.slice(0, wordLimit).join(" ") + "...";
+  };
+  
+  const shouldShowButton = (text: string | undefined, wordLimit: number) => {
+    if (!text) return false;
+    return text.split(/\s+/).length > wordLimit;
+  };
 
   // Para la edición de datos personales
   const fetchProfile = useCallback(async () => {
@@ -87,31 +100,24 @@ export default function Page() {
             <Card className="p-6 grid grid-cols-1 md:grid-cols-[300px_minmax(600px,_1fr)] gap-6 relative">
               <CardContent className="flex flex-col items-center md:items-start p-0">
               <div className="relative w-32 h-32 md:w-48 md:h-48 group">
-                {user.profile_picture ? (
-                  <Image
-                    width={192}
-                    height={192}
-                    src={
-                      typeof user.profile_picture === "string"
-                        ? getProfileUrl(user.profile_picture) || ""
-                        : URL.createObjectURL(user.profile_picture as never)
-                    }
-                    alt="Foto de perfil"
-                    className="w-full h-full rounded-full border-2 border-gray-300 object-cover"
-                    unoptimized
-                  />
-                ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gray-200 rounded-full border-2 border-gray-300">
-                  <span className="text-gray-400">Sin foto</span>
-                </div>
-                )}
+                <Image
+                  width={192}
+                  height={192}
+                  src={
+                    user.profile_picture && typeof user.profile_picture === "string"
+                      ? getProfileUrl(user.profile_picture) || "/proplayas_img.jpg"
+                      : "/proplayas_img.jpg"}
+                  alt="Foto de perfil"
+                  className="w-full h-full rounded-full border-2 border-gray-300 object-cover"
+                  unoptimized
+                />
                 <CardAction className="absolute top-2 right-2">
-                <button
-                  onClick={() => setShowEditImage(true)}
-                  className="bg-white dark:bg-zinc-800 dark:hover:bg-zinc-700 hover:bg-gray-100 p-1 rounded-full shadow"
-                >
-                  <IconPencil size={18} />
-                </button>
+                  <button
+                    onClick={() => setShowEditImage(true)}
+                    className="bg-white dark:bg-zinc-800 dark:hover:bg-zinc-700 hover:bg-gray-100 p-1 rounded-full shadow"
+                  >
+                    <IconPencil size={18} />
+                  </button>
                 </CardAction>
               </div>
               <div className="my-3 text-center md:text-left">
@@ -152,9 +158,19 @@ export default function Page() {
                 <CardTitle className="text-2xl font-semibold text-gray-500 dark:text-white">
                 Sobre mí
                 </CardTitle>
-                <CardDescription className="text-gray-600 dark:text-white mt-2">
-                {user.about}
-                </CardDescription>
+                <div className="text-gray-600 dark:text-white mt-2">
+                  <p className="whitespace-pre-wrap">
+                    {isExpanded ? user.about : truncateText(user.about, 50)}
+                  </p>
+                  {shouldShowButton(user.about, 50) && (
+                    <button
+                      onClick={() => setIsExpanded(!isExpanded)}
+                      className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-500 text-sm mt-2 transition"
+                    >
+                      {isExpanded ? "Ver menos" : "Ver más"}
+                    </button>
+                  )}
+                </div>
                 <div className="mt-4">
                 <h2 className="text-lg font-semibold text-gray-500 dark:text-white">
                   Área de experiencia

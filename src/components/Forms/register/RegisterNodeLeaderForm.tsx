@@ -56,14 +56,12 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
     postgraduate: "",
     expertise_area: "",
     research_work: "",
-    profile_picture_file: null,
     profile_picture: "",
     country_user: "",
     city_user: "",
     social_media: [],
     node_name: "",
     profile_picture_node_file: null,
-    profile_picture_node: "",
     about_node: "",
     country_node: "",
     city_node: "",
@@ -251,12 +249,6 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
           <Label htmlFor="research_work">Trabajo de investigación</Label>
           <Input id="research_work" name="research_work" value={form.research_work} onChange={handleChange} />
 
-          <Label htmlFor="profile_picture_file">Foto de perfil</Label>
-          <Input id="profile_picture_file" name="profile_picture_file" type="file" accept="image/*" onChange={handleFileChange} />
-
-          <Label htmlFor="profile_picture">URL foto de perfil</Label>
-          <Input id="profile_picture" name="profile_picture" value={form.profile_picture} onChange={handleChange} />
-
           <Label htmlFor="country_user">País* (usuario)</Label>
           <Input id="country_user" name="country_user" value={form.country_user} onChange={handleChange} />
 
@@ -331,36 +323,55 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
         </div>
         {/* Columna derecha: Datos del nodo */}
         <div className="flex flex-col gap-4 rounded-lg p-4">
-          <div className="mb-2">
+            <div className="mb-2">
             <Label className="text-base font-semibold text-green-900">Datos del nodo</Label>
-          </div>
-          <Label htmlFor="node_name">Nombre del nodo</Label>
-          <Input id="node_name" name="node_name" value={form.node_name} onChange={handleChange} />
+            </div>
+            <Label htmlFor="node_name">Nombre del nodo</Label>
+            <Input 
+            id="node_name" 
+            name="node_name" 
+            value={form.node_name} 
+            onChange={handleChange}
+            maxLength={100}
+            />
+            <span className="text-xs text-gray-500">{form.node_name?.length}/100</span>
 
-          <Label htmlFor="profile_picture_node_file">Foto de perfil nodo</Label>
-          <Input id="profile_picture_node_file" name="profile_picture_node_file" type="file" accept="image/*" onChange={handleFileChange} />
+            <Label htmlFor="country_node">País* (nodo)</Label>
+            <Input id="country_node" name="country_node" value={form.country_node} onChange={handleChange} />
 
-          <Label htmlFor="profile_picture_node">URL foto nodo</Label>
-          <Input id="profile_picture_node" name="profile_picture_node" value={form.profile_picture_node} onChange={handleChange} />
+            <Label htmlFor="city_node">Ciudad* (nodo)</Label>
+            <Input id="city_node" name="city_node" value={form.city_node} onChange={handleChange} />
 
-          <Label htmlFor="country_node">País* (nodo)</Label>
-          <Input id="country_node" name="country_node" value={form.country_node} onChange={handleChange} />
+            <Label htmlFor="coordinates">Coordenadas</Label>
+            <Input id="coordinates" name="coordinates" value={form.coordinates} onChange={handleChange} />
 
-          <Label htmlFor="city_node">Ciudad* (nodo)</Label>
-          <Input id="city_node" name="city_node" value={form.city_node} onChange={handleChange} />
+            <Label htmlFor="alt_places">Lugares alternos</Label>
+            <Input 
+            id="alt_places" 
+            name="alt_places" 
+            value={form.alt_places} 
+            onChange={handleChange}
+            maxLength={150}
+            />
+            <span className="text-xs text-gray-500">{form.alt_places?.length}/150</span>
 
-          <Label htmlFor="coordinates">Coordenadas</Label>
-          <Input id="coordinates" name="coordinates" value={form.coordinates} onChange={handleChange} />
+            <Label htmlFor="joined_in">Año de ingreso*</Label>
+            <Input id="joined_in" name="joined_in" type="number" min={2000} max={new Date().getFullYear()} value={form.joined_in || ""} onChange={handleChange} />
 
-          <Label htmlFor="alt_places">Lugares alternos</Label>
-          <Input id="alt_places" name="alt_places" value={form.alt_places} onChange={handleChange} />
-
-          <Label htmlFor="joined_in">Año de ingreso*</Label>
-          <Input id="joined_in" name="joined_in" type="number" min={2000} max={new Date().getFullYear()} value={form.joined_in || ""} onChange={handleChange} />
-
-
-          <Label htmlFor="about_node">Sobre el nodo</Label>
-          <Textarea id="about_node" name="about_node" value={form.about_node} onChange={handleChange} />
+            <Label htmlFor="about_node">Sobre el nodo (máx. 180 palabras)</Label>
+            <Textarea 
+            id="about_node" 
+            name="about_node" 
+            value={form.about_node} 
+            onChange={(e) => {
+              const words = e.target.value.split(/\s+/).filter(w => w.length > 0);
+              if (words.length <= 180) {
+              handleChange(e);
+              }
+            }}
+            placeholder="Máximo 180 palabras"
+            />
+            <span className="text-xs text-gray-500">{form.about_node?.split(/\s+/).filter(w => w.length > 0).length}/180 palabras</span>
 
           {/* Redes sociales del nodo */}
           <div className="space-y-2">

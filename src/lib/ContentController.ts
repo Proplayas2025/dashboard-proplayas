@@ -10,21 +10,27 @@ const contentTypeMap: Record<string, string> = {
 };
 
 export class ContentController {
-  async getContent(content: string, page = 1, per_page = 20) {
+  async getContent(content: string, page = 1, per_page = 20, search?: string) {
     const contentType = contentTypeMap[content] || content;
-    const response = await api.get(`/content?content_type=${contentType}&page=${page}&per_page=${per_page}`);
+    const params: Record<string, unknown> = { content_type: contentType, page, per_page };
+    if (search) params.search = search;
+    const response = await api.get(`/content`, { params });
     return { data: response.data.data, meta: response.data.meta };
   }
 
-  async getContentAuthor(content: string, page = 1, per_page = 20) {
+  async getContentAuthor(content: string, page = 1, per_page = 20, search?: string) {
     const contentType = contentTypeMap[content] || content;
-    const response = await api.get(`/content/own?content_type=${contentType}&page=${page}&per_page=${per_page}`);
+    const params: Record<string, unknown> = { content_type: contentType, page, per_page };
+    if (search) params.search = search;
+    const response = await api.get(`/content/own`, { params });
     return { data: response.data.data, meta: response.data.meta };
   }
 
-  async getContentAll(content: string, page = 1, per_page = 20) {
+  async getContentAll(content: string, page = 1, per_page = 20, search?: string) {
     const contentType = contentTypeMap[content] || content;
-    const response = await api.get(`/content/all?content_type=${contentType}&page=${page}&per_page=${per_page}`);
+    const params: Record<string, unknown> = { content_type: contentType, page, per_page };
+    if (search) params.search = search;
+    const response = await api.get(`/content/all`, { params });
     return { data: response.data.data, meta: response.data.meta };
   }
 

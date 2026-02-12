@@ -28,6 +28,19 @@ export default function Page() {
   const [showEditImage, setShowEditImage] = useState(false);
   const [showEditMemorandum, setShowEditMemorandum] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
+  
+  const truncateText = (text: string | null | undefined, wordLimit: number) => {
+    if (!text) return "";
+    const words = text.split(/\s+/);
+    if (words.length <= wordLimit) return text;
+    return words.slice(0, wordLimit).join(" ") + "...";
+  };
+  
+  const shouldShowButton = (text: string | null | undefined, wordLimit: number) => {
+    if (!text) return false;
+    return text.split(/\s+/).length > wordLimit;
+  };
 
   const fetchNodeBio = useCallback(async () => {
     setLoading(true);
@@ -63,20 +76,14 @@ export default function Page() {
             <Card className="p-6 grid grid-cols-1 md:grid-cols-[300px_minmax(600px,_1fr)] gap-6 relative">
               <div className="flex flex-col items-center md:items-start">
                 <div className="relative w-32 h-32 md:w-48 md:h-48 group">
-                  {nodo?.profile_picture ? (
                     <Image
                       width={192}
                       height={192}
-                      src={getProfileUrl(nodo.profile_picture) || ""}
+                      src={getProfileUrl(nodo?.profile_picture) || "/proplayas_img.jpg"}
                       alt="Foto de perfil"
                       className="w-full h-full rounded-full border-2 border-gray-300 object-cover"
                       unoptimized
                     />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gray-200 rounded-full border-2 border-gray-300">
-                      <span className="text-gray-400">Sin foto</span>
-                    </div>
-                  )}
                   <button
                     onClick={() => setShowEditImage(true)}
                     className="absolute top-2 right-2 bg-white dark:bg-zinc-800 p-1 rounded-full shadow hover:bg-gray-100 dark:hover:bg-zinc-700"
@@ -115,9 +122,19 @@ export default function Page() {
                   <h1 className="text-2xl font-semibold text-gray-500 dark:text-white">
                     Sobre el nodo
                   </h1>
-                  <p className="text-gray-600 dark:text-white mt-2">
-                    {nodo?.about}
-                  </p>
+                  <div className="text-gray-600 dark:text-white mt-2">
+                    <p className="whitespace-pre-wrap">
+                      {isExpanded ? nodo?.about : truncateText(nodo?.about, 50)}
+                    </p>
+                    {shouldShowButton(nodo?.about, 50) && (
+                      <button
+                        onClick={() => setIsExpanded(!isExpanded)}
+                        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-500 text-sm mt-2 transition"
+                      >
+                        {isExpanded ? "Ver menos" : "Ver más"}
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 {nodo?.social_media && nodo.social_media.length > 0 && (

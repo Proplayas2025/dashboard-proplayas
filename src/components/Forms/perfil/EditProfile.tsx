@@ -59,6 +59,15 @@ export function EditProfileFormModal({
 }: EditProfileFormModalProps) {
   const [formData, setFormData] = useState<Omit<User, "profile_picture">>({
     ...defaultValues,
+    name: defaultValues.name || "",
+    email: defaultValues.email || "",
+    degree: defaultValues.degree || "",
+    postgraduate: defaultValues.postgraduate || "",
+    country: defaultValues.country || "",
+    city: defaultValues.city || "",
+    about: defaultValues.about || "",
+    expertise_area: defaultValues.expertise_area || "",
+    research_work: defaultValues.research_work || "",
     social_media: Array.isArray(defaultValues.social_media)
       ? defaultValues.social_media
       : [],

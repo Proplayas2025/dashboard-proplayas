@@ -29,9 +29,8 @@ export const PublicationCard: React.FC<PublicationCardProps> = ({
   return (
     <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-md p-4 flex flex-col md:flex-row gap-4 items-center">
       <div className="w-32 h-32 relative flex-shrink-0">
-        {imageUrl ? (
           <Image
-            src={imageUrl}
+            src={imageUrl || "/proplayas_img.jpg"}
             alt={publication.title}
             fill
             className="object-cover rounded-md"
@@ -39,17 +38,13 @@ export const PublicationCard: React.FC<PublicationCardProps> = ({
             priority={false}
             unoptimized
           />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-zinc-700 rounded-md">
-            <span className="text-gray-400 text-sm">Sin imagen</span>
-          </div>
-        )}
+
       </div>
       <div className="flex-1 flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">{publication.title}</h2>
           <span className="text-xs px-2 py-1 rounded bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 capitalize">
-            {publication.type}
+            {publication.publication_type}
           </span>
         </div>
         <p className="text-gray-600 dark:text-gray-300 line-clamp-2">{publication.description}</p>

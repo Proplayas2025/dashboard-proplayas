@@ -45,7 +45,6 @@ export interface RegisterNodeLeaderRequest {
   postgraduate?: string;
   expertise_area?: string;
   research_work?: string;
-  profile_picture_file?: File | null;
   profile_picture?: string;
   country_user?: string;
   city_user?: string;
@@ -53,7 +52,6 @@ export interface RegisterNodeLeaderRequest {
   // Nodo
   node_name?: string;
   profile_picture_node_file?: File | null;
-  profile_picture_node?: string;
   about_node?: string;
   country_node?: string;
   city_node?: string;

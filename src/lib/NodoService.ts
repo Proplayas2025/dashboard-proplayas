@@ -9,9 +9,9 @@ export interface PaginationMeta {
 }
 
 export class NodosService {
-    async getPublicNodes(page: number = 1): Promise<{ data: Nodes[]; meta?: PaginationMeta }> {
+    async getPublicNodes(page: number = 1, search?: string): Promise<{ data: Nodes[]; meta?: PaginationMeta }> {
         try {
-            const response = await api.get<ApiResponse<Nodes[]>>("/nodes", { params: { page } });
+            const response = await api.get<ApiResponse<Nodes[]>>("/nodes", { params: { page, search: search || undefined } });
             return { data: response.data.data || [], meta: response.data.meta };
         } catch (e) {
             console.error("Error al obtener los nodos públicos:", e);

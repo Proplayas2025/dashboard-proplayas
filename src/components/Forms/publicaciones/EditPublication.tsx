@@ -78,8 +78,8 @@ export const EditPublicationModal: React.FC<EditPublicationModalProps> = ({
           <div className="flex flex-col gap-1">
             <Label>Tipo de publicación</Label>
             <Select
-              value={formData.type || ""}
-              onValueChange={(value) => handleSelectChange("type", value)}
+              value={formData.publication_type || ""}
+              onValueChange={(value) => handleSelectChange("publication_type", value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Tipo de publicación" />

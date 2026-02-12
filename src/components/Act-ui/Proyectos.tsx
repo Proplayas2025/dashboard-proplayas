@@ -3,6 +3,7 @@
 import { Projects } from "@/interfaces/Content";
 import Image from "next/image";
 import { getCoverUrl, getFileUrl } from "@/lib/image-utils";
+import { formatDate } from "@/lib/date-utils";
 
 interface ProyectoCardProps {
   proyecto: Projects;
@@ -22,21 +23,15 @@ export const ProyectoCard: React.FC<ProyectoCardProps> = ({ proyecto }) => {
   return (
     <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-md p-4 flex flex-col md:flex-row gap-4 items-center">
       <div className="w-32 h-32 relative flex-shrink-0">
-        {imageUrl ? (
           <Image
-            src={imageUrl}
+            src={imageUrl || "/proplayas_img.jpg"}
             alt={proyecto.title}
             fill
             className="object-cover rounded-md"
             sizes="128px"
             priority={false}
             unoptimized
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-zinc-700 rounded-md">
-            <span className="text-gray-400 text-sm">Sin imagen</span>
-          </div>
-        )}
+          />        
       </div>
       <div className="flex-1 flex flex-col gap-2">
         <div className="flex items-center justify-between">
@@ -48,10 +43,7 @@ export const ProyectoCard: React.FC<ProyectoCardProps> = ({ proyecto }) => {
         <p className="text-gray-600 dark:text-gray-300">{proyecto.description}</p>
         <div className="flex flex-wrap gap-2 text-sm text-gray-500 dark:text-gray-400">
           <span>
-            <strong>Fecha:</strong>{" "}
-            {proyecto.date
-              ? new Date(proyecto.date).toLocaleDateString("en-GB", { timeZone: "UTC" })
-              : "Sin fecha"}
+            <strong>Fecha:</strong> {formatDate(proyecto.event_date)}
           </span>
           {proyecto.location && (
             <span>

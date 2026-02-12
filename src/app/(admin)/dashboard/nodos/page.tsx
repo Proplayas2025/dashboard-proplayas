@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/site-header";
 import { NodosService } from "@/lib/NodoService";
 import { Nodes } from "@/interfaces/Nodes";
 import { Loader2 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { IconPlus } from "@tabler/icons-react";
 import InviteNodeForm from "@/components/Forms/invitations/InviteNodeLeaderForm";
@@ -18,6 +19,8 @@ export default function Page() {
   const nodoService = useMemo(() => new NodosService(), []);
   const invitationService = useMemo(() => new InvitationService(), []);
   const [nodes, setNodes] = useState<Nodes[]>([]);
+  const [pagination, setPagination] = useState({ current_page: 1, per_page: 50, total: 0, last_page: 1 });
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [inviteLoading, setInviteLoading] = useState(false);
@@ -25,16 +28,28 @@ export default function Page() {
   const [invitationToken, setInvitationToken] = useState<string | null>(null);
   const [invitedInfo, setInvitedInfo] = useState({ name: "", email: "" });
 
-  const fetchNodes = useCallback(async () => {
+  const [search, setSearch] = useState("");
+
+
+  const fetchNodes = useCallback(async (page: number = 1, searchTerm?: string) => {
     setLoading(true);
     try {
-      const res = await nodoService.getPublicNodes();
-      setNodes(res?.data || []);
+      const res = await nodoService.getPublicNodes(page, searchTerm ?? search);
+      setNodes(res.data || []);
+      setPagination(res.meta || { current_page: 1, per_page: 50, total: 0, last_page: 1 });
+      setCurrentPage(page);
     } catch {
       setNodes([]);
+      setPagination({ current_page: 1, per_page: 50, total: 0, last_page: 1 });
     }
     setLoading(false);
-  }, [nodoService]);
+  }, [nodoService, search]);
+
+
+  const handleSearch = useCallback((value: string) => {
+    setSearch(value);
+    fetchNodes(1, value);
+  }, [fetchNodes]);
 
   const handleToggleStatus = async (id: number) => {
     console.log(`usuario con id ${id} desactivado`);
@@ -50,7 +65,6 @@ export default function Page() {
 
   const handleAdd = () => {
     setShowModal(true);
-    // Aquí puedes abrir tu modal
   };
 
   const handleInviteSubmit = async (data: InviteNodeLeader) => {
@@ -98,8 +112,13 @@ export default function Page() {
             ) : (
               <NodesTable
                 data={nodes}
+                page={currentPage}
+                pageSize={pagination.per_page}
+                total={pagination.total}
+                onPageChange={fetchNodes}
                 onToggleStatus={handleToggleStatus}
                 onDelete={handleDelete}
+                onSearch={handleSearch}
               />
             )}
           </div>

@@ -13,6 +13,7 @@ export default function Page() {
   const [users, setUsers] = useState<Users[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
 
   const [meta, setMeta] = useState<PaginationMeta>({
     current_page: 1,
@@ -23,10 +24,10 @@ export default function Page() {
   const pageSize = 25;
 
   const fetchUsers = useCallback(
-    async (page = 1, pageSize = 25) => {
+    async (page = 1, pageSize = 25, searchTerm?: string) => {
       setLoading(true);
       try {
-        const res = await userService.fetchUsers(page, pageSize);
+        const res = await userService.fetchUsers(page, pageSize, searchTerm ?? search);
         setUsers(res?.data || []);
         setMeta(
           res?.meta ?? {
@@ -47,8 +48,14 @@ export default function Page() {
       }
       setLoading(false);
     },
-    [userService]
+    [userService, search]
   );
+
+  const handleSearch = useCallback((value: string) => {
+    setSearch(value);
+    setPage(1);
+    fetchUsers(1, pageSize, value);
+  }, [fetchUsers, pageSize]);
 
   const handleToggleStatus = async (id: number) => {
     try {
@@ -84,6 +91,7 @@ export default function Page() {
               pageSize={meta.per_page}
               total={meta.total}
               onPageChange={setPage}
+              onSearch={handleSearch}
             />
           )}
         </div>

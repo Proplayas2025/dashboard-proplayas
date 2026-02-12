@@ -60,4 +60,26 @@ export default class InvitationService {
             throw error;
         }
     }
+
+    // Obtener invitaciones pendientes
+    async getPendingInvitations(): Promise<ApiResponse<InvitationResponseData[]>> {
+        try {
+            const response = await axiosInstance.get("/invitations?status=pending");
+            return response.data;
+        } catch (error) {
+            console.error("Error al obtener invitaciones:", error);
+            throw error;
+        }
+    }
+
+    // Cancelar invitación
+    async cancelInvitation(invitationId: number): Promise<ApiResponse<null>> {
+        try {
+            const response = await axiosInstance.delete(`/invitations/${invitationId}`);
+            return response.data;
+        } catch (error) {
+            console.error("Error al cancelar invitación:", error);
+            throw error;
+        }
+    }
 }
