@@ -128,6 +128,7 @@ export class Authentication {
       const response = await axiosInstance.post('/set-new-password', {
         token,
         password: btoa(password),
+        confirm_password: btoa(password),
       });
       const { status, message } = response.data;
       return {
@@ -140,6 +141,29 @@ export class Authentication {
       return {
         status: error.response?.data?.status ?? 500,
         message: error.response?.data?.message ?? "Hubo un error en la recuperación",
+        data: null
+      };
+    }
+  }
+
+  async changePassword(currentPassword: string, newPassword: string, confirmNewPassword: string): Promise<ApiResponse<null>> {
+    try {
+      const response = await axiosInstance.put('/users/me/change-password', {
+        current_password: btoa(currentPassword),
+        new_password: btoa(newPassword),
+        confirm_new_password: btoa(confirmNewPassword),
+      });
+      const { status, message } = response.data;
+      return {
+        status,
+        message: message || "Error al cambiar la contraseña",
+        data: null
+      };
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { status?: number; message?: string } } };
+      return {
+        status: error.response?.data?.status ?? 500,
+        message: error.response?.data?.message ?? "Hubo un error al cambiar la contraseña",
         data: null
       };
     }

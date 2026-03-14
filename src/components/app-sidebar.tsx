@@ -12,7 +12,8 @@ import {
   IconUser,
   IconBook2,
   Icon,
-  IconMailForward
+  IconMailForward,
+  IconSettings
 } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 
@@ -100,6 +101,11 @@ export function AppSidebar({
         url: "/dashboard/invitaciones",
         icon: IconMailForward,
       },
+      {
+        title: "Configuración",
+        url: "/dashboard/configuracion",
+        icon: IconSettings,
+      },
     ];
   } else if (role === "admin") {
     navMainFiltered = [
@@ -123,6 +129,11 @@ export function AppSidebar({
         url: "/dashboard/invitaciones",
         icon: IconMailForward,
       },
+      {
+        title: "Configuración",
+        url: "/dashboard/configuracion",
+        icon: IconSettings,
+      },
     ];
   } else if (role === "member") {
     navMainFiltered = [
@@ -130,6 +141,11 @@ export function AppSidebar({
         title: "Mi Perfil",
         url: "/dashboard/perfil",
         icon: IconUser,
+      },
+      {
+        title: "Configuración",
+        url: "/dashboard/configuracion",
+        icon: IconSettings,
       },
     ];
   } else {
@@ -139,6 +155,11 @@ export function AppSidebar({
         title: "Mi Perfil",
         url: "/dashboard/perfil",
         icon: IconFolder,
+      },
+      {
+        title: "Configuración",
+        url: "/dashboard/configuracion",
+        icon: IconSettings,
       },
     ];
   }

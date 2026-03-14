@@ -40,13 +40,6 @@ export function LoginForm({ onSubmit, loading = false, error }: LoginFormProps) 
 
   const [showPassword, setShowPassword] = useState(false);
 
-  // Detecta si el error es de contraseña olvidada
-  const forgotPasswordError =
-    error &&
-    (error.toLowerCase().includes("contraseña") ||
-      error.toLowerCase().includes("password") ||
-      error.toLowerCase().includes("olvid"));
-
   return (
     <div className="w-full max-w-md mx-auto mt-16 bg-white dark:bg-zinc-900 rounded-lg shadow-md p-8">
       <h2 className="text-2xl font-bold mb-6 text-center">Iniciar sesión</h2>
@@ -110,13 +103,12 @@ export function LoginForm({ onSubmit, loading = false, error }: LoginFormProps) 
           <Button type="submit" className="w-full" disabled={loading}>
             {loading ? "Ingresando..." : "Ingresar"}
           </Button>
-          {forgotPasswordError && (
+          {error && (
             <Button
               type="button"
               variant="link"
               className="w-full text-center mt-2"
               onClick={() => {
-                // Aquí podrías redirigir a la página de recuperación de contraseña
                 window.location.href = "/recuperar-contrasena";
               }}
             >
