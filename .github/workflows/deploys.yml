@@ -50,6 +50,6 @@ jobs:
             tar -xzf /home/proplayas/apps/incoming/build.tar.gz -C /home/proplayas/apps/incoming/build/
             [ -d /home/proplayas/apps/current ] && mv /home/proplayas/apps/current /home/proplayas/apps/previous
             mv /home/proplayas/apps/incoming/build /home/proplayas/apps/current
-            systemctl restart proplayas-frontend
+            sudo systemctl restart proplayas-frontend
             sleep 3
-            curl -sf http://localhost:3000 || (mv /home/proplayas/apps/previous /home/proplayas/apps/current && systemctl restart proplayas-frontend && exit 1)
+            curl -sf http://localhost:3000 || (mv /home/proplayas/apps/previous /home/proplayas/apps/current && sudo systemctl restart proplayas-frontend && exit 1)

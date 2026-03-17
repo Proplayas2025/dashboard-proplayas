@@ -3,7 +3,6 @@ import axios from "axios";
 import { V_Global_API, system } from "./system";
 import { getCookie } from "./cookies";
 
-console.log("API URL en build:", process.env.NEXT_PUBLIC_API_URL)
 // el global api es "http://localhost:8080/api/"
 const axiosInstance = axios.create({
   baseURL: V_Global_API,
