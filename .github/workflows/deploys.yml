@@ -32,7 +32,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           source: build.tar.gz
-          target: /app/incoming/
+          target: /home/proplayas/apps/incoming/
 
       - name: Desplegar en el VPS
         uses: appleboy/ssh-action@v1.0.3
@@ -41,12 +41,10 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd /app
-            tar -xzf incoming/build.tar.gz -C incoming/build/
-            # Guardar build anterior para rollback
-            [ -d current ] && mv current previous
-            mv incoming/build current
-            systemctl restart nextjs
-            # Healthcheck
+            mkdir -p /home/proplayas/apps/incoming/build
+            tar -xzf /home/proplayas/apps/incoming/build.tar.gz -C /home/proplayas/apps/incoming/build/
+            [ -d /home/proplayas/apps/current ] && mv /home/proplayas/apps/current /home/proplayas/apps/previous
+            mv /home/proplayas/apps/incoming/build /home/proplayas/apps/current
+            systemctl restart proplayas-frontend
             sleep 3
-            curl -sf http://localhost:3000/api/health || (mv previous current && systemctl restart nextjs && exit 1)
+            curl -sf http://localhost:3000 || (mv /home/proplayas/apps/previous /home/proplayas/apps/current && systemctl restart proplayas-frontend && exit 1)
