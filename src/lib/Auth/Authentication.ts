@@ -61,25 +61,31 @@ export class Authentication {
   }
 
   async login(credentials: LoginRequest): Promise<ApiResponse<LoginResponse>> {
-    const response = await axiosInstance.post('/login', { email: credentials.email, password: btoa(credentials.password) });
-    if (response.data.status === 200 && response.data.data) {
-      const { token, role, node_id } = response.data.data;
-      this.setSession(token, role, node_id);
-      const route = this.getRedirectRoute(role, node_id);
+    try {
+      const response = await axiosInstance.post('/login', { email: credentials.email, password: btoa(credentials.password) });
+      if (response.data.status === 200 && response.data.data) {
+        const { token, role, node_id } = response.data.data;
+        this.setSession(token, role, node_id);
+        const route = this.getRedirectRoute(role, node_id);
+        return {
+          status: 200,
+          message: "Inicio de sesión exitoso",
+          data: { ...response.data.data, route }
+        };
+      }
       return {
-        status: 200,
-        message: "Inicio de sesión exitoso",
-        data: { ...response.data.data, route }
+        status: response.data.status || 500,
+        message: response.data.message || "Error al iniciar sesión",
+        data: null
       };
-    } else if (response.data.status === 401) {
-      return { status: 401, message: "Credenciales incorrectas", data: null };
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { status?: number; message?: string } } };
+      return {
+        status: error.response?.data?.status ?? 500,
+        message: error.response?.data?.message ?? "Error al iniciar sesión",
+        data: null
+      };
     }
-    // Para cualquier otro status, solo retorna el mensaje de la API
-    return {
-      status: 500,
-      message: "Hubo un error en el servidor",
-      data: null
-    };
   }
 
   //{"status":200,"message":"Logged out successfully","data":[]}

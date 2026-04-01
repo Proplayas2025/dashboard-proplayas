@@ -5,18 +5,9 @@ import { z } from "zod";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
 
 import {
   Table,
@@ -35,7 +26,8 @@ import {
   IconChevronDown,
   IconSelector,
 } from "@tabler/icons-react";
-import { useIsMobile } from "@/hooks/use-mobile";
+
+import Link from "next/link";
 
 export const schema = z.object({
   id: z.number(),
@@ -223,7 +215,14 @@ export function DataTable({
                 sortedData.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell>
-                      <TableCellViewer item={item} />
+                      <div className="flex items-center gap-2">
+                        <Link
+                          href={`/perfil/${item.username}`}
+                          className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-500 hover:underline transition"
+                        >
+                          {item.name}
+                        </Link>
+                      </div>
                     </TableCell>
                     <TableCell>{item.email}</TableCell>
                     <TableCell>{item.username}</TableCell>
@@ -257,64 +256,5 @@ export function DataTable({
         </div>
       </TabsContent>
     </Tabs>
-  );
-}
-
-function TableCellViewer({ item }: { item: Member }) {
-  const isMobile = useIsMobile();
-
-  return (
-    <Drawer direction={isMobile ? "bottom" : "right"}>
-      <DrawerTrigger asChild>
-        <Button variant="link" className="text-foreground w-fit px-0 text-left">
-          {item.name}
-        </Button>
-      </DrawerTrigger>
-      <DrawerContent>
-        <DrawerHeader className="gap-1">
-          <DrawerTitle>{item.name}</DrawerTitle>
-          <DrawerDescription>
-            Información del usuario seleccionada
-          </DrawerDescription>
-        </DrawerHeader>
-        <div className="flex flex-col gap-4 overflow-y-auto px-4 text-sm">
-          <form className="flex flex-col gap-4">
-            <div className="flex flex-col gap-3">
-              <Label htmlFor="name">Nombre</Label>
-              <Input id="name" value={item.name} readOnly />
-            </div>
-            <div className="flex flex-col gap-3">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" value={item.email} readOnly />
-            </div>
-            <div className="flex flex-col gap-3">
-              <Label htmlFor="username">Username</Label>
-              <Input id="username" value={item.username} readOnly />
-            </div>
-            <div className="flex flex-col gap-3">
-              <Label htmlFor="member_code">Member Code</Label>
-              <Input id="member_code" value={item.member_code} readOnly />
-            </div>
-            <div className="flex flex-col gap-3">
-              <Label htmlFor="research_line">Research Line</Label>
-              <Input id="research_line" value={item.research_line || ""} readOnly />
-            </div>
-            <div className="flex flex-col gap-3">
-              <Label htmlFor="work_area">Work Area</Label>
-              <Input id="work_area" value={item.work_area || ""} readOnly />
-            </div>
-            <div className="flex flex-col gap-3">
-              <Label htmlFor="status">Status</Label>
-              <Input id="status" value={item.status} readOnly />
-            </div>
-          </form>
-        </div>
-        <DrawerFooter>
-          <DrawerClose asChild>
-            <Button variant="outline">Cerrar</Button>
-          </DrawerClose>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
   );
 }

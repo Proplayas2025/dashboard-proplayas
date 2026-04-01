@@ -19,12 +19,9 @@ export default function Page() {
       if (res.status === 200 && res.data?.token) {
         toast.success("Inicio de sesión exitoso");
         router.push("/dashboard/perfil");
-      } else if (res.status === 401) {
-        setError("Credenciales incorrectas");
-        toast.error("Credenciales incorrectas");
       } else {
-        setError(res.message || "Error al iniciar sesión");
-        toast.error(res.message || "Error al iniciar sesión");
+        setError(res.message || "Credenciales incorrectas");
+        toast.error(res.message || "Credenciales incorrectas");
       }
     } catch {
       setError("Error al iniciar sesión");

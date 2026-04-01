@@ -8,7 +8,7 @@ import Image from "next/image";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { IconPencil, IconWorld, IconPin } from "@tabler/icons-react";
-// Puedes crear estos componentes modales como en el nodo, o usar los mismos si son genéricos
+
 import {
   EditProfileFormModal,
   EditProfileImageModal,
