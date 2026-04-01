@@ -48,6 +48,7 @@ jobs:
           script: |
             mkdir -p /home/proplayas/apps/incoming/build
             tar -xzf /home/proplayas/apps/incoming/build.tar.gz -C /home/proplayas/apps/incoming/build/
+            rm -rf /home/proplayas/apps/previous
             [ -d /home/proplayas/apps/current ] && mv /home/proplayas/apps/current /home/proplayas/apps/previous
             mv /home/proplayas/apps/incoming/build /home/proplayas/apps/current
             sudo systemctl restart proplayas-frontend
