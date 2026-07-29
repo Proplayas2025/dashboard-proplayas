@@ -55,54 +55,55 @@ export function AppHeader() {
     router.push("/login");
   };
   return (
-    <header className="w-full bg-white dark:bg-zinc-900 border-b shadow-sm">
-      <nav className="container mx-auto flex items-center h-16 px-4 gap-6 relative">
+    <header className="w-full bg-white dark:bg-zinc-900 border-b shadow-sm overflow-hidden">
+      <nav className="w-full flex items-center h-16 px-2 sm:px-4 gap-2 sm:gap-4 relative">
         {/* Logo a la izquierda */}
-        <Link href="/" className="flex items-center gap-2 z-20">
+        <Link href="/" className="flex items-center gap-1 sm:gap-2 z-20 flex-shrink-0">
           <Image
             src="/proplayas_logo.svg"
             alt="Proplayas Logo"
-            width={40}
-            height={40}
-            className="rounded-full"
+            width={32}
+            height={32}
+            className="rounded-full w-8 h-8 sm:w-10 sm:h-10"
             priority
           />
-          <span className="font-bold text-lg text-gray-700 dark:text-white">
+          <span className="hidden sm:block font-bold text-sm sm:text-lg text-gray-700 dark:text-white">
             Proplayas
           </span>
         </Link>
         <div className="flex-1" />
         {/* Menú de navegación en desktop */}
-        <nav className="hidden md:flex gap-6 items-center">
+        <nav className="hidden xl:flex gap-3 lg:gap-4 items-center flex-nowrap text-sm lg:text-base">
           <Link
             href="/"
-            className="text-gray-700 dark:text-white hover:text-blue-600 transition font-medium"
+            className="text-gray-700 dark:text-white hover:text-blue-600 transition font-medium whitespace-nowrap"
           >
             Inicio
           </Link>
           <Link
             href="/quienes-somos"
-            className="text-gray-700 dark:text-white hover:text-blue-600 transition font-medium"
+            className="text-gray-700 dark:text-white hover:text-blue-600 transition font-medium whitespace-nowrap"
           >
-            Quienes Somos
+            Quiénes Somos
           </Link>
           <Link
             href="/actividades/eventos"
-            className="text-gray-700 dark:text-white hover:text-blue-600 transition font-medium"
+            className="text-gray-700 dark:text-white hover:text-blue-600 transition font-medium whitespace-nowrap"
           >
             Actividades
           </Link>
           <Link
             href="/nodos"
-            className="text-gray-700 dark:text-white hover:text-blue-600 transition font-medium"
+            className="text-gray-700 dark:text-white hover:text-blue-600 transition font-medium whitespace-nowrap"
           >
             Nodos
           </Link>
           {isMounted && (userEmail ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="flex items-center gap-2">
-                  {userEmail}
+                <Button variant="outline" className="flex items-center gap-1 sm:gap-2 text-sm sm:text-base">
+                  <span className="hidden sm:inline truncate">{userEmail}</span>
+                  <span className="sm:hidden">{userEmail.split('@')[0]}</span>
                   <ChevronDown size={16} />
                 </Button>
               </DropdownMenuTrigger>
@@ -121,29 +122,29 @@ export function AppHeader() {
             </Button>
           ))}
         </nav>
-        <div>
+        <div className="flex-shrink-0">
           <ModeToggle />
         </div>
-        {/* Dropdown menú en mobile */}
-        <div className="md:hidden">
+        {/* Dropdown menú en mobile - solo para pantallas muy pequeñas */}
+        <div className="xl:hidden ml-auto flex-shrink-0">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
-                className="p-2 rounded-md border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900"
+                className="p-2 rounded-md border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 hover:bg-gray-50 dark:hover:bg-zinc-800 transition"
                 aria-label="Abrir menú"
               >
-                <Menu size={28} />
+                <Menu size={24} />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48 mt-2">
+            <DropdownMenuContent align="end" className="w-56 mt-2">
               <DropdownMenuItem asChild>
                 <Link href="/">Inicio</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/quienes-somos">Quienes Somos</Link>
+                <Link href="/quienes-somos">Quiénes Somos</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/actividades">Actividades</Link>
+                <Link href="/actividades/eventos">Actividades</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href="/nodos">Nodos</Link>

@@ -18,16 +18,16 @@ export default function DashboardLayout({
   if (!isAuthorized) return null; // Aunque el router.replace() ya lo mandó
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <header className="z-20 relative md:pl-64">
-        <AppHeader />
-      </header>
-      <div className="flex flex-1">
-        <SidebarProvider>
-          <AppSidebar role={role ?? ""} />
-          <main className="flex-1 p-4 md:pl-4">{children}</main>
-        </SidebarProvider>
+    <SidebarProvider>
+      <div className="flex h-screen w-full overflow-hidden">
+        <AppSidebar role={role ?? ""} />
+        <div className="flex flex-col flex-1 w-full overflow-hidden">
+          <header className="z-20 flex-shrink-0 border-b bg-white dark:bg-zinc-900 overflow-hidden">
+            <AppHeader />
+          </header>
+          <main className="flex-1 overflow-auto w-full p-4">{children}</main>
+        </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 }
