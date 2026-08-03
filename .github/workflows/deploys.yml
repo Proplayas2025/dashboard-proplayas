@@ -13,16 +13,16 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 24.5.0
-          cache: npm
+          node-version: 24.19.0
+          cache: pnpm
 
-      - run: npm ci
+      - run: pnpm ci
       - name: Build
         env:
           NEXT_PUBLIC_API_URL: "https://proplayas.org/api/"
           NEXT_PUBLIC_STORAGE_URL: "https://proplayas.org/storage/uploads"
           NODE_ENV: production
-        run: npm run build
+        run: pnpm run build
 
       - name: Empaquetar solo el build
         run: |
@@ -37,7 +37,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           source: build.tar.gz
-          target: /home/proplayas/apps/incoming/
+          target: /home/proplayas/web/proplayas.org/public_html/incoming/
 
       - name: Desplegar en el VPS
         uses: appleboy/ssh-action@v1.0.3
@@ -46,11 +46,11 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            mkdir -p /home/proplayas/apps/incoming/build
-            tar -xzf /home/proplayas/apps/incoming/build.tar.gz -C /home/proplayas/apps/incoming/build/
-            rm -rf /home/proplayas/apps/previous
-            [ -d /home/proplayas/apps/current ] && mv /home/proplayas/apps/current /home/proplayas/apps/previous
-            mv /home/proplayas/apps/incoming/build /home/proplayas/apps/current
+            mkdir -p /home/proplayas/web/proplayas.org/public_html/incoming/build
+            tar -xzf /home/proplayas/web/proplayas.org/public_html/incoming/build.tar.gz -C /home/proplayas/web/proplayas.org/public_html/incoming/build/
+            rm -rf /home/proplayas/web/proplayas.org/public_html/previous
+            [ -d /home/proplayas/web/proplayas.org/public_html/current ] && mv /home/proplayas/web/proplayas.org/public_html/current /home/proplayas/web/proplayas.org/public_html/previous
+            mv /home/proplayas/web/proplayas.org/public_html/incoming/build /home/proplayas/web/proplayas.org/public_html/current
             sudo systemctl restart proplayas-frontend
             sleep 3
-            curl -sf http://localhost:3000 || (mv /home/proplayas/apps/previous /home/proplayas/apps/current && sudo systemctl restart proplayas-frontend && exit 1)
+            curl -sf http://localhost:3000 || (mv /home/proplayas/web/proplayas.org/public_html/previous /home/proplayas/web/proplayas.org/public_html/current && sudo systemctl restart proplayas-frontend && exit 1)
