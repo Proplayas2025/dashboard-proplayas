@@ -16,6 +16,11 @@ jobs:
           node-version: 24.19.0
           cache: pnpm
 
+      - name: Enable pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
+
       - run: pnpm ci
       - name: Build
         env:
