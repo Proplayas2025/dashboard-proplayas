@@ -14,12 +14,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24.19.0
-          cache: pnpm
 
       - name: Enable pnpm
         run: |
           corepack enable
           corepack prepare pnpm@latest --activate
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.19.0
+          cache: pnpm
 
       - run: pnpm ci
       - name: Build
