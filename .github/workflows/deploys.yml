@@ -60,6 +60,6 @@ jobs:
             rm -rf /home/proplayas/web/proplayas.org/public_html/previous
             [ -d /home/proplayas/web/proplayas.org/public_html/current ] && mv /home/proplayas/web/proplayas.org/public_html/current /home/proplayas/web/proplayas.org/public_html/previous
             mv /home/proplayas/web/proplayas.org/public_html/incoming/build /home/proplayas/web/proplayas.org/public_html/current
-            sudo systemctl restart proplayas-frontend
+            systemctl restart proplayas-frontend
             sleep 3
-            curl -sf http://localhost:3000 || (mv /home/proplayas/web/proplayas.org/public_html/previous /home/proplayas/web/proplayas.org/public_html/current && sudo systemctl restart proplayas-frontend && exit 1)
+            curl -sf http://localhost:3000 || (mv /home/proplayas/web/proplayas.org/public_html/previous /home/proplayas/web/proplayas.org/public_html/current && systemctl restart proplayas-frontend && exit 1)
