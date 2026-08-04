@@ -44,8 +44,8 @@ type Node = z.infer<typeof nodeSchema>;
 
 type NodesTableProps = {
   data: Node[];
-  onToggleStatus: (id: number) => void;
-  onDelete: (id: number) => void;
+  onToggleStatus: (id: number, name?: string) => void;
+  onDelete: (id: number, name?: string) => void;
   onAdd?: () => void;
   page?: number;
   pageSize?: number;
@@ -260,13 +260,13 @@ export function NodesTable({
                           size="icon"
                           variant={item.status === "active" ? "secondary" : "outline"}
                           title={
-                            item.status === "activo"
+                            item.status === "active"
                               ? "Desactivar nodo"
                               : "Activar nodo"
                           }
-                          onClick={() => onToggleStatus(item.id)}
+                          onClick={() => onToggleStatus(item.id, item.name)}
                         >
-                          {item.status === "activo" ? (
+                          {item.status === "active" ? (
                             <IconPower className="text-red-500" />
                           ) : (
                             <IconPower className="text-green-500" />
@@ -276,7 +276,7 @@ export function NodesTable({
                           size="icon"
                           variant="destructive"
                           title="Eliminar nodo"
-                          onClick={() => onDelete(item.id)}
+                          onClick={() => onDelete(item.id, item.name)}
                         >
                           <IconTrash />
                         </Button>

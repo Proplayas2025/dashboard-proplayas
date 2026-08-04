@@ -104,4 +104,14 @@ export class NodosService {
         }
     }
 
+    async toggleNodeStatus(nodeId: number): Promise<ApiResponse<Node>> {
+        try {
+            const response = await api.put(`/nodes/${nodeId}/toggle-status`);
+            return response.data;
+        } catch (error) {
+            console.error("Error al cambiar el estado del nodo:", error);
+            throw error;
+        }
+    }
+
 }

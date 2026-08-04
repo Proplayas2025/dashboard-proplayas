@@ -8,6 +8,14 @@ import { Nodes } from "@/interfaces/Nodes";
 import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { IconPlus } from "@tabler/icons-react";
 import InviteNodeForm from "@/components/Forms/invitations/InviteNodeLeaderForm";
 import InvitationService from "@/lib/InvitationService";
@@ -29,6 +37,12 @@ export default function Page() {
   const [invitedInfo, setInvitedInfo] = useState({ name: "", email: "" });
 
   const [search, setSearch] = useState("");
+  const [confirmDialog, setConfirmDialog] = useState<{
+    open: boolean;
+    type: "delete" | "toggle-status" | null;
+    nodeId: number | null;
+    nodeName?: string;
+  }>({ open: false, type: null, nodeId: null });
 
 
   const fetchNodes = useCallback(async (page: number = 1, searchTerm?: string) => {
@@ -51,16 +65,40 @@ export default function Page() {
     fetchNodes(1, value);
   }, [fetchNodes]);
 
-  const handleToggleStatus = async (id: number) => {
-    console.log(`usuario con id ${id} desactivado`);
-    // Aquí podrías implementar la lógica para activar/desactivar el nodo si tu API lo permite
-    // Por ahora solo recargamos la lista
-    fetchNodes();
+  const handleToggleStatus = async (id: number, name?: string) => {
+    setConfirmDialog({
+      open: true,
+      type: "toggle-status",
+      nodeId: id,
+      nodeName: name,
+    });
   };
 
-  const handleDelete = async (id: number) => {
-    await nodoService.deleteNode(id);
-    fetchNodes();
+  const handleDelete = async (id: number, name?: string) => {
+    setConfirmDialog({
+      open: true,
+      type: "delete",
+      nodeId: id,
+      nodeName: name,
+    });
+  };
+
+  const handleConfirmAction = async () => {
+    const { type, nodeId } = confirmDialog;
+    try {
+      if (type === "delete" && nodeId) {
+        await nodoService.deleteNode(nodeId);
+        toast.success("Nodo eliminado correctamente");
+      } else if (type === "toggle-status" && nodeId) {
+        await nodoService.toggleNodeStatus(nodeId);
+        toast.success("Estado del nodo actualizado");
+      }
+      setConfirmDialog({ open: false, type: null, nodeId: null });
+      fetchNodes();
+    } catch (error) {
+      toast.error("Error al realizar la acción");
+      setConfirmDialog({ open: false, type: null, nodeId: null });
+    }
   };
 
   const handleAdd = () => {
@@ -137,6 +175,43 @@ export default function Page() {
         invitedName={invitedInfo.name}
         invitedEmail={invitedInfo.email}
       />
+
+      <Dialog open={confirmDialog.open} onOpenChange={(open) => {
+        if (!open) setConfirmDialog({ open: false, type: null, nodeId: null });
+      }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {confirmDialog.type === "delete" ? "Eliminar Nodo" : "Cambiar Estado del Nodo"}
+            </DialogTitle>
+            <DialogDescription>
+              {confirmDialog.type === "delete" ? (
+                <>
+                  ¿Estás seguro de que deseas eliminar el nodo <strong>{confirmDialog.nodeName}</strong>? Esta acción no se puede deshacer.
+                </>
+              ) : (
+                <>
+                  ¿Deseas cambiar el estado del nodo <strong>{confirmDialog.nodeName}</strong>?
+                </>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setConfirmDialog({ open: false, type: null, nodeId: null })}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant={confirmDialog.type === "delete" ? "destructive" : "default"}
+              onClick={handleConfirmAction}
+            >
+              {confirmDialog.type === "delete" ? "Eliminar" : "Cambiar Estado"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
