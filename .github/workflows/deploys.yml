@@ -35,10 +35,9 @@ jobs:
 
       - name: Empaquetar solo el build
         run: |
+          cp -r .next/standalone/* . || true
           cp -r .next/static .next/standalone/.next/static
           cp -r public .next/standalone/public
-          cp package.json .next/standalone/
-          cp pnpm-lock.yaml .next/standalone/
           tar -czf build.tar.gz -C .next/standalone .
 
       - name: Subir al VPS
