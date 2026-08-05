@@ -161,13 +161,13 @@ export default function PublicProfilePage() {
               </p>
             </div>
           )}
-          {user.research_work && (
+          {user.research_line && (
             <div className="mt-4">
               <h2 className="text-lg font-semibold text-gray-500 dark:text-white">
-                Trabajo de investigación
+                Línea de investigación
               </h2>
               <p className="text-gray-600 dark:text-white">
-                {user.research_work}
+                {user.research_line}
               </p>
             </div>
           )}

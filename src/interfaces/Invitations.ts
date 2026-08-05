@@ -44,7 +44,7 @@ export interface RegisterNodeLeaderRequest {
   degree?: string;
   postgraduate?: string;
   expertise_area?: string;
-  research_work?: string;
+  research_line?: string;
   profile_picture?: string;
   country_user?: string;
   city_user?: string;
@@ -77,7 +77,7 @@ export interface RegisterNodeMemberRequest {
     password: string;
     confirm_password: string;
     expertise_area: string;
-    research_work: string;
+    research_line: string;
     social_media?: SocialMediaItem[];
     about_user: string;
     country_user: string;

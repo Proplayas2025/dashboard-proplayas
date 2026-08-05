@@ -55,7 +55,7 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
     degree: "",
     postgraduate: "",
     expertise_area: "",
-    research_work: "",
+    research_line: "",
     profile_picture: "",
     country_user: "",
     city_user: "",
@@ -246,8 +246,8 @@ export default function RegisterNodeLeaderForm({ onSubmit, loading, initialValue
           <Label htmlFor="expertise_area">Área de experiencia</Label>
           <Input id="expertise_area" name="expertise_area" value={form.expertise_area} onChange={handleChange} />
 
-          <Label htmlFor="research_work">Trabajo de investigación</Label>
-          <Input id="research_work" name="research_work" value={form.research_work} onChange={handleChange} />
+          <Label htmlFor="research_line">Línea de investigación</Label>
+          <Input id="research_line" name="research_line" value={form.research_line} onChange={handleChange} />
 
           <Label htmlFor="country_user">País* (usuario)</Label>
           <Input id="country_user" name="country_user" value={form.country_user} onChange={handleChange} />

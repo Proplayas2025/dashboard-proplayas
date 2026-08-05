@@ -9,7 +9,7 @@ export interface User {
     degree: string;
     postgraduate: string;
     expertise_area: string;
-    research_work: string;
+    research_line: string;
     profile_picture: File; // foto del usuario
     country: string;
     city: string;

@@ -67,7 +67,7 @@ export function EditProfileFormModal({
     city: defaultValues.city || "",
     about: defaultValues.about || "",
     expertise_area: defaultValues.expertise_area || "",
-    research_work: defaultValues.research_work || "",
+    research_line: defaultValues.research_line || "",
     social_media: Array.isArray(defaultValues.social_media)
       ? defaultValues.social_media
       : [],
@@ -149,10 +149,10 @@ export function EditProfileFormModal({
             placeholder="Área de experiencia"
           />
           <Input
-            name="research_work"
-            value={formData.research_work}
+            name="research_line"
+            value={formData.research_line}
             onChange={handleChange}
-            placeholder="Trabajo de investigación"
+            placeholder="Línea de investigación"
           />
 
           {/* Redes sociales */}

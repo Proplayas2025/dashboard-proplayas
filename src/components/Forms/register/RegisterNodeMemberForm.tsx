@@ -53,7 +53,7 @@ export default function RegisterNodeMemberForm({ onSubmit, loading, initialValue
     password: "",
     confirm_password: "",
     expertise_area: "",
-    research_work: "",
+    research_line: "",
     social_media: [],
     about_user: "",
     country_user: "",
@@ -142,8 +142,6 @@ export default function RegisterNodeMemberForm({ onSubmit, loading, initialValue
         <Label htmlFor="name">Nombre*</Label>
         <Input id="name" name="name" value={form.name} onChange={handleChange} required />
 
-        <Label htmlFor="username">Usuario</Label>
-        <Input id="username" name="username" value={form.username} onChange={handleChange} autoComplete="username" />
 
         <Label htmlFor="password">Contraseña*</Label>
         <div className="relative">
@@ -207,8 +205,8 @@ export default function RegisterNodeMemberForm({ onSubmit, loading, initialValue
         <Label htmlFor="expertise_area">Área de experiencia</Label>
         <Input id="expertise_area" name="expertise_area" value={form.expertise_area} onChange={handleChange} />
 
-        <Label htmlFor="research_work">Trabajo de investigación</Label>
-        <Input id="research_work" name="research_work" value={form.research_work} onChange={handleChange} />
+        <Label htmlFor="research_line">Línea de investigación</Label>
+        <Input id="research_line" name="research_line" value={form.research_line} onChange={handleChange} />
 
         {/* Redes sociales del usuario */}
         <div className="space-y-2">
