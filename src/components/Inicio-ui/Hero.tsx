@@ -22,7 +22,7 @@ export default function Hero() {
             <li>• La comunidad de playeros más grande.</li>
             <li>• Presencia internacional</li>
           </ul>
-          <Button asChild variant="outline">
+          <Button asChild variant="outline" className="bg-white dark:bg-white dark:text-black">
             <Link href="/quienes-somos">Conócenos</Link>
           </Button>
         </div>

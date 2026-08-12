@@ -30,7 +30,7 @@ export default function Donation() {
           </p>
           <Button
             asChild
-            className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-8 py-3 rounded-md shadow transition"
+            className="bg-yellow-800 hover:bg-yellow-900 text-white font-semibold px-8 py-3 rounded-md shadow transition"
           >
             <a
               href="https://www.paypal.com/donate/?hosted_button_id=XXXXXXXXXXXX"

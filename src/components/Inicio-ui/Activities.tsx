@@ -9,7 +9,7 @@ const activities = [
     title: "Proyectos Colaborativos De Bajo Costo",
     desc: "Participa y colabora en proyectos con impacto real en la conservación de playas.",
     href: "/actividades/proyectos",
-    image: "/home_img/proyect.jpeg",
+    image: "/home_img/about8.webp",
     icon: Lightbulb,
     gradient: "from-blue-600/90 to-cyan-600/90"
   },
@@ -17,7 +17,7 @@ const activities = [
     title: "Eventos",
     desc: "Talleres, conferencias y seminarios impartidos por expertos en gestión costera.",
     href: "/actividades/eventos",
-    image: "/home_img/event.jpg",
+    image: "/home_img/about7.webp",
     icon: Calendar,
     gradient: "from-purple-600/90 to-pink-600/90"
   },
@@ -25,7 +25,7 @@ const activities = [
     title: "Libros",
     desc: "Biblioteca digital con publicaciones especializadas de la comunidad.",
     href: "/actividades/libros",
-    image: "/home_img/books.jpg",
+    image: "/home_img/about2.webp",
     icon: BookOpen,
     gradient: "from-green-600/90 to-emerald-600/90"
   },
@@ -33,18 +33,10 @@ const activities = [
     title: "Publicaciones",
     desc: "Investigaciones científicas y artículos de nuestros colaboradores.",
     href: "/actividades/publicaciones",
-    image: "/home_img/about1.JPG",
+    image: "/home_img/about1.webp",
     icon: FileText,
     gradient: "from-orange-600/90 to-red-600/90"
-  },
-  // {
-  //   title: "Series",
-  //   desc: "Contenido multimedia educativo y documental sobre gestión de playas.",
-  //   href: "/content#series",
-  //   image: "/home_img/series.jpg",
-  //   icon: Video,
-  //   gradient: "from-indigo-600/90 to-purple-600/90"
-  // },
+  }
 ];
 
 export default function Activities() {

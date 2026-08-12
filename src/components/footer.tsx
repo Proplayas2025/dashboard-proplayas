@@ -14,16 +14,16 @@ export default function Footer() {
             height={32} 
             className="h-8 w-auto" 
           />
-          <span className="font-semibold text-neutral-700 dark:text-neutral-200 text-lg">proplayas.org</span>
+          <span className="font-semibold text-neutral-800 dark:text-gray-100 text-lg">proplayas.org</span>
         </div>
         <Separator className="md:hidden my-4" />
-        <nav className="flex flex-wrap gap-4 text-sm text-neutral-600 dark:text-neutral-400">
+        <nav className="flex flex-wrap gap-4 text-sm text-neutral-600 dark:text-gray-100">
           <Link href="/inicio" className="hover:text-primary transition">Inicio</Link>
           <Link href="/quienes-somos" className="hover:text-primary transition">Quiénes somos</Link>
           <Link href="/nodos" className="hover:text-primary transition">Nodos</Link>
           <Link href="/actividades" className="hover:text-primary transition">Actividades</Link>
         </nav>
-        <div className="text-xs text-neutral-500 dark:text-neutral-400 text-center md:text-right">
+        <div className="text-xs text-neutral-800 dark:text-gray-100 text-center md:text-right">
           © {new Date().getFullYear()} Proplayas. Todos los derechos reservados.
         </div>
       </div>

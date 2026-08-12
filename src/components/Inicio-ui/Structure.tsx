@@ -63,7 +63,7 @@ export default function Structure() {
         </div>
         <Button
           asChild
-          className="bg-cyan-600 hover:bg-cyan-700 text-white font-semibold px-8 py-3 rounded-md shadow transition"
+          className="bg-cyan-800 hover:bg-cyan-900 text-white font-semibold px-8 py-3 rounded-md shadow transition"
         >
           <Link href="/nodos">Nodos</Link>
         </Button>

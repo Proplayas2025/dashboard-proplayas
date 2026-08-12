@@ -11,7 +11,7 @@ export default function About() {
         {/* Columna izquierda: imagen fija */}
         <div className="flex-1 max-w-md flex flex-col items-center">
           <Image
-            src="/home_img/about1.JPG"
+            src="/home_img/about1.webp"
             alt="Quiénes Somos"
             width={320}
             height={320}
@@ -32,14 +32,10 @@ export default function About() {
             promoviendo la gestión integrada de las zonas costeras.
           </p>
           <div className="flex gap-4 mt-4 flex-wrap">
-            <Button asChild  className="bg-yellow-500 hover:bg-yellow-600 text-white">
+            <Button asChild  className="bg-yellow-800 hover:bg-yellow-900 text-white">
               <Link href="/quienes-somos">Conócenos</Link>
             </Button>
-            <Button
-              asChild
-              
-              className="bg-cyan-600 hover:bg-cyan-700 text-white font-semibold px-8 py-3 rounded-md shadow transition"
-            >
+            <Button asChild className="bg-cyan-800 hover:bg-cyan-900 text-white font-semibold px-8 py-3 rounded-md shadow transition">
               <a
                 href="/docs/proplayas-info.pdf"
                 target="_blank"
