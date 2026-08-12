@@ -15,8 +15,46 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Proplayas",
-  description: "Pagina web de Proplayas",
+  title: "Proplayas | Plataforma de Investigación",
+  description: "Plataforma colaborativa para investigación y conocimiento en ciencias marinas y costas",
+  keywords: ["investigación", "ciencias marinas", "colaboración", "conocimiento", "proplayas"],
+  authors: [{ name: "Proplayas Team", url: "https://proplayas.org" }],
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: false,
+    },
+  },
+  alternates: {
+    canonical: "https://proplayas.org",
+  },
+  openGraph: {
+    type: "website",
+    locale: "es_ES",
+    url: "https://proplayas.org",
+    title: "Proplayas | Plataforma de Investigación",
+    description: "Plataforma colaborativa para investigación y conocimiento en ciencias marinas y costas",
+    siteName: "Proplayas",
+    images: [
+      {
+        url: "https://proplayas.org/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Proplayas",
+        type: "image/jpeg",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Proplayas",
+    description: "Plataforma colaborativa para investigación",
+    images: ["https://proplayas.org/og-image.jpg"],
+  },
 };
 
 export default function RootLayout({

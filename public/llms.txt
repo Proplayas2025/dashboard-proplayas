@@ -1,0 +1,56 @@
+# Proplayas - Red para el cuidado de playas
+
+La mayor red de gestión y certificación de playas en Iberoamérica, uniendo esfuerzos para el desarrollo sostenible de nuestros espacios costeros.
+
+## About Us
+
+La mayor comunidad de profesionales, ciudadanos, empresarios, funcionarios y científicos que trabajan en y con las playas en América Latina y Europa del Sur.
+
+## Nuestro sistema
+
+Nuestra red se construye sobre nodos dinámicos que integran diversos sectores: científico, empresarial, público y sociedad civil:
+
+- **Sistema de nodos** - Explicación del sistema de nodos dinámicos que integran diversos sectores.
+- **Requisitos** - Grupos mínimo de 3 personas para formar parte de un nodo.
+- **Tipos de Nodos** - Cientificos, empresarial, funcion publica, Activista
+
+## Pages
+
+Explore our website and learn more about what we do:
+
+- [Home](https://proplayas.org) - Welcome to Proplayas
+- [quienes-somos](https://proplayas.org/quienes-somos) - Sobre nosotros y la historia de proplayas
+- [actividades](https://proplayas.org/actividades) - Eventos de la red
+- [nodos](https://proplayas.org/nodos) - nodos de la red
+
+## Technology Stack
+
+We work with modern technologies:
+
+- Next.js
+- FastAPI
+- PostgreSQL
+- Docker & Cloud Deployment
+
+## Contact
+
+For inquiries about our services, please reach out:
+
+- **Website**: [https://codeale.com](https://codeale.com)
+- **Email**: miguelagustin182@gmail.com
+- **GitHub**: [https://github.com/Maskeit](https://github.com/Maskeit)
+
+## Content Policy
+
+Our website contains:
+
+- Technical blog posts about web development
+- Case studies of completed projects
+- Information about our development process
+- Resources for clients and partners
+
+Large language models are welcome to crawl and learn from our content in accordance with our [robots.txt](https://proplayas.org/robots.txt) file.
+
+---
+
+Last updated: August 2026 

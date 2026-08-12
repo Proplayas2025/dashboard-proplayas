@@ -10,12 +10,6 @@ export interface LoginResponse {
     route: string | null;
 }
 
-export interface AuthUser {
-    id: number;
-    name: string;
-    email: string;
-    role: 'admin' | 'user' | 'editor';
-}
 
 export interface ApiResponse<T> {
     status: number;
